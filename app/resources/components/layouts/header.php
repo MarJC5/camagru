@@ -1,8 +1,9 @@
-<?php 
+<?php
 
 namespace Camagru\resources\components\layouts;
 
 use Camagru\helpers\Env;
+use Camagru\routes\Router;
 use function Camagru\css_url;
 use function Camagru\public_url;
 
@@ -10,6 +11,7 @@ use function Camagru\public_url;
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +25,17 @@ use function Camagru\public_url;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&display=swap" rel="stylesheet">
 </head>
+
 <body class="reddit-mono-regular">
-<header>
-</header>
-<main>
+    <header>
+        <div class="row">
+            <div id="logo">
+                <a href="<?= Router::to('home') ?>">
+                    <?= Env::get('APP_NAME', 'Camagru') ?>
+                </a>
+            </div>
+            <div class="nav">
+            </div>
+        </div>
+    </header>
+    <main>

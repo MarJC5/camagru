@@ -23,36 +23,43 @@ class Web {
             [
                 'method' => 'GET',
                 'path' => '/users',
+                'name' => 'users',
                 'action' => [UserController::class, 'index']
             ],
             [
                 'method' => 'GET',
                 'path' => '/user/{id}',
+                'name' => 'user',
                 'action' => [UserController::class, 'show']
             ],
             [
                 'method' => 'GET',
                 'path' => '/user/{id}/edit',
+                'name' => 'edit_user',
                 'action' => [UserController::class, 'edit']
             ],
             [
                 'method' => 'GET',
                 'path' => '/user/create',
+                'name' => 'create_user',
                 'action' => [UserController::class, 'create']
             ],
             [
                 'method' => 'POST',
                 'path' => '/user',
+                'name' => 'store_user',
                 'action' => [UserController::class, 'store']
             ],
             [
                 'method' => 'PUT',
                 'path' => '/user/{id}',
+                'name' => 'update_user',
                 'action' => [UserController::class, 'update']
             ],
             [
                 'method' => 'DELETE',
                 'path' => '/user/{id}',
+                'name' => 'delete_user',
                 'action' => [UserController::class, 'delete']
             ]
         ];
@@ -66,36 +73,43 @@ class Web {
             [
                 'method' => 'GET',
                 'path' => '/posts',
+                'name' => 'posts',
                 'action' => [PostController::class, 'index']
             ],
             [
                 'method' => 'GET',
                 'path' => '/post/{id}',
+                'name' => 'post',
                 'action' => [PostController::class, 'show']
             ],
             [
                 'method' => 'GET',
                 'path' => '/post/{id}/edit',
+                'name' => 'edit_post',
                 'action' => [PostController::class, 'edit']
             ],
             [
                 'method' => 'GET',
                 'path' => '/post/create',
+                'name' => 'create_post',
                 'action' => [PostController::class, 'create']
             ],
             [
                 'method' => 'POST',
                 'path' => '/post',
+                'name' => 'store_post',
                 'action' => [PostController::class, 'store']
             ],
             [
                 'method' => 'PUT',
                 'path' => '/post/{id}',
+                'name' => 'update_post',
                 'action' => [PostController::class, 'update']
             ],
             [
                 'method' => 'DELETE',
                 'path' => '/post/{id}',
+                'name' => 'delete_post',
                 'action' => [PostController::class, 'delete']
             ]
         ];
@@ -109,16 +123,19 @@ class Web {
             [
                 'method' => 'GET',
                 'path' => '/',
+                'name' => 'home',
                 'action' => [PageController::class, 'index']
             ],
             [
                 'method' => 'GET',
                 'path' => '/{slug}',
+                'name' => 'page',
                 'action' => [PageController::class, 'show']
             ],
             [
                 'method' => 'GET',
                 'path' => '/error/{code}',
+                'name' => 'error',
                 'action' => [PageController::class, 'error']
             ]
         ];
@@ -132,6 +149,7 @@ class Web {
             [
                 'method' => 'GET',
                 'path' => '/error/{code}',
+                'name' => 'error',
                 'action' => [PageController::class, 'error']
             ]
         ];

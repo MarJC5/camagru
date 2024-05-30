@@ -50,4 +50,45 @@ class Router
         }
         return $params;
     }
+
+    public static function redirect($path)
+    {
+        header('Location: ' . $path);
+        exit();
+    }
+
+    public static function back()
+    {
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit();
+    }
+
+    public static function refresh()
+    {
+        header('Location: ' . $_SERVER['REQUEST_URI']);
+        exit();
+    }
+
+    public static function refreshWith($params)
+    {
+        $query = http_build_query($params);
+        header('Location: ' . $_SERVER['REQUEST_URI'] . '?' . $query);
+        exit();
+    }
+
+    public static function to($name, $params = [])
+    {
+        $routes = Web::routes();
+        $routes = array_merge($routes, Api::routes());
+
+        foreach ($routes as $route) {
+            if (isset($route['name']) && $route['name'] == $name) {
+                $path = $route['path'];
+                foreach ($params as $key => $value) {
+                    $path = str_replace('{' . $key . '}', $value, $path);
+                }
+                return $path;
+            }
+        }
+    }
 }
