@@ -10,8 +10,8 @@ class User extends Model
 
     protected $fillable = ['username', 'email', 'password'];
 
-    public function __construct()
+    public function __construct(int $id = null)
     {
-        parent::__construct();
+        parent::__construct($id);
     }
 }

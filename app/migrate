@@ -34,6 +34,6 @@ switch ($command) {
         $migrations->reset();
         break;
     default:
-        echo "Usage: migrate.php [up|down|reset]\n";
+        echo "Usage: migrate.php [run|rollback|reset]\n";
         break;
 }

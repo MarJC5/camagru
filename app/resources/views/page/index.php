@@ -11,7 +11,10 @@ get_header();
 
 <section class="page page--home">
     <div class="row">
-        <h1 class="the-title">Hello <?= Env::get('APP_NAME', '') ?>!</h1>
+        <h1 class="the-title"><?= $page->title() ?></h1>
+        <div class="the-content w-half">
+            <?= $page->content() ?>
+        </div>
     </div>
 </section>
 

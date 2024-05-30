@@ -8,10 +8,8 @@ use function Camagru\views_path;
 class PageController {
 
     public static function index() {
-        // Search in the database for the page with the given slug
-        $page = Page::where('slug', 'home');
+        $page = Page::where('slug', 'home')->first();
 
-        // If the page does not exist, return a 404 error
         if (empty($page)) {
             return self::error(404);
         }
@@ -22,10 +20,8 @@ class PageController {
     }
 
     public static function show($slug) {
-        // Search in the database for the page with the given slug
-        $page = Page::where('slug', $slug);
+        $page = Page::where('slug', $slug)->first();
 
-        // If the page does not exist, return a 404 error
         if (empty($page)) {
             return self::error(404);
         }
@@ -33,6 +29,34 @@ class PageController {
         ob_start();
         include views_path('page/show.php');
         echo ob_get_clean();
+    }
+
+    public static function edit($slug) {
+        $page = Page::where('slug', $slug)->first();
+
+        if (empty($page)) {
+            return self::error(404);
+        }
+
+        ob_start();
+        include views_path('page/edit.php');
+        echo ob_get_clean();
+    }
+
+    public static function create() {
+    }
+
+    public static function store() {
+    }
+
+    public static function update($slug, $data) {
+        $page = Page::where('slug', $slug)->first();
+
+        if (empty($page)) {
+            return self::error(404);
+        }
+
+        $page->update($data);
     }
 
     public static function error($code) {

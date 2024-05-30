@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+
+// Register the Composer autoloader...
+require_once __DIR__ . '/helpers/autoloader.php';
+
+use Camagru\database\seeders\PageSeeders;
+use Camagru\database\seeders\PostSeeders;
+use Camagru\database\seeders\UserSeeders;
+use Camagru\database\seeders\LikeSeeders;
+use Camagru\database\seeders\CommentSeeders;
+
+// Instantiate the database connection
+$seeders = [
+    new PageSeeders(),
+    new PostSeeders(),
+    new UserSeeders(),
+    new LikeSeeders(),
+    new CommentSeeders(),
+];
+
+foreach ($seeders as $seeder) {
+    if (method_exists($seeder, 'run')) {
+        $seeder->run();
+    } else {
+        echo "Seeder class not found: $seeder\n";
+    }
+}

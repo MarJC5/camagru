@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Camagru\models;
 
@@ -8,120 +8,96 @@ abstract class Model
 {
     protected $db;
     protected $table;
+    protected $query;
+    protected $data;
 
-    public function __construct()
+    public function __construct(int $id = null)
     {
         $this->db = new Database();
+        
+        if ($id) {
+            $this->query = "SELECT * FROM {$this->table} WHERE id = " . $this->db->quote($id);
+
+            return $this->first();
+        } else {
+            $this->query = "";
+        }
+
+        return $this;
     }
 
     public static function where($column, $value)
     {
-        $model = new static();
-        return $model->get(['*'], ["{$column} = '{$value}'"]);
+        $instance = new static();
+        $instance->query = "SELECT * FROM {$instance->table} WHERE {$column} = " . $instance->db->quote($value);
+
+        return $instance;
     }
 
-    protected static function get($columns = ['*'], $where = [])
+    public function andWhere($column, $value)
     {
-        $model = new static();
-        $sql = "SELECT " . implode(', ', $columns) . " FROM {$model->table}";
-        if (!empty($where)) {
-            $sql .= " WHERE " . implode(' AND ', $where);
+        $this->query .= " AND {$column} = " . $this->db->quote($value);
+        return $this;
+    }
+
+    public function get()
+    {
+        return $this->db->query($this->query);
+    }
+
+    public function first()
+    {
+        $sql = $this->query . " LIMIT 1";
+        $result = $this->db->query($sql);
+        $this->data = $result ? (object) $result[0] : null;
+
+        if ($this->data) {
+            return $this;
         }
-        return $model->db->query($sql);
+
+        return null;
     }
 
-    public static function getAll()
+    public static function all()
     {
-        $model = new static();
-        return $model->query('SELECT * FROM ' . $model->table);
+        $instance = new static();
+        $sql = "SELECT * FROM {$instance->table}";
+        return $instance->db->query($sql);
     }
 
-    public static function getById($id)
+    public function insert($data)
     {
-        $model = new static();
-        return $model->query('SELECT * FROM ' . $model->table . ' WHERE id = ?', [$id], true);
-    }
-
-    public static function getBySlug($slug)
-    {
-        $model = new static();
-        return $model->query('SELECT * FROM ' . $model->table . ' WHERE slug = ?', [$slug], true);
-    }
-
-    public static function insert($data)
-    {
-        $model = new static();
         $columns = implode(', ', array_keys($data));
-        $values = implode(', ', array_values($data));
-        $sql = "INSERT INTO {$model->table} ({$columns}) VALUES ({$values})";
-        return $model->db->execute($sql);
+        $values = implode(', ', array_map([$this->db, 'quote'], array_values($data)));
+        $sql = "INSERT INTO {$this->table} ({$columns}) VALUES ({$values})";
+        return $this->db->execute($sql);
     }
 
-    protected function update($data, $where = [])
+    public function update($data)
     {
         $set = [];
         foreach ($data as $column => $value) {
-            $set[] = "{$column} = {$value}";
+            $set[] = "{$column} = " . $this->db->quote($value);
         }
-        $sql = "UPDATE {$this->table} SET " . implode(', ', $set);
-        if (!empty($where)) {
-            $sql .= " WHERE " . implode(' AND ', $where);
-        }
+        $sql = "UPDATE {$this->table} SET " . implode(', ', $set) . " WHERE " . $this->query;
         return $this->db->execute($sql);
     }
 
-    public static function delete($where = [])
+    public function delete()
     {
-        $model = new static();
-        $sql = "DELETE FROM {$model->table}";
-        if (!empty($where)) {
-            $sql .= " WHERE " . implode(' AND ', $where);
-        }
-        return $model->db->execute($sql);
-    }
-
-    public static function count($where = [])
-    {
-        $model = new static();
-        $sql = "SELECT COUNT(*) FROM {$model->table}";
-        if (!empty($where)) {
-            $sql .= " WHERE " . implode(' AND ', $where);
-        }
-        return $model->db->query($sql);
-    }
-
-    public static function exists($where = [])
-    {
-        $model = new static();
-        $sql = "SELECT EXISTS(SELECT 1 FROM {$model->table}";
-        if (!empty($where)) {
-            $sql .= " WHERE " . implode(' AND ', $where);
-        }
-        $sql .= ") AS `exists`";
-        return $model->db->query($sql);
-    }
-
-    protected function query($sql)
-    {
-        return $this->db->query($sql);
-    }
-
-    protected function execute($sql)
-    {
+        $sql = "DELETE FROM {$this->table} WHERE " . $this->query;
         return $this->db->execute($sql);
     }
 
-    public static function last($column = 'id')
+    public static function count()
     {
-        $model = new static();
-        $sql = "SELECT MAX({$column}) FROM {$model->table}";
-        return $model->db->query($sql);
+        $instance = new static();
+        $sql = "SELECT COUNT(*) FROM {$instance->table}";
+        return $instance->db->query($sql);
     }
 
-    public static function first($column = 'id')
+    protected function quote($value)
     {
-        $model = new static();
-        $sql = "SELECT MIN({$column}) FROM {$model->table}";
-        return $model->db->query($sql);
+        return $this->db->quote($value);
     }
 }

@@ -10,8 +10,23 @@ class Page extends Model
 
     protected $fillable = ['title', 'content', 'slug'];
 
-    public function __construct()
+    public function __construct(int $id = null)
     {
-        parent::__construct();
+        parent::__construct($id);
+    }
+
+    public function title()
+    {
+        return $this->data->title;
+    }
+
+    public function content()
+    {
+        return $this->data->content;
+    }
+
+    public function slug()
+    {
+        return $this->data->slug;
     }
 }

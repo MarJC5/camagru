@@ -2,9 +2,9 @@
 
 namespace Camagru\controllers;
 
-use Camagru\models\Comment;
+use Camagru\models\Like;
 use function Camagru\views_path;
 
-class CommentController {
+class LikeController {
     // Class methods here
 }
