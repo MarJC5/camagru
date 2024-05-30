@@ -24,9 +24,16 @@ use function Camagru\public_url;
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&display=swap" rel="stylesheet">
+    <!-- Styles -->
+    <style>
+        body {
+            opacity: 0;
+            transition: opacity 1s;
+        }
+    </style>
 </head>
 
-<body class="reddit-mono-regular">
+<body class="reddit-mono-regular" onload="document.body.style.opacity='1'">
     <header>
         <div class="row">
             <div id="logo">

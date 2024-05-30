@@ -9,3 +9,12 @@ body {
     font-size: var(--font-size);
     line-height: var(--line-height);
 }
+
+a {
+    color: var(--color-main);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
