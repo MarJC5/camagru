@@ -17,80 +17,88 @@ abstract class Model
     public static function where($column, $value)
     {
         $model = new static();
-        return $model->get($model->table, ['*'], ["{$column} = '{$value}'"]);
+        return $model->get(['*'], ["{$column} = '{$value}'"]);
     }
 
-    protected function get($tableName, $columns = ['*'], $where = [])
+    protected static function get($columns = ['*'], $where = [])
     {
-        $sql = "SELECT " . implode(', ', $columns) . " FROM {$tableName}";
+        $model = new static();
+        $sql = "SELECT " . implode(', ', $columns) . " FROM {$model->table}";
         if (!empty($where)) {
             $sql .= " WHERE " . implode(' AND ', $where);
         }
-        return $this->db->query($sql);
+        return $model->db->query($sql);
     }
 
-    public function getAll()
+    public static function getAll()
     {
-        return $this->query('SELECT * FROM ' . $this->table);
+        $model = new static();
+        return $model->query('SELECT * FROM ' . $model->table);
     }
 
-    public function getById($id)
+    public static function getById($id)
     {
-        return $this->query('SELECT * FROM ' . $this->table . ' WHERE id = ?', [$id], true);
+        $model = new static();
+        return $model->query('SELECT * FROM ' . $model->table . ' WHERE id = ?', [$id], true);
     }
 
-    public function getBySlug($slug)
+    public static function getBySlug($slug)
     {
-        return $this->query('SELECT * FROM ' . $this->table . ' WHERE slug = ?', [$slug], true);
+        $model = new static();
+        return $model->query('SELECT * FROM ' . $model->table . ' WHERE slug = ?', [$slug], true);
     }
 
-    protected function insert($tableName, $data)
+    public static function insert($data)
     {
+        $model = new static();
         $columns = implode(', ', array_keys($data));
         $values = implode(', ', array_values($data));
-        $sql = "INSERT INTO {$tableName} ({$columns}) VALUES ({$values})";
-        return $this->db->execute($sql);
+        $sql = "INSERT INTO {$model->table} ({$columns}) VALUES ({$values})";
+        return $model->db->execute($sql);
     }
 
-    protected function update($tableName, $data, $where = [])
+    protected function update($data, $where = [])
     {
         $set = [];
         foreach ($data as $column => $value) {
             $set[] = "{$column} = {$value}";
         }
-        $sql = "UPDATE {$tableName} SET " . implode(', ', $set);
+        $sql = "UPDATE {$this->table} SET " . implode(', ', $set);
         if (!empty($where)) {
             $sql .= " WHERE " . implode(' AND ', $where);
         }
         return $this->db->execute($sql);
     }
 
-    protected function delete($tableName, $where = [])
+    public static function delete($where = [])
     {
-        $sql = "DELETE FROM {$tableName}";
+        $model = new static();
+        $sql = "DELETE FROM {$model->table}";
         if (!empty($where)) {
             $sql .= " WHERE " . implode(' AND ', $where);
         }
-        return $this->db->execute($sql);
+        return $model->db->execute($sql);
     }
 
-    protected function count($tableName, $where = [])
+    public static function count($where = [])
     {
-        $sql = "SELECT COUNT(*) FROM {$tableName}";
+        $model = new static();
+        $sql = "SELECT COUNT(*) FROM {$model->table}";
         if (!empty($where)) {
             $sql .= " WHERE " . implode(' AND ', $where);
         }
-        return $this->db->query($sql);
+        return $model->db->query($sql);
     }
 
-    protected function exists($tableName, $where = [])
+    public static function exists($where = [])
     {
-        $sql = "SELECT EXISTS(SELECT 1 FROM {$tableName}";
+        $model = new static();
+        $sql = "SELECT EXISTS(SELECT 1 FROM {$model->table}";
         if (!empty($where)) {
             $sql .= " WHERE " . implode(' AND ', $where);
         }
         $sql .= ") AS `exists`";
-        return $this->db->query($sql);
+        return $model->db->query($sql);
     }
 
     protected function query($sql)
@@ -103,15 +111,17 @@ abstract class Model
         return $this->db->execute($sql);
     }
 
-    protected function last($tableName, $column = 'id')
+    public static function last($column = 'id')
     {
-        $sql = "SELECT MAX({$column}) FROM {$tableName}";
-        return $this->db->query($sql);
+        $model = new static();
+        $sql = "SELECT MAX({$column}) FROM {$model->table}";
+        return $model->db->query($sql);
     }
 
-    protected function first($tableName, $column = 'id')
+    public static function first($column = 'id')
     {
-        $sql = "SELECT MIN({$column}) FROM {$tableName}";
-        return $this->db->query($sql);
+        $model = new static();
+        $sql = "SELECT MIN({$column}) FROM {$model->table}";
+        return $model->db->query($sql);
     }
 }
