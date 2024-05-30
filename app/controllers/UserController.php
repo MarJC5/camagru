@@ -3,31 +3,45 @@
 namespace Camagru\controllers;
 
 use Camagru\models\User;
-use function Camagru\views_path;
+use function Camagru\loadView;
 
 class UserController {
     public static function index() {
         $users = User::all();
 
-        ob_start();
-        include views_path('user/index.php');
-        echo ob_get_clean();
+        $_GET['title'] = 'Users';
+
+        echo loadView('user/index.php', [
+            'users' => $users,
+        ]);
     }
 
     public static function show($id) {
         $user = new User($id);
 
-        ob_start();
-        include views_path('user/show.php');
-        echo ob_get_clean();
+        if (empty($user)) {
+            return PageController::error(404);
+        }
+
+        $_GET['title'] = $user->username();
+
+        echo loadView('user/show.php', [
+            'user' => $user,
+        ]);
     }
 
     public static function edit($id) {
         $user = new User($id);
 
-        ob_start();
-        include views_path('user/edit.php');
-        echo ob_get_clean();
+        if (empty($user)) {
+            return PageController::error(404);
+        }
+
+        $_GET['title'] = $user->username() . ' - Edit';
+
+        echo loadView('user/edit.php', [
+            'user' => $user,
+        ]);
     }
 
     public static function create() {

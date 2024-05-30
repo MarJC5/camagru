@@ -4,15 +4,17 @@ namespace Camagru\controllers;
 
 use Camagru\models\Post;
 use Camagru\controllers\PageController;
-use function Camagru\views_path;
+use function Camagru\loadView;
 
 class PostController {
     public static function index() {
         $posts = Post::all();
 
-        ob_start();
-        include views_path('post/index.php');
-        echo ob_get_clean();
+        $_GET['title'] = 'Posts';
+
+        echo loadView('post/index.php', [
+            'posts' => $posts,
+        ]);
     }
 
     public static function show($id) {
@@ -22,17 +24,21 @@ class PostController {
             return PageController::error(404);
         }
 
-        ob_start();
-        include views_path('post/show.php');
-        echo ob_get_clean();
+        echo loadView('post/show.php', [
+            'post' => $post,
+        ]);
     }
 
     public static function edit($id) {
         $post = new Post($id);
 
-        ob_start();
-        include views_path('post/edit.php');
-        echo ob_get_clean();
+        if (empty($post)) {
+            return PageController::error(404);
+        }
+
+        echo loadView('post/edit.php', [
+            'post' => $post,
+        ]);
     }
 
     public static function create() {

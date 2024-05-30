@@ -69,6 +69,11 @@ class Router
         exit();
     }
 
+    public static function current()
+    {
+        return $_SERVER['REQUEST_URI'];
+    }
+
     public static function refreshWith($params)
     {
         $query = http_build_query($params);

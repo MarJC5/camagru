@@ -117,6 +117,13 @@ function get_footer() {
     echo load_template(components_path('layouts/footer.php'));
 }
 
+function loadView($path, $data = []) {
+    extract($data);
+    ob_start();
+    include views_path($path);
+    return ob_get_clean();
+}
+
 /**
  * Get the current HTTP response code.
  */

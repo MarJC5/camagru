@@ -15,7 +15,7 @@ use function Camagru\public_url;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= Env::get('APP_NAME', 'Camagru') ?></title>
+    <title><?= Env::get('APP_NAME', 'Camagru') ?><?= !empty($_GET['title']) ? ' | ' . htmlspecialchars($_GET['title']) : '' ?></title>
     <!-- Favicon -->
     <link rel="icon" href="<?= public_url('/favicon/favicon.ico') ?>" type="image/x-icon">
     <!-- CSS -->

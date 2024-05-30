@@ -3,7 +3,7 @@
 namespace Camagru\controllers;
 
 use Camagru\models\Page;
-use function Camagru\views_path;
+use function Camagru\loadView;
 
 class PageController {
 
@@ -14,9 +14,11 @@ class PageController {
             return self::error(404);
         }
 
-        ob_start();
-        include views_path('page/index.php');
-        echo ob_get_clean();
+        $_GET['title'] = $page->title();
+
+        echo loadView('page/index.php', [
+            'page' => $page,
+        ]);
     }
 
     public static function show($slug) {
@@ -26,9 +28,11 @@ class PageController {
             return self::error(404);
         }
 
-        ob_start();
-        include views_path('page/show.php');
-        echo ob_get_clean();
+        $_GET['title'] = $page->title();
+
+        echo loadView('page/show.php', [
+            'page' => $page,
+        ]);
     }
 
     public static function edit($slug) {
@@ -38,9 +42,11 @@ class PageController {
             return self::error(404);
         }
 
-        ob_start();
-        include views_path('page/edit.php');
-        echo ob_get_clean();
+        $_GET['title'] = $page->title() . ' - Edit';
+
+        echo loadView('page/edit.php', [
+            'page' => $page,
+        ]);
     }
 
     public static function create() {
@@ -61,9 +67,12 @@ class PageController {
 
     public static function error($code) {
         http_response_code($code);
-        ob_start();
-        include views_path('page/error.php');
-        echo ob_get_clean();
+
+        $_GET['title'] = $code;
+
+        echo loadView('page/error.php', [
+            'title' => $code
+        ]);
     }
 
 }

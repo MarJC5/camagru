@@ -5,14 +5,42 @@ namespace Camagru\routes;
 use Camagru\controllers\PageController;
 use Camagru\controllers\PostController;
 use Camagru\controllers\UserController;
+use Camagru\controllers\AuthController;
 
 class Web {
     public static function routes() {
         return array_merge(
             self::user(),
             self::post(),
-            self::page()
+            self::page(),
+            self::auth(),
         );
+    }
+
+    /**
+     * Auth routes
+     */
+    private static function auth() {
+        return [
+            [
+                'method' => 'GET',
+                'path' => '/auth/login',
+                'name' => 'login',
+                'action' => [AuthController::class, 'login']
+            ],
+            [
+                'method' => 'GET',
+                'path' => '/auth/register',
+                'name' => 'register',
+                'action' => [AuthController::class, 'register']
+            ],
+            [
+                'method' => 'GET',
+                'path' => '/auth/logout',
+                'name' => 'logout',
+                'action' => [AuthController::class, 'logout']
+            ]
+        ];
     }
 
     /**
