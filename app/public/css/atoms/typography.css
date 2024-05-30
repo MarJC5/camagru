@@ -1,0 +1,11 @@
+.reddit-mono-regular {
+    font-family: "Reddit Mono", monospace;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+body {
+    font-size: var(--font-size);
+    line-height: var(--line-height);
+}

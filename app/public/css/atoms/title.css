@@ -1,0 +1,44 @@
+/* Heading and paragraph classes with specified font sizes */
+.h1,
+h1 {
+    font-size: 2.986rem;
+}
+
+.h2,
+h2 {
+    font-size: 2.488rem;
+}
+
+.h3,
+h3 {
+    font-size: 2.074rem;
+}
+
+.h4,
+h4 {
+    font-size: 1.728rem;
+}
+
+.h5,
+h5 {
+    font-size: 1.44rem;
+}
+
+.h6,
+h6 {
+    font-size: 1.2rem;
+}
+
+.paragraph,
+p {
+    font-size: 1rem;  /* Standard paragraph text */
+}
+
+.text-small,
+small {
+    font-size: 0.833rem; /* Smaller text, often used for less emphasized content */
+}
+
+.text-smallest {
+    font-size: 0.694rem; /* Even smaller text size */
+}

@@ -1,6 +1,7 @@
 <?php 
 
 namespace Camagru\config;
+
 use Camagru\helpers\Env;
 
 return [

@@ -1,0 +1,71 @@
+/* Base styles for a two-column layout */
+.two-columns {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: calc(-10px);
+    margin-right: calc(-10px);
+}
+
+.two-columns > .column {
+    flex: 0 0 calc(100% / 2);
+}
+
+.two-columns > .column > .inner {
+    padding: 0 10px;
+    margin-bottom: 40px;
+}
+
+/* Responsive adjustments for two columns on tablet and below */
+@media screen and (max-width: 768px) {
+    .two-columns > .column {
+        flex: 0 0 50%;
+    }
+}
+
+/* Responsive adjustments for two columns on phones */
+@media screen and (max-width: 576px) {
+    .two-columns {
+        margin-left: 0;
+        margin-right: 0;
+        display: block;
+    }
+    .two-columns > .column > .inner {
+        padding: 0;
+    }
+}
+
+/* Base styles for a four-column layout */
+.four-columns {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: calc(-10px);
+    margin-right: calc(-10px);
+}
+
+.four-columns > .column {
+    flex: 0 0 calc(100% / 4);
+}
+
+.four-columns > .column > .inner {
+    padding: 0 10px;
+    margin-bottom: 40px;
+}
+
+/* Responsive adjustments for four columns on tablet and below */
+@media screen and (max-width: 768px) {
+    .four-columns > .column {
+        flex: 0 0 50%;
+    }
+}
+
+/* Responsive adjustments for four columns on phones */
+@media screen and (max-width: 576px) {
+    .four-columns {
+        margin-left: 0;
+        margin-right: 0;
+        display: block;
+    }
+    .four-columns > .column > .inner {
+        padding: 0;
+    }
+}

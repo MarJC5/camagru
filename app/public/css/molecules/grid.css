@@ -1,0 +1,94 @@
+/* Base grid styling */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-rows: repeat(2, auto);
+    grid-gap: 1em;
+}
+
+/* Media query adjustments for the base grid */
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Variant 1-2 grid styling */
+.grid--1-2 {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 1fr;
+    grid-gap: 5em;
+}
+
+/* Media query adjustments for the 1-2 grid */
+@media (max-width: 1024px) {
+    .grid--1-2 {
+        grid-template-columns: 1fr;
+        grid-gap: 1em;
+    }
+}
+
+/* Variant 2-1 grid styling */
+.grid--2-1 {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr;
+    grid-gap: 5em;
+}
+
+/* Media query adjustments for the 2-1 grid */
+@media (max-width: 1024px) {
+    .grid--2-1 {
+        grid-template-columns: 1fr;
+        grid-gap: 1em;
+    }
+}
+
+/* Variant 3 grid styling */
+.grid--3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+}
+
+/* Media query adjustments for the 3 grid */
+@media (max-width: 1024px) {
+    .grid--3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Variant 3-4 grid styling */
+.grid--3-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+}
+
+/* Media query adjustments for the 3-4 grid */
+@media (max-width: 1024px) {
+    .grid--3-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Variant 4 grid styling */
+.grid--4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+}
+
+/* Media query adjustments for the 4 grid */
+@media (max-width: 1024px) {
+    .grid--4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .grid--4 {
+        grid-template-columns: 1fr;
+    }
+}

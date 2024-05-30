@@ -12,7 +12,7 @@ class Api {
     }
 
     /**
-     * Page routes
+     * Posts routes
      */
     private static function posts() {
         return [

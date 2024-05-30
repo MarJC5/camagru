@@ -1,0 +1,67 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+footer {
+    flex-grow: 0;
+}
+
+.row {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-4);
+}
+
+.h-screen {
+    height: 100vh;
+}
+
+.h-full {
+    height: 100%;
+}
+
+.h-half {
+    height: 50%;
+}
+
+.h-third {
+    height: 33.33%;
+}
+
+.h-quarter {
+    height: 25%;
+}
+
+.h-auto {
+    height: auto;
+}
+
+.w-screen {
+    width: 100vw;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.w-half {
+    width: 50%;
+}
+
+.w-third {
+    width: 33.33%;
+}
+
+.w-quarter {
+    width: 25%;
+}
+
+.w-auto {
+    width: auto;
+}

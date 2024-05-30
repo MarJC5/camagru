@@ -17,6 +17,14 @@ function public_path($path = '') {
 }
 
 /**
+ * Get public url
+ */
+
+function public_url($path = '') {
+    return BASE_URL . ($path ? '/' . $path : $path);
+}
+
+/**
  * Get the absolute path to the resources directory.
  */
 function resources_path($path = '') {
@@ -63,6 +71,20 @@ function js_path($path = '') {
  */
 function js_url($path = '') {
     return BASE_URL . '/js' . ($path ? '/' . $path : $path);
+}
+
+/**
+ * Get the absolute path to the images directory within the public directory.
+ */
+function images_path($path = '') {
+    return public_path('images' . ($path ? DIRECTORY_SEPARATOR . $path : $path));
+}
+
+/**
+ * Get images url
+ */
+function images_url($path = '') {
+    return BASE_URL . '/images' . ($path ? '/' . $path : $path);
 }
 
 /**

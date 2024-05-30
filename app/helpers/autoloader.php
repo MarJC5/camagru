@@ -6,6 +6,7 @@ namespace Camagru;
  * Autoload classes based on their namespace and directory structure.
  */
 spl_autoload_register(function ($class) {
+    // echo "Attempting to load class: $class\n";
     $filename = explode('\\', $class);
     $namespace = array_shift($filename);
 
@@ -22,7 +23,8 @@ spl_autoload_register(function ($class) {
     $filePath = implode(DIRECTORY_SEPARATOR, $filename) . '.php';
     // If the namespace matches the directory structure, concatenate the filename and include the file
     if ($namespace === __NAMESPACE__ && file_exists($filePath)) {
-        include $filePath;
+        // echo "Loading file: $filePath\n";
+        include_once $filePath;
     } else {
         echo "Failed to load: $filePath\n";
     }
