@@ -23,7 +23,12 @@ class Router
                 // Capture the output of the controller action
                 $output = call_user_func_array($route['action'], $params);
 
-                echo $output; // Output the view content
+                if (strpos($path, '/api/') === 0) {
+                    header('Content-Type: application/json');
+                    echo json_encode($output);
+                } else {
+                    echo $output; // For regular web routes
+                }
                 return;
             }
         }

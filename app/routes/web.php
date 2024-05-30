@@ -10,9 +10,9 @@ use Camagru\controllers\AuthController;
 class Web {
     public static function routes() {
         return array_merge(
-            self::user(),
-            self::post(),
-            self::page(),
+            self::users(),
+            self::posts(),
+            self::pages(),
             self::auth(),
         );
     }
@@ -46,7 +46,7 @@ class Web {
     /**
      * User routes
      */
-    private static function user() {
+    private static function users() {
         return [
             [
                 'method' => 'GET',
@@ -96,7 +96,7 @@ class Web {
     /**
      * Post routes
      */
-    private static function post() {
+    private static function posts() {
         return [
             [
                 'method' => 'GET',
@@ -146,7 +146,7 @@ class Web {
     /**
      * Page routes
      */
-    private static function page() {
+    private static function pages() {
         return [
             [
                 'method' => 'GET',
@@ -172,7 +172,7 @@ class Web {
     /**
      * Handle errors
      */
-    public static function error() {
+    public static function errors() {
         return [
             [
                 'method' => 'GET',

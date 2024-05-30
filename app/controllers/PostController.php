@@ -92,4 +92,14 @@ class PostController {
 
         $post->delete();
     }
+
+    public static function json() {
+        $posts = Post::all();
+
+        if (empty($posts)) {
+            return ['message' => 'No posts found'];
+        }
+
+        return $posts;
+    }
 }
