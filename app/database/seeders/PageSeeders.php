@@ -24,12 +24,12 @@ class PageSeeders extends Seeders
             [
                 'title' => 'Hello, Camagru!', 
                 'slug' => 'home', 
-                'content' => 'Welcome to Camagru! This is a simple photo sharing application that allows you to take pictures, apply filters, and share them with your friends.',
+                'content' => '<p>Welcome to Camagru! This is a simple photo sharing application that allows you to take pictures, apply filters, and share them with your friends.</p>',
             ],
             [
                 'title' => 'About', 
                 'slug' => 'about', 
-                'content' => 'Create a small Instagram-like site allowing users to create and share photo montages. Thus implement, with a bare hands (frameworks are prohibited), the basic functionalities encountered on the majority of sites with a user base.',
+                'content' => '<p>Create a small Instagram-like site allowing users to create and share photo montages. Thus implement, with a bare hands (frameworks are prohibited), the basic functionalities encountered on the majority of sites with a user base.</p>',
             ],
         ];
 

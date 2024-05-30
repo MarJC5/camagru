@@ -10,7 +10,7 @@ class Like extends Model
 
     protected $fillable = ['user_id', 'post_id'];
 
-    public function __construct(int $id = null)
+    public function __construct(?int $id = null)
     {
         parent::__construct($id);
     }

@@ -3,6 +3,7 @@
 namespace Camagru\controllers;
 
 use Camagru\models\Page;
+use Camagru\middlewares\Validation;
 use function Camagru\loadView;
 
 class PageController {
@@ -50,9 +51,30 @@ class PageController {
     }
 
     public static function create() {
+        $_GET['title'] = 'New page';
+
+        echo loadView('page/create.php');
     }
 
     public static function store() {
+        $validation = new Validation();
+        $page = new Page();
+
+        $data = $_POST;
+        $rules = $page->validation();
+
+        $validation->validate($data, $rules);
+
+        if ($validation->fails()) {
+            $errors = $validation->getErrors();
+
+            echo loadView('page/create.php', [
+                'errors' => $errors,
+                'old' => $data
+            ]);
+        }
+
+        $page->insert($data);
     }
 
     public static function update($slug, $data) {

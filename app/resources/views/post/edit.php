@@ -10,7 +10,7 @@ get_header();
 
 <section class="post post--edit">
     <div class="row">
-        <h1 class="the-title"></h1>
+        <h1 class="the-title animate__animated animate__slideInUp"></h1>
     </div>
 </section>
 

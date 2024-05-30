@@ -56,12 +56,6 @@ class Web {
             ],
             [
                 'method' => 'GET',
-                'path' => '/user/{id}',
-                'name' => 'user',
-                'action' => [UserController::class, 'show']
-            ],
-            [
-                'method' => 'GET',
                 'path' => '/user/{id}/edit',
                 'name' => 'edit_user',
                 'action' => [UserController::class, 'edit']
@@ -77,6 +71,12 @@ class Web {
                 'path' => '/user',
                 'name' => 'store_user',
                 'action' => [UserController::class, 'store']
+            ],
+            [
+                'method' => 'GET',
+                'path' => '/user/{id}',
+                'name' => 'user',
+                'action' => [UserController::class, 'show']
             ],
             [
                 'method' => 'PUT',
@@ -106,12 +106,6 @@ class Web {
             ],
             [
                 'method' => 'GET',
-                'path' => '/post/{id}',
-                'name' => 'post',
-                'action' => [PostController::class, 'show']
-            ],
-            [
-                'method' => 'GET',
                 'path' => '/post/{id}/edit',
                 'name' => 'edit_post',
                 'action' => [PostController::class, 'edit']
@@ -127,6 +121,12 @@ class Web {
                 'path' => '/post',
                 'name' => 'store_post',
                 'action' => [PostController::class, 'store']
+            ],
+            [
+                'method' => 'GET',
+                'path' => '/post/{id}',
+                'name' => 'post',
+                'action' => [PostController::class, 'show']
             ],
             [
                 'method' => 'PUT',

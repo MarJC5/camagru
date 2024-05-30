@@ -1,3 +1,63 @@
+.flex {
+    display: flex;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.flex-nowrap {
+    flex-wrap: nowrap;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-start {
+    justify-content: flex-start;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.item-start {
+    align-items: flex-start;
+}
+
+.item-center {
+    align-items: center;
+}
+
+.item-end {
+    align-items: flex-end;
+}
+
+.content-start {
+    align-content: flex-start;
+}
+
+.content-center {
+    align-content: center;
+}
+
+.content-end {
+    align-content: flex-end;
+}
+
 /* Base styles for a two-column layout */
 .two-columns {
     display: flex;

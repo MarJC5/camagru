@@ -14,7 +14,7 @@ $httpCode = http_response_code();
 
 <section class="page page--error">
     <div class="row">
-        <h1 class="the-title">
+        <h1 class="the-title animate__animated animate__slideInUp">
             Error <?= $httpCode ?>: <?= getHttpStatusMessage($httpCode); ?>
         </h1>
     </div>

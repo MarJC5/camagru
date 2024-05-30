@@ -11,7 +11,7 @@ abstract class Model
     protected $query;
     protected $data;
 
-    public function __construct(int $id = null)
+    public function __construct(?int $id = null)
     {
         $this->db = new Database();
         
@@ -93,7 +93,7 @@ abstract class Model
     {
         $instance = new static();
         $sql = "SELECT COUNT(*) FROM {$instance->table}";
-        return $instance->db->query($sql);
+        return $instance->db->query($sql)[0]['COUNT(*)'];
     }
 
     protected function quote($value)

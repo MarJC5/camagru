@@ -10,7 +10,7 @@ class Page extends Model
 
     protected $fillable = ['title', 'content', 'slug'];
 
-    public function __construct(int $id = null)
+    public function __construct(?int $id = null)
     {
         parent::__construct($id);
     }
@@ -28,5 +28,14 @@ class Page extends Model
     public function slug()
     {
         return $this->data->slug;
+    }
+
+    public function validation()
+    {
+        return [
+            'title' => 'required|min:3|max:255',
+            'content' => 'required',
+            'slug' => 'required|min:3|max:255|alpha_dash|unique:pages',
+        ];
     }
 }

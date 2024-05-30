@@ -3,6 +3,7 @@
 namespace Camagru\controllers;
 
 use Camagru\models\Post;
+use Camagru\middlewares\Validation;
 use Camagru\controllers\PageController;
 use function Camagru\loadView;
 
@@ -10,10 +11,14 @@ class PostController {
     public static function index() {
         $posts = Post::all();
 
+        // Count all posts
+        $total = Post::count();
+
         $_GET['title'] = 'Posts';
 
         echo loadView('post/index.php', [
             'posts' => $posts,
+            'total' => $total,
         ]);
     }
 
@@ -42,9 +47,30 @@ class PostController {
     }
 
     public static function create() {
+        $_GET['title'] = 'New page';
+
+        echo loadView('post/create.php');
     }
 
     public static function store() {
+        $validation = new Validation();
+        $page = new Post();
+
+        $data = $_POST;
+        $rules = $page->validation();
+
+        $validation->validate($data, $rules);
+
+        if ($validation->fails()) {
+            $errors = $validation->getErrors();
+
+            echo loadView('post/create.php', [
+                'errors' => $errors,
+                'old' => $data
+            ]);
+        }
+
+        $page->insert($data);
     }
 
     public static function update($id, $data) {

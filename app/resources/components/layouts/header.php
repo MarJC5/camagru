@@ -20,6 +20,7 @@ use function Camagru\public_url;
     <link rel="icon" href="<?= public_url('/favicon/favicon.ico') ?>" type="image/x-icon">
     <!-- CSS -->
     <link href="<?= css_url('app.css') ?>" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
