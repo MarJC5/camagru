@@ -2,6 +2,8 @@
 
 namespace Camagru\models;
 
+use Camagru\models\Model;
+
 class Comment extends Model
 {
     protected $table = 'comments';

@@ -14,6 +14,12 @@ abstract class Model
         $this->db = new Database();
     }
 
+    public static function where($column, $value)
+    {
+        $model = new static();
+        return $model->get($model->table, ['*'], ["{$column} = '{$value}'"]);
+    }
+
     protected function get($tableName, $columns = ['*'], $where = [])
     {
         $sql = "SELECT " . implode(', ', $columns) . " FROM {$tableName}";

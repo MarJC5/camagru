@@ -2,6 +2,8 @@
 
 namespace Camagru\models;
 
+use Camagru\models\Model;
+
 class Page extends Model
 {
     protected $table = 'pages';

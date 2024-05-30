@@ -2,6 +2,8 @@
 
 namespace Camagru\models;
 
+use Camagru\models\Model;
+
 class Post extends Model
 {
     protected $table = 'posts';

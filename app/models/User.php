@@ -2,6 +2,8 @@
 
 namespace Camagru\models;
 
+use Camagru\models\Model;
+
 class User extends Model
 {
     protected $table = 'users';

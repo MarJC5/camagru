@@ -9,7 +9,9 @@ get_header();
 ?>
 
 <section class="page page--show">
-    <h1 class="the-title">Page show</h1>
+    <div class="row">
+        <h1 class="the-title">Page show</h1>
+    </div>
 </section>
 
 <?php get_footer(); ?>
