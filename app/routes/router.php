@@ -4,7 +4,7 @@ namespace Camagru\routes;
 
 use Camagru\routes\Web;
 use Camagru\routes\Api;
-use Camagru\controllers\PageController;
+use Camagru\core\controllers\PageController;
 
 class Router
 {

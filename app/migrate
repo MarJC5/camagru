@@ -1,13 +1,13 @@
 #!/usr/bin/env php
 <?php
 
-// Register the Composer autoloader...
+// Register the autoloader...
 require_once __DIR__ . '/helpers/autoloader.php';
 
-use Camagru\database\migrations\Runner;
-use Camagru\database\Database;
+use Camagru\core\database\migrations\Runner;
+use Camagru\core\database\Database;
 
-$migrationsPath = __DIR__ . '/database/migrations';
+$migrationsPath = __DIR__ . '/core/database/migrations';
 
 // Instantiate the database connection
 $db = new Database();

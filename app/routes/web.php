@@ -2,10 +2,10 @@
 
 namespace Camagru\routes;
 
-use Camagru\controllers\PageController;
-use Camagru\controllers\PostController;
-use Camagru\controllers\UserController;
-use Camagru\controllers\AuthController;
+use Camagru\core\controllers\PageController;
+use Camagru\core\controllers\PostController;
+use Camagru\core\controllers\UserController;
+use Camagru\core\controllers\AuthController;
 
 class Web {
     public static function routes() {

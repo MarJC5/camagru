@@ -1,14 +1,14 @@
 #!/usr/bin/env php
 <?php
 
-// Register the Composer autoloader...
+// Register the autoloader...
 require_once __DIR__ . '/helpers/autoloader.php';
 
-use Camagru\database\seeders\PageSeeders;
-use Camagru\database\seeders\PostSeeders;
-use Camagru\database\seeders\UserSeeders;
-use Camagru\database\seeders\LikeSeeders;
-use Camagru\database\seeders\CommentSeeders;
+use Camagru\core\database\seeders\PageSeeders;
+use Camagru\core\database\seeders\PostSeeders;
+use Camagru\core\database\seeders\UserSeeders;
+use Camagru\core\database\seeders\LikeSeeders;
+use Camagru\core\database\seeders\CommentSeeders;
 
 // Instantiate the database connection
 $seeders = [

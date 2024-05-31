@@ -2,7 +2,7 @@
 
 namespace Camagru\routes;
 
-use Camagru\controllers\PostController;
+use Camagru\core\controllers\PostController;
 
 class Api {
     public static function routes() {
