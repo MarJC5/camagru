@@ -18,6 +18,14 @@ footer {
     padding: var(--space-4);
 }
 
+.hidden {
+    display: none;
+}
+
+.shadow {
+    box-shadow: var(--shadow);
+}
+
 .h-screen {
     height: 100vh;
 }

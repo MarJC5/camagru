@@ -117,6 +117,14 @@ function get_footer() {
     echo load_template(components_path('layouts/footer.php'));
 }
 
+/**
+ * Load and display the component.
+ */
+function partials($path, $data = []) {
+    extract($data);
+    echo load_template(components_path($path));
+}
+
 function loadView($path, $data = []) {
     extract($data);
     ob_start();

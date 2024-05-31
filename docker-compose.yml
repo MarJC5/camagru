@@ -10,6 +10,7 @@ services:
     container_name: nginx_camagru
     ports:
       - '80:80'
+      - '443:443'
     command: nginx -g 'daemon off;'
     volumes:
       # load nginx config
@@ -18,6 +19,9 @@ services:
       - ./docker/services/nginx/config/php.conf:/etc/nginx/php.conf
       # mount your nginx project virtual hosts
       - ./docker/services/nginx/sites-enabled:/etc/nginx/sites-enabled
+      # mount ssl scripts
+      - ./docker/services/nginx/scripts/ssl.sh:/ssl.sh
+      - ./docker/services/nginx/ssl:/etc/nginx/ssl
       # mount your project directories to connect them with nginx
       - ./app/:/home/dev/app/
       # mount your system's local timezone settings (for WSL2, Linux distros)

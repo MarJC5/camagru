@@ -1,0 +1,29 @@
+
+.screenshot-image {
+    border-radius: var(--radius);
+    background: white;
+    box-shadow: var(--shadow);
+  }
+  
+  .display-cover {
+    position: relative;
+  }
+
+  video {
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius);
+  }
+
+  .camera {
+    overflow: hidden;
+    z-index: 1;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+
+  .controls {
+    display: flex;
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+  }
