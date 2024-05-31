@@ -95,6 +95,13 @@ function images_url($path = '') {
 }
 
 /**
+ * Get mail path
+ */
+function mail_path($path = '') {
+    return app_path('mail' . ($path ? DIRECTORY_SEPARATOR . $path : $path));
+}
+
+/**
  * Load and return the content of a layout file (e.g., header, footer).
  */
 function load_template($path) {

@@ -29,6 +29,12 @@ class Web {
                 'action' => [AuthController::class, 'login']
             ],
             [
+                'method' => 'GET',
+                'path' => '/auth/register',
+                'name' => 'register_user',
+                'action' => [AuthController::class, 'register']
+            ],
+            [
                 'method' => 'POST',
                 'path' => '/auth/login',
                 'name' => 'connect_user',
@@ -40,12 +46,7 @@ class Web {
                 'name' => 'create_user',
                 'action' => [AuthController::class, 'create']
             ],
-            [
-                'method' => 'GET',
-                'path' => '/auth/register',
-                'name' => 'register_user',
-                'action' => [AuthController::class, 'register']
-            ],
+            
             [
                 'method' => 'GET',
                 'path' => '/auth/logout',
