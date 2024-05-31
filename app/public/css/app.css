@@ -16,6 +16,8 @@
 @import "molecules/grid.css";
 @import "molecules/flex-columns.css";
 @import "molecules/forms.css";
+@import "molecules/alerts.css";
+
 
 /**
 * ORGANISMS

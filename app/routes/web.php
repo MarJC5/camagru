@@ -168,6 +168,24 @@ class Web {
             ],
             [
                 'method' => 'GET',
+                'path' => '/{slug}/edit',
+                'name' => 'edit_page',
+                'action' => [PageController::class, 'edit']
+            ],
+            [
+                'method' => 'GET',
+                'path' => '/page/create',
+                'name' => 'create_page',
+                'action' => [PageController::class, 'create']
+            ],
+            [
+                'method' => 'POST',
+                'path' => '/page',
+                'name' => 'store_page',
+                'action' => [PageController::class, 'store']
+            ],
+            [
+                'method' => 'GET',
                 'path' => '/error/{code}',
                 'name' => 'error',
                 'action' => [PageController::class, 'error']

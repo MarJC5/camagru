@@ -15,6 +15,6 @@ use function Camagru\js_url;
     </div>
 </footer>
 <!-- JS -->
-<script src="<?= js_url('app.js') ?>" type="text/javascript"></script>
+<script src="<?= js_url('app.js') ?>" type="module"></script>
 </body>
 </html>

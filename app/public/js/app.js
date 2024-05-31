@@ -1,3 +1,5 @@
+import './hooks/alert.js';
+
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Hello World!');
+    console.log('Hello, Camagru!');
 });

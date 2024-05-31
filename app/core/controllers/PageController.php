@@ -2,6 +2,8 @@
 
 namespace Camagru\core\controllers;
 
+use Camagru\helpers\Session;
+use Camagru\routes\Router;
 use Camagru\core\models\Page;
 use Camagru\core\middlewares\Validation;
 use function Camagru\loadView;
@@ -68,13 +70,19 @@ class PageController {
         if ($validation->fails()) {
             $errors = $validation->getErrors();
 
-            echo loadView('page/create.php', [
-                'errors' => $errors,
-                'old' => $data
-            ]);
-        }
+            Session::set('error', $errors);
+            Router::redirect('create_page');
+        } else {
+            $status = $page->insert($data);
 
-        $page->insert($data);
+            if ($status) {
+                Session::set('success', 'Page created successfully');
+                Router::redirect('page', ['slug' => $data['slug']]);
+            } else {
+                Session::set('error', 'An error occurred while creating the page');
+                Router::redirect('create_page');
+            }
+        }
     }
 
     public static function update($slug, $data) {
@@ -84,7 +92,26 @@ class PageController {
             return self::error(404);
         }
 
-        $page->update($data);
+        $validation = new Validation();
+        $rules = $page->validation();
+        $validation->validate($data, $rules);
+
+        if ($validation->fails()) {
+            $errors = $validation->getErrors();
+
+            Session::set('error', $errors);
+            Router::redirect('edit_page', ['slug' => $slug]);
+        } else {
+            $status = $page->update($data);
+            
+            if ($status) {
+                Session::set('success', 'Page updated successfully');
+                Router::redirect('page', ['slug' => $slug]);
+            } else {
+                Session::set('error', 'An error occurred while updating the page');
+                Router::redirect('edit_page', ['slug' => $slug]);
+            }
+        }
     }
 
     public static function error($code) {
@@ -104,6 +131,12 @@ class PageController {
             return self::error(404);
         }
 
-        $page->delete();
+        $status = $page->delete();
+
+        if ($status) {
+            Session::set('success', 'Page deleted successfully');
+        } else {
+            Session::set('error', 'An error occurred while deleting the page');
+        }
     }
 }

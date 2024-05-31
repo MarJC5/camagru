@@ -43,10 +43,10 @@ class AuthController
 
         if ($user && password_verify($password, $user->password())) {
             Session::set('user', $user->id());
-            Session::set('username', $username);
+            Session::set('success', 'Welcome back, ' . $username);
             Router::redirect('profile');
         } else {
-            Session::flash('error', 'Invalid username or password');
+            Session::set('error', 'Invalid username or password');
             Router::redirect('login');
         }
     }
@@ -65,17 +65,17 @@ class AuthController
         $validation->validate($data, $rules);
 
         if ($validation->fails()) {
-            Session::flash('errors', $validation->getErrors());
+            Session::set('errors', $validation->getErrors());
             Router::redirect('register_user');
         } else {
             $status = $user->insert($data);
 
             if (!$status) {
-                Session::flash('error', 'An error occurred while creating your account. Please try again.');
+                Session::set('error', 'An error occurred while creating your account. Please try again.');
                 Router::redirect('register_user');
             }
             
-            Session::flash('success', 'Account created successfully. Please login.');
+            Session::set('success', 'Account created successfully. Please login.');
             Router::redirect('login');
         }
     }

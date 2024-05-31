@@ -2,7 +2,11 @@
 
 namespace Camagru\core\controllers;
 
+use Camagru\helpers\Session;
+use Camagru\routes\Router;
 use Camagru\core\models\User;
+use Camagru\core\middlewares\Validation;
+use Camagru\core\controllers\PageController;
 use function Camagru\loadView;
 
 class UserController {
@@ -61,7 +65,26 @@ class UserController {
             return PageController::error(404);
         }
 
-        $user->update($data);
+        $validation = new Validation();
+        $rules = $user->validation();
+        $validation->validate($data, $rules);
+
+        if ($validation->fails()) {
+            $errors = $validation->getErrors();
+
+            Session::set('error', $errors);
+            Router::redirect('edit_user', ['id' => $id]);
+        } else {
+            $status = $user->update($data);
+
+            if ($status) {
+                Session::set('success', 'User updated successfully');
+                Router::redirect('user', ['id' => $id]);
+            } else {
+                Session::set('error', 'An error occurred while updating the user');
+                Router::redirect('edit_user', ['id' => $id]);
+            }
+        }
     }
 
     public static function delete($id) {
@@ -71,6 +94,12 @@ class UserController {
             return PageController::error(404);
         }
 
-        $user->delete();
+        $status = $user->delete();
+
+        if ($status) {
+            Session::set('success', 'User deleted successfully');
+        } else {
+            Session::set('error', 'An error occurred while deleting the user');
+        }
     }
 }

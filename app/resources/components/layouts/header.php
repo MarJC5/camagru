@@ -6,6 +6,7 @@ use Camagru\helpers\Env;
 use Camagru\helpers\Session;
 use Camagru\routes\Router;
 use function Camagru\css_url;
+use function Camagru\partials;
 use function Camagru\public_url;
 
 ?>
@@ -36,6 +37,7 @@ use function Camagru\public_url;
 </head>
 
 <body class="reddit-mono-regular" onload="document.body.style.opacity='1'">
+    <?= partials('ui/alert.php') ?>
     <header>
         <div class="row grid">
             <div id="logo">
