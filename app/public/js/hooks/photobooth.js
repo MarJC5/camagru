@@ -4,9 +4,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const video = document.querySelector("video");
   const canvas = document.querySelectorAll("canvas");
   const screenshotImage = document.querySelectorAll(".screenshot-image");
+  const screenshotsCountDisplay = document.querySelector(".screenshots-count");
   const buttons = [...controls.querySelectorAll("button")];
   let streamStarted = false;
   const MAX_SCREENSHOTS = 4; // Set the maximum number of screenshots
+
+  screenshotsCountDisplay.innerHTML = `0 / ${MAX_SCREENSHOTS}`;
 
   const [play, pause, screenshot] = buttons;
 
@@ -71,6 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
       screenshotImage[count].classList.remove("hidden");
       count++; // Increment the counter
       screenshotDataSet.setAttribute("data-screenshots", count);
+      screenshotsCountDisplay.innerHTML = `${count} / ${MAX_SCREENSHOTS}`;
     } else {
       alert(`Maximum of ${MAX_SCREENSHOTS} screenshots reached.`);
     }

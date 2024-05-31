@@ -14,7 +14,7 @@ use function Camagru\partials;
         </div>
 
         <div class="screenshots">
-            <h2 class="mt-0 mb-4">Shots</h2>
+            <h2 class="mt-0 mb-4 flex">Shots<span class="screenshots-count ml-4 text-small"></span></h2>
             <div id="screenshots-container" class="grid grid--2" data-screenshots="0">
                 <canvas class="hidden"></canvas>
                 <img class="screenshot-image screenshot-image--1 hidden w-full h-auto" alt="">
