@@ -10,6 +10,8 @@ abstract class AModel
     protected $table;
     protected $query;
     protected $data;
+    protected $fillable = [];
+    protected $hidden = [];
 
     public function __construct(?int $id = null)
     {
@@ -24,6 +26,19 @@ abstract class AModel
         }
 
         return $this;
+    }
+
+    public function id()
+    {
+        return $this->data->id;
+    }
+
+    public static function find($id)
+    {
+        $instance = new static();
+        $instance->query = "SELECT * FROM {$instance->table} WHERE id = " . $instance->db->quote($id);
+
+        return $instance->first();
     }
 
     public static function where($column, $value)
@@ -42,7 +57,16 @@ abstract class AModel
 
     public function get()
     {
-        return $this->db->query($this->query);
+        $data = $this->db->query($this->query);
+
+        // Hide hidden columns
+        foreach ($data as $key => $value) {
+            foreach ($this->hidden as $hidden) {
+                unset($data[$key][$hidden]);
+            }
+        }
+
+        return $data;
     }
 
     public function first()

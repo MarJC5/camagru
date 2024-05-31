@@ -5,10 +5,11 @@ namespace Camagru\routes;
 use Camagru\routes\Web;
 use Camagru\routes\Api;
 use Camagru\core\controllers\PageController;
+use function Camagru\loadView;
 
 class Router
 {
-    public static function route($requestUri, $requestMethod)
+    public static function route($requestUri, $requestMethod, $data = [])
     {
         $parsedUrl = parse_url($requestUri);
         $path = $parsedUrl['path'] ?? '/';
@@ -22,12 +23,11 @@ class Router
                 $params = self::extractParams($path, $route['path']);
                 // Capture the output of the controller action
                 $output = call_user_func_array($route['action'], $params);
-
                 if (strpos($path, '/api/') === 0) {
                     header('Content-Type: application/json');
                     echo json_encode($output);
                 } else {
-                    echo $output; // For regular web routes
+                    echo $output;
                 }
                 return;
             }
@@ -56,8 +56,9 @@ class Router
         return $params;
     }
 
-    public static function redirect($path)
+    public static function redirect($name, $params = [])
     {
+        $path = self::to($name, $params);
         header('Location: ' . $path);
         exit();
     }

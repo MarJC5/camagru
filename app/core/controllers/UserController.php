@@ -16,6 +16,16 @@ class UserController {
         ]);
     }
 
+    public static function profile() {
+        $user = new User($_SESSION['user']);
+
+        $_GET['title'] = $user->username();
+
+        echo loadView('user/profile.php', [
+            'user' => $user,
+        ]);
+    }
+
     public static function show($id) {
         $user = new User($id);
 
@@ -42,12 +52,6 @@ class UserController {
         echo loadView('user/edit.php', [
             'user' => $user,
         ]);
-    }
-
-    public static function create() {
-    }
-
-    public static function store() {
     }
 
     public static function update($id, $data) {

@@ -9,7 +9,7 @@ class User extends AModel
     protected $table = 'users';
 
     protected $fillable = ['username', 'email', 'password'];
-    protected $hidden = ['password'];
+    protected $hidden = [];
 
     public function __construct(?int $id = null)
     {
@@ -24,6 +24,11 @@ class User extends AModel
     public function email()
     {
         return $this->data->email;
+    }
+
+    public function password()
+    {
+        return $this->data->password;
     }
 
     public function validation()

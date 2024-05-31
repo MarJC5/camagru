@@ -10,6 +10,8 @@ get_header();
 
 <section class="auth auth--login">
     <div class="row">
+        <h1>Login</h1>
+        <?= $form ?>
     </div>
 </section>
 

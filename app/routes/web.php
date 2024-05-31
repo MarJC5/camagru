@@ -29,9 +29,21 @@ class Web {
                 'action' => [AuthController::class, 'login']
             ],
             [
+                'method' => 'POST',
+                'path' => '/auth/login',
+                'name' => 'connect_user',
+                'action' => [AuthController::class, 'connect']
+            ],
+            [
+                'method' => 'POST',
+                'path' => '/auth/register',
+                'name' => 'create_user',
+                'action' => [AuthController::class, 'create']
+            ],
+            [
                 'method' => 'GET',
                 'path' => '/auth/register',
-                'name' => 'register',
+                'name' => 'register_user',
                 'action' => [AuthController::class, 'register']
             ],
             [
@@ -50,6 +62,12 @@ class Web {
         return [
             [
                 'method' => 'GET',
+                'path' => '/profile',
+                'name' => 'profile',
+                'action' => [UserController::class, 'profile']
+            ],
+            [
+                'method' => 'GET',
                 'path' => '/users',
                 'name' => 'users',
                 'action' => [UserController::class, 'index']
@@ -59,18 +77,6 @@ class Web {
                 'path' => '/user/{id}/edit',
                 'name' => 'edit_user',
                 'action' => [UserController::class, 'edit']
-            ],
-            [
-                'method' => 'GET',
-                'path' => '/user/create',
-                'name' => 'create_user',
-                'action' => [UserController::class, 'create']
-            ],
-            [
-                'method' => 'POST',
-                'path' => '/user',
-                'name' => 'store_user',
-                'action' => [UserController::class, 'store']
             ],
             [
                 'method' => 'GET',

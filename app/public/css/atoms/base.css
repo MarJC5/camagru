@@ -42,3 +42,7 @@ span.anchor {
     top: -130px;
     visibility: hidden;
 }
+
+.reset-ul {
+    list-style-type: none;
+}

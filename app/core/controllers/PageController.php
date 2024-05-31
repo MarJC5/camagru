@@ -97,4 +97,13 @@ class PageController {
         ]);
     }
 
+    public static function delete($slug) {
+        $page = Page::where('slug', $slug)->first();
+
+        if (empty($page)) {
+            return self::error(404);
+        }
+
+        $page->delete();
+    }
 }

@@ -1,6 +1,6 @@
 <?php 
 
-namespace Camagru\views\auth;
+namespace Camagru\views\user;
 
 use function Camagru\get_header;
 use function Camagru\get_footer;
@@ -8,10 +8,9 @@ use function Camagru\get_footer;
 get_header();
 ?>
 
-<section class="auth auth--register">
+<section class="user user--profile">
     <div class="row">
-        <h1>Register</h1>
-        <?= $form ?>
+        <h1 class="the-title">@<?= $user->username() ?></h1>
     </div>
 </section>
 
