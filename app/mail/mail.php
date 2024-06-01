@@ -7,13 +7,18 @@ use function Camagru\mail_path;
 
 class Mail {
     public static function send($to, $subject, $template, $data) {
-        $headers = 'From: <' . Env::get('MAIL_FROM_ADDRESS') . ">\r\n";
-        $headers .= 'Reply-To: ' . Env::get('MAIL_FROM_ADDRESS') . "\r\n";
-        $headers .= 'X-Mailer: PHP/' . phpversion() . "\r\n";
+        $displayName = Env::get('MAIL_FROM_NAME');
+        $mailFrom = Env::get('MAIL_FROM_ADDRESS');
+        
+        $headers = "From: {$displayName} <{$mailFrom}>\r\n";
+        $headers .= "Reply-To: {$mailFrom}\r\n";
+        $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
         $headers .= "MIME-Version: 1.0\r\n";
-        $headers .= "Content-type: text/html; charset=UTF-8\r\n";
+        $headers .= "Content-type: text/html;charset=UTF-8" . "\r\n";
 
-        if (!mail($to, $subject, self::template($template, $data), $headers)) {
+        $content = self::template($template, $data);
+
+        if (!mail($to, $subject, $content, $headers)) {
             return false;
         }
 
@@ -21,17 +26,15 @@ class Mail {
     }
 
     public static function template($template, $data) {
-        $template = mail_path('/templates/' . $template . '.html');
-        if (!file_exists($template)) {
+        $templatePath = mail_path('/templates/' . $template . '.php');
+        if (!file_exists($templatePath)) {
             return false;
         }
-        $template = file_get_contents($template);
+        $templateContent = file_get_contents($templatePath);
         foreach ($data as $key => $value) {
-            $template = str_replace('{{' . $key . '}}', htmlspecialchars($value, ENT_QUOTES, 'UTF-8'), $template);
+            $templateContent = str_replace('{{' . $key . '}}', htmlspecialchars($value, ENT_QUOTES, 'UTF-8'), $templateContent);
         }
     
-        return $template;
-
-        return $template;
+        return $templateContent;
     }
 }

@@ -47,4 +47,10 @@ class Session {
             return $user ? true : false;
         }
     }
+
+    public static function currentUser() {
+        if (self::has('user')) {
+            return new User(self::get('user'));
+        }
+    }
 }

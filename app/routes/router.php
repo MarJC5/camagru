@@ -6,12 +6,13 @@ use Camagru\routes\Web;
 use Camagru\routes\Api;
 use Camagru\core\controllers\PageController;
 use Camagru\core\database\Runner;
+use Camagru\helpers\Logger;
 
 use function Camagru\loadView;
 
 class Router
 {
-    public static function route($requestUri, $requestMethod, $data = [])
+    public static function route($requestUri, $requestMethod)
     {
         // Check if the application has been migrated
         if (!Runner::isMigrated() && $requestUri !== '/setup') {
@@ -24,16 +25,18 @@ class Router
 
         $parsedUrl = parse_url($requestUri);
         $path = $parsedUrl['path'] ?? '/';
+        $query = $parsedUrl['query'] ?? ''; // Capture the query part
+
         $method = $requestMethod;
-
-        $routes = Web::routes();
-        $routes = array_merge($routes, Api::routes());
-
+        $routes = array_merge(Web::routes(), Api::routes());
+        
         foreach ($routes as $route) {
             if ($method == $route['method'] && self::matchRoute($path, $route['path'])) {
-                $params = self::extractParams($path, $route['path']);
+                $params = self::extractParams($path, $route['path'] . $query);
+                $params = array_merge($params, self::extractQueryParams($query));
+                
                 // Capture the output of the controller action
-                $output = call_user_func_array($route['action'], $params);
+                $output = call_user_func_array($route['action'], [$params]);
                 if (strpos($path, '/api/') === 0) {
                     header('Content-Type: application/json');
                     echo json_encode($output);
@@ -45,7 +48,7 @@ class Router
         }
 
         // If no route is matched, show a 404 page
-        PageController::error(404);
+        Router::redirect('error', ['code' => 404]);
     }
 
     private static function matchRoute($path, $routePath)
@@ -64,6 +67,13 @@ class Router
             array_shift($matches);  // Remove the full match from the beginning
             $params = array_values($matches);
         }
+        return $params;
+    }
+
+    private static function extractQueryParams($queryParams)
+    {
+        $params = [];
+        parse_str($queryParams, $params);
         return $params;
     }
 
@@ -100,8 +110,7 @@ class Router
 
     public static function to($name, $params = [])
     {
-        $routes = Web::routes();
-        $routes = array_merge($routes, Api::routes());
+        $routes = array_merge(Web::routes(), Api::routes());
 
         foreach ($routes as $route) {
             if (isset($route['name']) && $route['name'] == $name) {
@@ -109,6 +118,7 @@ class Router
                 foreach ($params as $key => $value) {
                     $path = str_replace('{' . $key . '}', $value, $path);
                 }
+
                 return $path;
             }
         }

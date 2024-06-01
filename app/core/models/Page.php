@@ -8,7 +8,7 @@ class Page extends AModel
 {
     protected $table = 'pages';
 
-    protected $fillable = ['title', 'content', 'slug'];
+    protected $fillable = ['title', 'content', 'slug', 'thumbnail'];
 
     public function __construct(?int $id = null)
     {

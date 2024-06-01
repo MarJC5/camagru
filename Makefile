@@ -40,6 +40,11 @@ delete:
 	@echo "${RED}Deleting containers...${RESET}"
 	@${DOCKER} down -v --remove-orphans
 
+rebuild-no-cache:
+	@echo "${GREEN}Rebuilding containers...${RESET}"
+	@${DOCKER} build --no-cache
+	@${DOCKER} up -d --remove-orphans --build
+
 nginx:
 	@echo "${GREEN}Running nginx ...${RESET}"
 	@${DOCKER} exec nginx sh

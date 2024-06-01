@@ -100,10 +100,12 @@ abstract class AModel
     public function update($data)
     {
         $set = [];
-        foreach ($data as $column => $value) {
-            $set[] = "{$column} = " . $this->db->quote($value);
+        foreach ($data as $key => $value) {
+            $set[] = "{$key} = " . $this->db->quote($value);
         }
-        $sql = "UPDATE {$this->table} SET " . implode(', ', $set) . " WHERE " . $this->query;
+
+        $set = implode(', ', $set);
+        $sql = "UPDATE {$this->table} SET {$set} WHERE id = " . $this->id();
         return $this->db->execute($sql);
     }
 

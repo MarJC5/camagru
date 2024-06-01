@@ -30,7 +30,8 @@ class AuthController
 
     public static function logout()
     {
-        Session::destroy();
+        Session::clear();
+        Session::set('success', 'You have been logged out');
         Router::redirect('home');
     }
 

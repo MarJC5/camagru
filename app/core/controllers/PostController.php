@@ -28,7 +28,8 @@ class PostController {
         $post = new Post($id);
 
         if (empty($post)) {
-            return PageController::error(404);
+            Session::set('error', 'Invalid post');
+            Router::redirect('error', ['code' => 404]);
         }
 
         echo loadView('post/show.php', [
@@ -40,7 +41,8 @@ class PostController {
         $post = new Post($id);
 
         if (empty($post)) {
-            return PageController::error(404);
+            Session::set('error', 'Invalid post');
+            Router::redirect('error', ['code' => 404]);
         }
 
         echo loadView('post/edit.php', [
@@ -85,7 +87,8 @@ class PostController {
         $post = new Post($id);
 
         if (empty($post)) {
-            return PageController::error(404);
+            Session::set('error', 'Invalid post');
+            Router::redirect('error', ['code' => 404]);
         }
 
         $validation = new Validation();
@@ -114,7 +117,8 @@ class PostController {
         $post = new Post($id);
 
         if (empty($post)) {
-            return PageController::error(404);
+            Session::set('error', 'Invalid post');
+            Router::redirect('error', ['code' => 404]);
         }
 
         $status = $post->delete();

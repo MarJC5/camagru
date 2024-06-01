@@ -63,6 +63,25 @@ class Web {
     private static function users() {
         return [
             [
+                'method' => 'POST',
+                'path' => '/profile/resend-email-validation',
+                'name' => 'resend_email_validation',
+                'action' => [UserController::class, 'resend_email_validation']
+            ],
+            [
+                'method' => 'GET',
+                'path' => '/profile/validation-needed',
+                'name' => 'validation_needed',
+                'action' => [UserController::class, 'validation_needed']
+            ],
+            [
+                'method' => 'GET',
+                'path' => '/profile/validate',
+                'query' => 'token',
+                'name' => 'validate_email',
+                'action' => [UserController::class, 'validate']
+            ],
+            [
                 'method' => 'GET',
                 'path' => '/profile',
                 'name' => 'profile',
@@ -97,7 +116,7 @@ class Web {
                 'path' => '/user/{id}',
                 'name' => 'delete_user',
                 'action' => [UserController::class, 'delete']
-            ]
+            ],
         ];
     }
 

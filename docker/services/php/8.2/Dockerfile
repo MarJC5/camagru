@@ -18,7 +18,7 @@ RUN mv wp-cli.phar /usr/local/bin/wp
 RUN docker-php-ext-install pdo pdo_mysql
 
 RUN apk update && apk upgrade && \
-    apk add --no-cache bash git openssh
+    apk add --no-cache bash git openssh curl wget zip unzip vim
 
 RUN apk add --no-cache \
       vim \

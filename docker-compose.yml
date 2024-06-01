@@ -31,11 +31,9 @@ services:
     depends_on:
       - php_8_2
 
-  mailhog:
-    image: mailhog/mailhog
-    container_name: mailhog_camagru
-    logging:
-      driver: 'none'
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: mailpit_camagru
     ports:
       - '1025:1025'
       - '8025:8025'

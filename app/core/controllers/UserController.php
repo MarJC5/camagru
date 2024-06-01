@@ -6,7 +6,8 @@ use Camagru\helpers\Session;
 use Camagru\routes\Router;
 use Camagru\core\models\User;
 use Camagru\core\middlewares\Validation;
-use Camagru\core\controllers\PageController;
+use Camagru\helpers\Logger;
+
 use function Camagru\loadView;
 
 class UserController {
@@ -21,9 +22,23 @@ class UserController {
     }
 
     public static function profile() {
+        if (!Session::isLogged()) {
+            Router::redirect('login');
+        }
+
         $user = new User($_SESSION['user']);
 
-        $_GET['title'] = $user->username();
+        if (empty($user)) {
+            Session::set('error', 'Invalid user');
+            Router::redirect('error', ['code' => 404]);
+        }
+
+        // Is user validated?
+        if (!$user->is_validated()) {
+            return self::validation_needed();
+        }
+
+        $_GET['title'] = '@' . $user->username();
 
         echo loadView('user/profile.php', [
             'user' => $user,
@@ -34,10 +49,11 @@ class UserController {
         $user = new User($id);
 
         if (empty($user)) {
-            return PageController::error(404);
+            Session::set('error', 'Invalid user');
+            Router::redirect('error', ['code' => 404]);
         }
 
-        $_GET['title'] = $user->username();
+        $_GET['title'] = '@' . $user->username();
 
         echo loadView('user/show.php', [
             'user' => $user,
@@ -48,10 +64,11 @@ class UserController {
         $user = new User($id);
 
         if (empty($user)) {
-            return PageController::error(404);
+            Session::set('error', 'Invalid user');
+            Router::redirect('error', ['code' => 404]);
         }
 
-        $_GET['title'] = $user->username() . ' - Edit';
+        $_GET['title'] = '@' . $user->username() . ' - Edit';
 
         echo loadView('user/edit.php', [
             'user' => $user,
@@ -62,7 +79,8 @@ class UserController {
         $user = new User($id);
 
         if (empty($user)) {
-            return PageController::error(404);
+            Session::set('error', 'Invalid user');
+            Router::redirect('error', ['code' => 404]);
         }
 
         $validation = new Validation();
@@ -91,7 +109,8 @@ class UserController {
         $user = new User($id);
 
         if (empty($user)) {
-            return PageController::error(404);
+            Session::set('error', 'Invalid user');
+            Router::redirect('error', ['code' => 404]);
         }
 
         $status = $user->delete();
@@ -101,5 +120,54 @@ class UserController {
         } else {
             Session::set('error', 'An error occurred while deleting the user');
         }
+    }
+
+    public static function validate($params) {
+
+        if (!isset($params['token'])) {
+            Session::set('error', 'Invalid token');
+            Router::redirect('home');
+        }
+
+        $token = $params['token'];
+
+        if (empty($token)) {
+            Router::redirect('error', ['code' => 404]);
+        }
+
+        $user = User::where('token', $token)->first();
+
+        if (empty($user)) {
+            Session::set('error', 'Invalid user');
+            Router::redirect('error', ['code' => 404]);
+        }
+
+        $user->validate($token);
+    }
+
+    public static function validation_needed() {
+        $_GET['title'] = 'Validation needed';
+
+        echo loadView('user/validate.php', [
+            'token' => Session::currentUser()->token(),
+        ]);
+    }
+
+    public static function resend_email_validation() {
+        $user = Session::currentUser();
+
+        if (empty($user)) {
+            Session::set('error', 'Invalid user');
+            Router::redirect('error', ['code' => 404]);
+        }
+
+        if (!$user->resend_email_validation())
+        {
+            Session::set('error', 'An error occurred while sending the validation email');
+            Router::redirect('profile');
+        }
+
+        Session::set('success', 'Validation email sent successfully');
+        Router::redirect('profile');
     }
 }
