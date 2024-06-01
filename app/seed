@@ -1,6 +1,12 @@
 #!/usr/bin/env php
 <?php
 
+namespace Camagru;
+
+// Define the base path of the application one level above the public directory
+define('BASE_PATH', dirname(__DIR__) . '/app');
+require_once __DIR__ . '/main.php';
+
 // Register the autoloader...
 require_once __DIR__ . '/helpers/autoloader.php';
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace Camagru\resources\components\layouts;
+namespace Camagru\views\page;
 
+use Camagru\helpers\CSRF;
 use Camagru\helpers\Env;
-use Camagru\helpers\Session;
 use Camagru\routes\Router;
-use function Camagru\css_url;
-use function Camagru\partials;
 use function Camagru\public_url;
+use function Camagru\css_url;
+use function Camagru\js_url;
 
 ?>
 
@@ -37,7 +37,6 @@ use function Camagru\public_url;
 </head>
 
 <body class="reddit-mono-regular" onload="document.body.style.opacity='1'">
-    <?= partials('ui/alert.php') ?>
     <header>
         <div class="row flex justify-between">
             <div id="logo">
@@ -45,18 +44,37 @@ use function Camagru\public_url;
                     <?= Env::get('APP_NAME', 'Camagru') ?>
                 </a>
             </div>
-            <div class="nav">
-                <ul class="flex justify-end reset-ul gap-4">
-                    <li><a href="<?= Router::to('posts') ?>">Feed</a></li>
-                    <?php if (Session::isLogged()) : ?>
-                        <li><a href="<?= Router::to('profile') ?>">Profile</a></li>
-                        <li><a href="<?= Router::to('logout') ?>">Logout</a></li>
-                    <?php else : ?>
-                        <li><a href="<?= Router::to('login') ?>">Login</a></li>
-                        <li><a href="<?= Router::to('register_user') ?>">Register</a></li>
-                    <?php endif; ?>
-                </ul>
-            </div>
-        </div>
     </header>
     <main>
+
+        <section class="page page--install">
+            <div class="row">
+                <h1 class="the-title">Install</h1>
+                <div class="the-content w-half">
+                    <p>Camagru is not installed. Please run the following command to install the application:</p>
+                    <pre class="mb-4 text-small text-bold">./migrate run</pre>
+                    <pre class="text-small text-bold">./seed</pre>
+
+                    <p>Or you can click the button below to install the application:</p>
+                    <form action="<?= Router::to('setup') ?>" method="POST">
+                        <?= CSRF::field() ?>
+                        <input type="hidden" name="install" value="1">
+                        <button type="submit" class="button">Install</button>
+                    </form>
+
+                    <p>After running the above commands, you can access the application.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    <footer>
+        <div class="row grid">
+            <p>&copy; <?= date("Y"); ?> <?= Env::get('APP_NAME', 'Camagru') ?></p>
+        </div>
+    </footer>
+    <!-- JS -->
+    <script src="<?= js_url('app.js') ?>" type="module"></script>
+</body>
+
+</html>

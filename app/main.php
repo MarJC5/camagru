@@ -10,6 +10,13 @@ function app_path($path = '') {
 }
 
 /**
+ * Log path
+ */
+function log_path($path = '') {
+    return app_path('logs' . ($path ? DIRECTORY_SEPARATOR . $path : $path));
+}
+
+/**
  * Get the absolute path to the public directory.
  */
 function public_path($path = '') {
@@ -106,7 +113,7 @@ function mail_path($path = '') {
  */
 function load_template($path) {
     ob_start();
-    include $path;
+    include_once $path;
     return ob_get_clean();
 }
 
@@ -135,7 +142,7 @@ function partials($path, $data = []) {
 function loadView($path, $data = []) {
     extract($data);
     ob_start();
-    include views_path($path);
+    include_once views_path($path);
     return ob_get_clean();
 }
 

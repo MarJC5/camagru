@@ -4,7 +4,7 @@ namespace Camagru\core\database;
 
 use Camagru\core\database\Database;
 
-abstract class Migration {
+class Migration {
     protected $db;
 
     public function __construct() {

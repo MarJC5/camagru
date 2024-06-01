@@ -5,7 +5,9 @@ namespace Camagru\core\controllers;
 use Camagru\helpers\Session;
 use Camagru\routes\Router;
 use Camagru\core\models\Page;
+use Camagru\core\database\Runner;
 use Camagru\core\middlewares\Validation;
+use Camagru\core\database\Database;
 use function Camagru\loadView;
 
 class PageController {
@@ -122,6 +124,52 @@ class PageController {
         echo loadView('page/error.php', [
             'title' => $code
         ]);
+    }
+
+    public static function install()
+    {
+        if (Runner::isMigrated()) {
+            Router::redirect('home');
+        }
+
+        echo loadView('page/install.php');
+    }
+
+    public static function setup() {
+        $data = $_POST;
+
+        // Check if the application has been migrated
+        if (Runner::isMigrated()) {
+            Session::set('error', 'Application has already been migrated');
+            Router::redirect('home');
+        }
+        
+        if (isset($data['install']) && Runner::isMigrated() === false) {
+            $db = new Database();
+            $db->trackMigration();
+
+            $runner = new Runner($db);
+            $runner->run();
+
+            $seeders = [
+                'UserSeeders',
+                'PageSeeders',
+                'PostSeeders',
+                'CommentSeeders',
+                'LikeSeeders',
+            ];
+    
+            foreach ($seeders as $seeder) {
+                $seeder = 'Camagru\\core\\database\\seeders\\' . $seeder;
+                $seeder = new $seeder();
+                if (method_exists($seeder, 'run')) {
+                    $seeder->run();
+                }
+            }
+
+            Session::set('success', 'Database migration successful');
+            Router::redirect('home');
+        }
     }
 
     public static function delete($slug) {

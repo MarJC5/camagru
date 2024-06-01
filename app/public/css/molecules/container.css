@@ -63,12 +63,30 @@ footer {
     width: 50%;
 }
 
+@media (max-width: 768px) {
+    .w-half {
+        width: 100%;
+    }
+}
+
 .w-third {
     width: 33.33%;
 }
 
+@media (max-width: 768px) {
+    .w-third {
+        width: 100%;
+    }
+}
+
 .w-quarter {
     width: 25%;
+}
+
+@media (max-width: 768px) {
+    .w-quarter {
+        width: 100%;
+    }
 }
 
 .w-auto {

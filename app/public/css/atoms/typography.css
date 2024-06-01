@@ -18,3 +18,7 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+.text-bold {
+    font-weight: var(--font-weight-bold);
+}

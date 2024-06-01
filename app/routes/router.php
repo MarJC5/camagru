@@ -5,12 +5,19 @@ namespace Camagru\routes;
 use Camagru\routes\Web;
 use Camagru\routes\Api;
 use Camagru\core\controllers\PageController;
+use Camagru\core\database\Runner;
+
 use function Camagru\loadView;
 
 class Router
 {
     public static function route($requestUri, $requestMethod, $data = [])
     {
+        // Check if the application has been migrated
+        if (!Runner::isMigrated() && $requestUri !== '/setup') {
+            $requestUri = '/install';
+        }
+
         $parsedUrl = parse_url($requestUri);
         $path = $parsedUrl['path'] ?? '/';
         $method = $requestMethod;

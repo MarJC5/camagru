@@ -1,14 +1,15 @@
 <?php
 
-namespace Camagru\core\database\migrations;
+namespace Camagru\core\database;
 
 use Camagru\core\database\Database;
+use Camagru\helpers\Logger;
 
 class Runner {
     private $db;
     private $migrationsPath;
 
-    public function __construct(Database $db, $migrationsPath = __DIR__) {
+    public function __construct(Database $db, $migrationsPath = __DIR__ . '/migrations') {
         $this->db = $db;
         $this->migrationsPath = $migrationsPath;
     }
@@ -21,12 +22,12 @@ class Runner {
 
         foreach ($toRun as $migrationFile) {
             $filePath = $this->migrationsPath . '/' . $migrationFile;
-            $migration = include $filePath;
+            $migration = include_once $filePath;
         
             if ($migration && method_exists($migration, 'up')) {
                 $migration->up();
                 $this->logMigration($migrationFile, $batch);
-                echo "Migrated: " . $migrationFile . "\n";
+                Logger::log("Migrated: " . $migrationFile);
             }
         }
     }
@@ -37,12 +38,12 @@ class Runner {
 
         foreach (array_reverse($executed) as $migrationFile) {
             $filePath = $this->migrationsPath . '/' . $migrationFile;
-            $migration = include $filePath;
+            $migration = include_once $filePath;
         
             if ($migration && method_exists($migration, 'down')) {
                 $migration->down();
                 $this->db->execute("DELETE FROM migrations WHERE migration = ?", [$migrationFile]);
-                echo "Rolled back: " . $migrationFile . "\n";
+                Logger::log("Rolled back: " . $migrationFile);
             }
         }
     }
@@ -71,5 +72,35 @@ class Runner {
 
     private function logMigration($migrationName, $batch) {
         $this->db->execute("INSERT INTO migrations (migration, batch) VALUES (?, ?)", [$migrationName, $batch]);
+    }
+
+    public function createMigrationsTable() {
+        $this->db->execute("CREATE TABLE IF NOT EXISTS migrations (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            migration VARCHAR(255) NOT NULL,
+            batch INT NOT NULL
+        )");
+    }
+
+    public static function isMigrated()
+    {
+        $shouldBeMigrated = ['migrations', 'pages'];
+        $db = new Database();
+        // Check if the migrations table exists and has any records
+        $tables = $db->query("SHOW TABLES");
+        $tables = array_column($tables, 'Tables_in_camagru');
+        $migrationsTableExists = in_array('migrations', $tables);
+        $migrationsTableHasRecords = $migrationsTableExists && $db->query("SELECT COUNT(*) FROM migrations")[0]['COUNT(*)'] > 0;
+
+        // Check if the tables that should be migrated exist
+        $tablesExist = true;
+        foreach ($shouldBeMigrated as $table) {
+            if (!in_array($table, $tables)) {
+                $tablesExist = false;
+                break;
+            }
+        }
+
+        return $migrationsTableHasRecords && $tablesExist;
     }
 }

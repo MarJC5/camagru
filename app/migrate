@@ -1,13 +1,17 @@
 #!/usr/bin/env php
 <?php
 
+namespace Camagru;
+
+// Define the base path of the application one level above the public directory
+define('BASE_PATH', dirname(__DIR__) . '/app');
+require_once __DIR__ . '/main.php';
+
 // Register the autoloader...
 require_once __DIR__ . '/helpers/autoloader.php';
 
-use Camagru\core\database\migrations\Runner;
+use Camagru\core\database\Runner;
 use Camagru\core\database\Database;
-
-$migrationsPath = __DIR__ . '/core/database/migrations';
 
 // Instantiate the database connection
 $db = new Database();
@@ -20,7 +24,7 @@ $args = $_SERVER['argv'];
 $command = $args[1] ?? null; // The command is expected as the second argument
 
 // Create an instance of the migration runner
-$migrations = new Runner($db, $migrationsPath);
+$migrations = new Runner($db);
 
 // Process the command
 switch ($command) {

@@ -10,6 +10,7 @@ use Camagru\core\controllers\AuthController;
 class Web {
     public static function routes() {
         return array_merge(
+            self::setup(),
             self::users(),
             self::posts(),
             self::pages(),
@@ -204,6 +205,26 @@ class Web {
                 'path' => '/error/{code}',
                 'name' => 'error',
                 'action' => [PageController::class, 'error']
+            ]
+        ];
+    }
+
+    /**
+     * Redirect to setup page if not installed
+     */
+    public static function setup() {
+        return [
+            [
+                'method' => 'GET',
+                'path' => '/install',
+                'name' => 'install',
+                'action' => [PageController::class, 'install']
+            ],
+            [
+                'method' => 'POST',
+                'path' => '/setup',
+                'name' => 'setup',
+                'action' => [PageController::class, 'setup']
             ]
         ];
     }
