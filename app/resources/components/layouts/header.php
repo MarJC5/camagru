@@ -5,6 +5,7 @@ namespace Camagru\resources\components\layouts;
 use Camagru\helpers\Env;
 use Camagru\helpers\Session;
 use Camagru\routes\Router;
+use Camagru\core\database\Runner;
 use function Camagru\css_url;
 use function Camagru\partials;
 use function Camagru\public_url;
@@ -45,18 +46,20 @@ use function Camagru\public_url;
                     <?= Env::get('APP_NAME', 'Camagru') ?>
                 </a>
             </div>
-            <div class="nav">
-                <ul class="flex justify-end reset-ul gap-4">
-                    <li><a href="<?= Router::to('posts') ?>">Feed</a></li>
-                    <?php if (Session::isLogged()) : ?>
-                        <li><a href="<?= Router::to('profile') ?>">Profile</a></li>
-                        <li><a href="<?= Router::to('logout') ?>">Logout</a></li>
-                    <?php else : ?>
-                        <li><a href="<?= Router::to('login') ?>">Login</a></li>
-                        <li><a href="<?= Router::to('register_user') ?>">Register</a></li>
-                    <?php endif; ?>
-                </ul>
-            </div>
+            <?php if (Runner::isMigrated()) : ?>
+                <div class="nav">
+                    <ul class="flex justify-end reset-ul gap-4">
+                        <li><a href="<?= Router::to('posts') ?>">Feed</a></li>
+                        <?php if (Session::isLogged()) : ?>
+                            <li><a href="<?= Router::to('profile') ?>">Profile</a></li>
+                            <li><a href="<?= Router::to('logout') ?>">Logout</a></li>
+                        <?php else : ?>
+                            <li><a href="<?= Router::to('login') ?>">Login</a></li>
+                            <li><a href="<?= Router::to('register_user') ?>">Register</a></li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
         </div>
     </header>
     <main>

@@ -16,6 +16,10 @@ class Router
         // Check if the application has been migrated
         if (!Runner::isMigrated() && $requestUri !== '/setup') {
             $requestUri = '/install';
+        } else if (!Runner::isMigrated() && $requestUri === '/setup' && $requestMethod === 'GET') {
+            // Show the installation page
+            echo loadView('page/install.php');
+            return;
         }
 
         $parsedUrl = parse_url($requestUri);
