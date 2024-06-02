@@ -20,5 +20,6 @@ use Camagru\helpers\CSRF;
     <div>
         <button class="button" type="submit" name="login">Login</button>
         <p>Don't have an account? <a href="<?= Router::to('register_user') ?>">Register</a></p>
+        <p>Forgot your password? <a href="<?= Router::to('reset_password') ?>">Reset</a></p>
     </div>
 </form>

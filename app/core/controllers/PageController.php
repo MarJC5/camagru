@@ -16,7 +16,7 @@ class PageController {
         $page = Page::where('slug', 'home')->first();
 
         if (empty($page)) {
-            return self::error(404);
+            Router::redirect('error', ['code' => 404]);
         }
 
         $_GET['title'] = $page->title();
@@ -30,7 +30,7 @@ class PageController {
         $page = Page::where('slug', $slug)->first();
 
         if (empty($page)) {
-            return self::error(404);
+            Router::redirect('error', ['code' => 404]);
         }
 
         $_GET['title'] = $page->title();
@@ -44,7 +44,7 @@ class PageController {
         $page = Page::where('slug', $slug)->first();
 
         if (empty($page)) {
-            return self::error(404);
+            Router::redirect('error', ['code' => 404]);
         }
 
         $_GET['title'] = $page->title() . ' - Edit';
@@ -91,7 +91,7 @@ class PageController {
         $page = Page::where('slug', $slug)->first();
 
         if (empty($page)) {
-            return self::error(404);
+            Router::redirect('error', ['code' => 404]);
         }
 
         $validation = new Validation();
@@ -117,6 +117,10 @@ class PageController {
     }
 
     public static function error($code) {
+        if (is_array($code)) {
+            $code = 404;
+        }
+
         http_response_code($code);
 
         $_GET['title'] = $code;
@@ -176,7 +180,7 @@ class PageController {
         $page = Page::where('slug', $slug)->first();
 
         if (empty($page)) {
-            return self::error(404);
+            Router::redirect('error', ['code' => 404]);
         }
 
         $status = $page->delete();

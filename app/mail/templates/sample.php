@@ -6,6 +6,6 @@
 </head>
 <body>
 <h1>Hello, this is a test email!</h1>
-<p>This is an HTML email to test rendering in MailHog.</p>
+<p>This is an HTML email to test rendering in Mailpit.</p>
 </body>
 </html>

@@ -10,6 +10,7 @@ use Camagru\core\controllers\AuthController;
 class Web {
     public static function routes() {
         return array_merge(
+            self::errors(),
             self::setup(),
             self::users(),
             self::posts(),
@@ -69,6 +70,25 @@ class Web {
                 'action' => [UserController::class, 'resend_email_validation']
             ],
             [
+                'method' => 'POST',
+                'path' => '/profile/reset-password',
+                'name' => 'reset_password_request',
+                'action' => [UserController::class, 'reset_password_request']
+            ],
+            [
+                'method' => 'POST',
+                'path' => '/profile/new-password',
+                'name' => 'new_password',
+                'action' => [UserController::class, 'new_password']
+            ],
+            [
+                'method' => 'GET',
+                'path' => '/profile/reset-password',
+                'name' => 'reset_password',
+                'query' => ['token', 'id'],
+                'action' => [UserController::class, 'reset_password']
+            ],
+            [
                 'method' => 'GET',
                 'path' => '/profile/validation-needed',
                 'name' => 'validation_needed',
@@ -77,7 +97,7 @@ class Web {
             [
                 'method' => 'GET',
                 'path' => '/profile/validate',
-                'query' => 'token',
+                'query' => ['token'],
                 'name' => 'validate_email',
                 'action' => [UserController::class, 'validate']
             ],
@@ -205,12 +225,6 @@ class Web {
                 'name' => 'store_page',
                 'action' => [PageController::class, 'store']
             ],
-            [
-                'method' => 'GET',
-                'path' => '/error/{code}',
-                'name' => 'error',
-                'action' => [PageController::class, 'error']
-            ]
         ];
     }
 

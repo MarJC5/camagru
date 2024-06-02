@@ -3,6 +3,7 @@
 namespace Camagru\core\controllers;
 
 use Camagru\helpers\Session;
+use Camagru\helpers\CSRF;
 use Camagru\routes\Router;
 use Camagru\core\models\User;
 use Camagru\core\middlewares\Validation;
@@ -145,11 +146,52 @@ class UserController {
         $user->validate($token);
     }
 
+    public static function reset_password($params) {
+        $_GET['title'] = 'Reset password';
+
+        if (isset($params['token']) && isset($params['id'])) {
+            $token = $params['token'];
+
+            if (empty($token)) {
+                Router::redirect('error', ['code' => 404]);
+            }
+
+            if (!Session::checkTempResetToken($token)) {
+                Session::set('error', 'Token expired');
+                Router::redirect('reset_password');
+            }
+
+            $user_id = $params['id'];
+            $user = User::where('id', $user_id)->first();
+
+            if (empty($user)) {
+                Session::set('error', 'Invalid user');
+                Router::redirect('error', ['code' => 404]);
+            }
+
+            // Avoid reuse reset link
+            Session::removeTempResetToken();
+
+            echo loadView('user/reset-password.php', [
+                'form' => loadView('user/forms/new-password.php', [
+                    'user_id' => $user_id,
+                ]),
+            ]);
+
+        } else {
+            echo loadView('user/reset-password.php', [
+                'form' => loadView('user/forms/reset-password.php'),
+            ]);
+        }
+    }
+
     public static function validation_needed() {
         $_GET['title'] = 'Validation needed';
 
         echo loadView('user/validate.php', [
-            'token' => Session::currentUser()->token(),
+            'form' => loadView('user/forms/resend-email-validation.php', [
+                'token' => Session::currentUser()->token(),
+            ]),
         ]);
     }
 
@@ -166,8 +208,85 @@ class UserController {
             Session::set('error', 'An error occurred while sending the validation email');
             Router::redirect('profile');
         }
-
         Session::set('success', 'Validation email sent successfully');
         Router::redirect('profile');
+    }
+
+    public static function reset_password_request() {
+
+        if (!isset($_POST['email'])) {
+            Session::set('error', 'No email provided');
+            Router::redirect('reset_password');
+        }
+
+        $email = $_POST['email'];
+
+        $user = User::where('email', $email)->first();
+
+        if (empty($user)) {
+            Session::set('error', 'An error occurred while sending the reset password email');
+            Router::redirect('reset_password');
+        }
+
+        $token = $_POST['csrf_token'];
+
+        if (!CSRF::verify($token)) {
+            Session::set('error', 'Invalid token');
+            Router::redirect('reset_password');
+        }
+
+        if (!$user->reset_password_request($token))
+        {
+            Session::set('error', 'An error occurred while sending the reset password email');
+            Router::redirect('reset_password');
+        }
+
+        Session::setTempResetToken($token);
+        Session::set('success', 'Reset password email sent successfully, you have 10 minutes to reset your password');
+        Router::redirect('home');
+    }
+
+    public static function new_password()
+    {
+        if (!isset($_POST['password']) || !isset($_POST['password_confirmation'])) {
+            Session::set('error', 'No password provided');
+            Router::redirect('login');
+        }
+
+        $password = $_POST['password'];
+        $password_confirmation = $_POST['password_confirmation'];
+        $token = $_POST['csrf_token'];
+
+        if (!CSRF::verify($token)) {
+            Session::set('error', 'Invalid token');
+            Router::redirect('reset_password');
+        }
+
+        if ($password !== $password_confirmation) {
+            Session::set('error', 'Passwords do not match');
+            Router::redirect('reset_password');
+        }
+
+        if (!isset($_POST['user_id']))
+        {
+            Session::set('error', 'User id not provided');
+            Router::redirect('reset_password');
+        }
+
+        $user_id = $_POST['user_id'];
+        $user = User::where('id', $user_id)->first();
+
+        if (empty($user)) {
+            Session::set('error', 'Invalid user');
+            Router::redirect('reset_password');
+        }
+
+        if (!$user->new_password($password)) {
+            Session::set('error', 'An error occurred while updating the password');
+            Router::redirect('reset_password');
+        }
+
+        Session::set('success', 'Password updated successfully');
+        Router::redirect('login');
     }
 }

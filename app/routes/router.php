@@ -4,10 +4,9 @@ namespace Camagru\routes;
 
 use Camagru\routes\Web;
 use Camagru\routes\Api;
-use Camagru\core\controllers\PageController;
+use Camagru\helpers\Session;
 use Camagru\core\database\Runner;
 use Camagru\helpers\Logger;
-
 use function Camagru\loadView;
 
 class Router

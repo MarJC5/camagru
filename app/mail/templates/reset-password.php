@@ -13,9 +13,9 @@
 <div class="container">
     <h1>Camagru Password Reset</h1>
     <p>Hello {{user_name}},</p>
-    <p>{{notification_body}}</p>
     <p>Click the link below to reset your password:</p>
     <p><a href="{{reset_link}}" class="button">Reset Password</a></p>
+    <p>{{notification_body}}</p>
     <p>Thank you for using Camagru.</p>
     <p>Regards,</p>
 </div>

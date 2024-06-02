@@ -53,4 +53,30 @@ class Session {
             return new User(self::get('user'));
         }
     }
+
+    public static function getCSRFToken() {
+        return $_SESSION['csrf_token'] ?? null;
+    }
+
+    public static function setTempResetToken($token) {
+        // keep the token for 10 minutes
+        $_SESSION['reset_token'] = $token;
+        $_SESSION['reset_token_expires'] = time() + 600;
+    }
+
+    public static function checkTempResetToken($token) {
+        $reset_token = $_SESSION['reset_token'] ?? null;
+        $reset_token_expires = $_SESSION['reset_token_expires'] ?? null;
+
+        if (empty($reset_token) || empty($reset_token_expires) || $reset_token !== $token || time() > $reset_token_expires) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function removeTempResetToken() {
+        unset($_SESSION['reset_token']);
+        unset($_SESSION['reset_token_expires']);
+    }
 }

@@ -6,7 +6,6 @@ use Camagru\helpers\Session;
 use Camagru\routes\Router;
 use Camagru\core\models\Post;
 use Camagru\core\middlewares\Validation;
-use Camagru\core\controllers\PageController;
 use function Camagru\loadView;
 
 class PostController {

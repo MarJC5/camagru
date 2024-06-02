@@ -7,6 +7,7 @@ use Camagru\helpers\Logger;
 use Camagru\mail\Mail;
 use Camagru\helpers\Session;
 use Camagru\routes\Router;
+use Camagru\core\middlewares\Validation;
 
 class User extends AModel
 {
@@ -88,6 +89,7 @@ class User extends AModel
             Router::redirect('profile');
         } else {
             Session::set('error', 'An error occurred while validating your account.');
+            Router::redirect('home');
         }
     }
 
@@ -107,6 +109,51 @@ class User extends AModel
                 'activation_link' => BASE_URL . Router::to('validate_email', ['token' => $this->token()])
             ]
         );
+    }
+
+    public function reset_password_request($token)
+    {
+        // Send email
+        return Mail::send(
+            $this->email(), 
+            'Password reset',
+            'reset-password',
+            [
+                'user_name' => $this->username(),
+                'reset_link' => BASE_URL . Router::to('reset_password') . '?token=' . $token . '&id=' . $this->id(),
+                'notification_body' => 'You have 10 minutes to reset your password. If you did not request a password reset, please ignore this email.'
+            ]
+        );
+    }
+
+    public function new_password($password)
+    {
+        $validation = new Validation();
+        $rules = $this->validation();
+
+        // only validate the password, so unset the other fields
+        foreach ($rules as $key => $value) {
+            if ($key !== 'password') {
+                unset($rules[$key]);
+            }
+        }
+
+        $validation->validate(['password' => $password], $rules);
+
+        if ($validation->fails()) {
+            $errors = $validation->getErrors();
+            Session::set('error', $errors);
+            Router::redirect('reset_password');
+        }
+
+        if ($this->update(['password' => password_hash($password, PASSWORD_DEFAULT)]))
+        {
+            Session::set('success', 'Password updated successfully.');
+            Router::redirect('login');
+        } else {
+            Session::set('error', 'An error occurred while updating your password.');
+            Router::redirect('reset_password');
+        }
     }
 
     public function validation()

@@ -89,7 +89,15 @@ class Validation
 
     public function getErrors()
     {
-        return $this->errors;
+        // convert to ul list string safe for html
+        $errors = '';
+        foreach ($this->errors as $field => $messages) {
+            $field = htmlspecialchars($field);
+            $messages = array_map('htmlspecialchars', $messages);
+            $errors .= "<li>{$field}: " . implode('</li><li>', $messages) . '</li>';
+        }
+
+        return "<ul>{$errors}</ul>";
     }
 
     private function checkImage($field, $value)

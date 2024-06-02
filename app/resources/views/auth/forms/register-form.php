@@ -21,7 +21,7 @@ use Camagru\helpers\CSRF;
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
     </div>
-    <div>
+    <div class="flex flex-column">
         <button class="button" type="submit" name="login">Register</button>
         <p>Aleady have an account? <a href="<?= Router::to('login') ?>">Login</a></p>
     </div>
