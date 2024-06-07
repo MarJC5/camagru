@@ -169,9 +169,6 @@ class UserController {
                 Router::redirect('error', ['code' => 404]);
             }
 
-            // Avoid reuse reset link
-            Session::removeTempResetToken();
-
             echo loadView('user/reset-password.php', [
                 'form' => loadView('user/forms/new-password.php', [
                     'user_id' => $user_id,
@@ -285,6 +282,9 @@ class UserController {
             Session::set('error', 'An error occurred while updating the password');
             Router::redirect('reset_password');
         }
+
+        // Avoid reuse reset link
+        Session::removeTempResetToken();
 
         Session::set('success', 'Password updated successfully');
         Router::redirect('login');

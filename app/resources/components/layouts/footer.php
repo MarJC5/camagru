@@ -5,6 +5,7 @@ namespace Camagru\resources\components\layouts;
 use Camagru\core\database\Runner;
 use Camagru\helpers\Env;
 use Camagru\routes\Router;
+use Camagru\helpers\Session;
 
 use function Camagru\js_url;
 
@@ -27,7 +28,7 @@ use function Camagru\js_url;
     </div>
 </footer>
 <!-- JS -->
-<script src="<?= js_url('app.js') ?>" type="module"></script>
+<script src="<?= js_url('app.js') ?>" type="module" nonce="<?= Session::get('nonce') ?>"></script>
 </body>
 
 </html>

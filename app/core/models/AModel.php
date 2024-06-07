@@ -115,6 +115,11 @@ abstract class AModel
         return $this->db->execute($sql);
     }
 
+    public function toArray()
+    {
+        return (array) $this->data;
+    }
+
     public static function count()
     {
         $instance = new static();

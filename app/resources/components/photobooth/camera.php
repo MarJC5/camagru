@@ -2,6 +2,7 @@
 
 namespace Camagru\resources\components\photobooth;
 
+use Camagru\helpers\Session;
 use function Camagru\js_url;
 use function Camagru\partials;
 
@@ -42,4 +43,4 @@ use function Camagru\partials;
 
 
 
-<script src="<?= js_url('hooks/photobooth.js') ?>" type="text/javascript"></script>
+<script src="<?= js_url('hooks/photobooth.js') ?>" type="text/javascript" nonce="<?= Session::get('nonce') ?>"></script>

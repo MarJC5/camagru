@@ -27,7 +27,7 @@ class PageController {
     }
 
     public static function show($slug) {
-        $page = Page::where('slug', $slug)->first();
+        $page = Page::where('slug', $slug[0])->first();
 
         if (empty($page)) {
             Router::redirect('error', ['code' => 404]);
@@ -41,7 +41,7 @@ class PageController {
     }
 
     public static function edit($slug) {
-        $page = Page::where('slug', $slug)->first();
+        $page = Page::where('slug', $slug[0])->first();
 
         if (empty($page)) {
             Router::redirect('error', ['code' => 404]);
@@ -190,5 +190,25 @@ class PageController {
         } else {
             Session::set('error', 'An error occurred while deleting the page');
         }
+    }
+
+    public static function json() {
+        $pages = Page::all();
+
+        if (empty($pages)) {
+            return ['message' => 'No page found'];
+        }
+
+        return $pages;
+    }
+
+    public static function show_json($slug) {
+        $page = Page::where('slug', $slug[0])->first();
+
+        if (empty($page)) {
+            return ['message' => 'No page found'];
+        }
+
+        return $page->toArray();
     }
 }
