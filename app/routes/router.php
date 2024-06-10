@@ -114,8 +114,15 @@ class Router
         foreach ($routes as $route) {
             if (isset($route['name']) && $route['name'] == $name) {
                 $path = $route['path'];
+        
                 foreach ($params as $key => $value) {
-                    $path = str_replace('{' . $key . '}', $value, $path);
+                    if (strpos($path, '{' . $key . '}') === false) {
+                        continue;
+                    } else if (strpos($path, '?' . $key) !== false) {
+                        $path = str_replace('?' . $key, $value, $path);
+                    } else {
+                        $path = str_replace('{' . $key . '}', $value, $path);
+                    }
                 }
 
                 return $path;

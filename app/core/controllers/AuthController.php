@@ -6,6 +6,9 @@ use Camagru\core\models\User;
 use Camagru\helpers\Session;
 use Camagru\routes\Router;
 use Camagru\core\middlewares\Validation;
+use Camagru\helpers\CSRF;
+use Camagru\helpers\Logger;
+
 use function Camagru\loadView;
 
 class AuthController
@@ -75,6 +78,20 @@ class AuthController
                 Session::set('error', 'An error occurred while creating your account. Please try again.');
                 Router::redirect('register_user');
             }
+
+            $user = User::where('username', $data['username'])->first();
+
+            if (!$user) {
+                Session::set('error', 'An error occurred while creating your account. Please try again.');
+                Router::redirect('register_user');
+            }
+
+            // Send email validation link
+            $user->update([
+                'token' => password_hash(CSRF::generate(), PASSWORD_DEFAULT)
+            ]);
+
+            $user->resend_email_validation();
             
             Session::set('success', 'Account created successfully. Please login.');
             Router::redirect('login');

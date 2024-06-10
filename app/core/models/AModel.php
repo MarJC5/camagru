@@ -106,6 +106,12 @@ abstract class AModel
 
         $set = implode(', ', $set);
         $sql = "UPDATE {$this->table} SET {$set} WHERE id = " . $this->id();
+
+        // update the data property
+        foreach ($data as $key => $value) {
+            $this->data->$key = $value;
+        }
+
         return $this->db->execute($sql);
     }
 

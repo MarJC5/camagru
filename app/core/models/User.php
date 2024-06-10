@@ -106,7 +106,7 @@ class User extends AModel
             'Email validation',
             'email-validation',
             [
-                'activation_link' => BASE_URL . Router::to('validate_email', ['token' => $this->token()])
+                'activation_link' => BASE_URL . Router::to('validate_email') . '?token=' . $this->token(),
             ]
         );
     }

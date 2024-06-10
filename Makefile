@@ -7,11 +7,12 @@ RESET		= \033[0m
 
 # FOLDER
 SRCS_DIR	= ./
+ENV_FILE	= ${SRCS_DIR}.env
 DOCKER_DIR	= ${SRCS_DIR}docker-compose.yml
 
 
 # COMMANDS
-DOCKER		=  docker compose -f ${DOCKER_DIR} -p camagru
+DOCKER		=  docker compose -f ${DOCKER_DIR} --env-file ${ENV_FILE} -p camagru
 
 %:
 	@:
@@ -45,28 +46,16 @@ rebuild-no-cache:
 	@${DOCKER} build --no-cache
 	@${DOCKER} up -d --remove-orphans --build
 
-nginx:
-	@echo "${GREEN}Running nginx ...${RESET}"
-	@${DOCKER} exec nginx sh
+frankenphp:
+	@echo "${GREEN}Running frankenphp ...${RESET}"
+	@${DOCKER} exec frankenphp sh
 
 mysql8:
 	@echo "${GREEN}Running mysql 8 ...${RESET}"
 	@${DOCKER} exec mysql_8 bash
 
-php82:
-	@echo "${GREEN}Running php 8.2 ...${RESET}"
-	@${DOCKER} exec -w /home/dev/app/ php_8_2 bash
-
-host:
-	@echo "${GREEN}Adding host...${RESET}"
-	@./docker/services/nginx/scripts/host.sh
-
 reload:
 	@echo "${GREEN}Reloading nginx...${RESET}"
 	@${DOCKER} exec nginx nginx -s reload
 
-nginx-restart:
-	@echo "${GREEN}Restarting nginx...${RESET}"
-	@${DOCKER} restart nginx
-
-.PHONY: all up down stop rebuild delete nginx mysql8 php82 host reload nginx-restart
+.PHONY: all start up down stop rebuild delete rebuild-no-cache frankenphp mysql8 php82 reload

@@ -27,7 +27,7 @@ class PageController {
     }
 
     public static function show($slug) {
-        $page = Page::where('slug', $slug[0])->first();
+        $page = Page::where('slug', $slug)->first();
 
         if (empty($page)) {
             Router::redirect('error', ['code' => 404]);
@@ -41,7 +41,7 @@ class PageController {
     }
 
     public static function edit($slug) {
-        $page = Page::where('slug', $slug[0])->first();
+        $page = Page::where('slug', $slug)->first();
 
         if (empty($page)) {
             Router::redirect('error', ['code' => 404]);
@@ -203,7 +203,7 @@ class PageController {
     }
 
     public static function show_json($slug) {
-        $page = Page::where('slug', $slug[0])->first();
+        $page = Page::where('slug', $slug)->first();
 
         if (empty($page)) {
             return ['message' => 'No page found'];

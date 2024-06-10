@@ -35,7 +35,7 @@ class Post extends AModel
         return [
             'user_id' => 'required|exists:users',
             'image' => 'required|image',
-            'caption' => 'required|max:255',
+            'caption' => 'required|max:255'
         ];
     }
 }

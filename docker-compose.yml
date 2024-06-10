@@ -5,38 +5,31 @@ networks:
     name: camagru
 
 services:
-  nginx:
-    image: nginx:1.23.0-alpine
-    container_name: nginx_camagru
-    ports:
-      - '80:80'
-      - '443:443'
-    command: nginx -g 'daemon off;'
-    volumes:
-      # load nginx config
-      - ./docker/services/nginx/config/nginx.conf:/etc/nginx/nginx.conf
-      - ./docker/services/nginx/config/default.conf:/etc/nginx/conf.d/default.conf
-      - ./docker/services/nginx/config/php.conf:/etc/nginx/php.conf
-      # mount your nginx project virtual hosts
-      - ./docker/services/nginx/sites-enabled:/etc/nginx/sites-enabled
-      # mount ssl scripts
-      - ./docker/services/nginx/scripts/ssl.sh:/ssl.sh
-      - ./docker/services/nginx/ssl:/etc/nginx/ssl
-      # mount your project directories to connect them with nginx
-      - ./app/:/home/dev/app/
-      # mount your system's local timezone settings (for WSL2, Linux distros)
-      - /etc/localtime:/etc/localtime:ro
-      # mount local etc/hosts file to the container
-      - /etc/hosts:/etc/hosts_local:ro
-    depends_on:
-      - php_8_2
-
   mailpit:
     image: axllent/mailpit:latest
     container_name: mailpit_camagru
     ports:
       - '1025:1025'
       - '8025:8025'
+
+  frankenphp:
+    build:
+      context: .
+      dockerfile: ./docker/services/frankenphp/Dockerfile
+    container_name: frankenphp_camagru
+    ports:
+      - "80:80" # HTTP
+      - "443:443" # HTTPS
+      - "443:443/udp" # HTTP/3
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./app:/var/www/html/camagru
+      - ./docker/services/frankenphp/Caddyfile:/etc/caddy/Caddyfile
+      - ./docker/services/frankenphp/php.ini:/usr/local/etc/php/php.ini
+    tty: true
+    depends_on:
+      - mysql_8
+      - mailpit
 
   mysql_8:
     image: mysql:8.0.28
@@ -51,11 +44,9 @@ services:
       - ./docker/services/mysql/8:/var/lib/mysql
       - ./docker/services/mysql/scripts/create.sh:/create.sh
     environment:
-      MYSQL_USER: homestead
-      MYSQL_PASSWORD: secret
-      MYSQL_ROOT_PASSWORD: secret
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql_8
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 
   adminer:
     image: adminer:latest
@@ -65,14 +56,3 @@ services:
       - '8080:8080'
     environment:
       ADMINER_DEFAULT_SERVER: mysql_8
-
-  php_8_2:
-    build:
-      context: ./docker/services/php/8.2
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    container_name: php82_camagru
-    volumes:
-      # mount your PHP 8.2 projects
-      - ./app:/home/dev/app/
-      - /etc/localtime:/etc/localtime:ro
