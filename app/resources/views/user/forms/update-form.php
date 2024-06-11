@@ -7,7 +7,8 @@ use Camagru\helpers\CSRF;
 
 ?>
 
-<form action="<?= Router::to('update_user', ['id' => $user_id]) ?>" method="POST" class="form w-full">
+<div class="grid grid--2">
+<form action="<?= Router::to('update_user', ['id' => $user_id]) ?>" method="POST" class="form">
     <?= CSRF::field() ?>
     <input type="number" id="id" name="id" class="hidden" value="<?= $user_id ?>">
     <div class="flex flex-column mb-4">
@@ -26,12 +27,25 @@ use Camagru\helpers\CSRF;
         <label for="password_confirmation">Password Confirmation:</label>
         <input type="password" id="password_confirmation" name="password_confirmation">
     </div>
-    <div class="flex flex-column">
+    <div class="flex flex-row gap-4">
         <button type="submit" class="button">
             Update
         </button>
     </div>
 </form>
+
+<div class="danger-zone">
+    <h4 class="the-title">Danger Zone</h4>
+    <p>Deleting your account will remove all your data from the system.</p>
+    <form action="<?= Router::to('delete_user') ?>" method="POST">
+        <?= CSRF::field() ?>
+        <input type="hidden" name="id" value="<?= $user_id ?>">
+        <button type="submit" class="button button--danger">
+            Delete Account
+        </button>
+    </form>
+</div>
+</div>
 
 <script>
     const form = document.querySelector('form');

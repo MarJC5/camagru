@@ -132,8 +132,8 @@ class Web {
                 'action' => [UserController::class, 'update']
             ],
             [
-                'method' => 'DELETE',
-                'path' => '/user/{id}',
+                'method' => 'POST',
+                'path' => '/user',
                 'name' => 'delete_user',
                 'action' => [UserController::class, 'delete']
             ],

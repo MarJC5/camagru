@@ -124,7 +124,7 @@ abstract class AModel
 
     public function delete()
     {
-        $sql = "DELETE FROM {$this->table} WHERE " . $this->query;
+        $sql = "DELETE FROM {$this->table} WHERE id = " . $this->id();
         return $this->db->execute($sql);
     }
 

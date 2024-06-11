@@ -82,6 +82,8 @@ class UserController {
     }
 
     public static function update($data) {
+        // TODO : Check csrf_token validity
+
         $id = $data['id'];
         $user = new User($id);
 
@@ -90,10 +92,9 @@ class UserController {
             Router::redirect('error', ['code' => 404]);
         }
 
-        // TODO Check csrf_token validity
-
         // remove if empty
         $data = array_filter($_POST);
+
         // remove id
         unset($data['id']);
         unset($data['csrf_token']);
@@ -108,6 +109,18 @@ class UserController {
             Session::set('error', $errors);
             Router::redirect('edit_user', ['id' => $id]);
         } else {
+            // Hash password
+            if (isset($data['password'])) {
+
+                // Validate password
+                if ($data['password'] !== $data['password_confirmation']) {
+                    Session::set('error', 'Passwords do not match');
+                    Router::redirect('edit_user', ['id' => $id]);
+                }
+
+                $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+            }
+
             $status = $user->update($data);
 
             if ($status) {
@@ -124,8 +137,10 @@ class UserController {
         }
     }
 
-    public static function delete($data) {
-        $user = new User($data['id']);
+    public static function delete() {
+        // TODO : Check csrf_token validity
+        $id = $_POST['id'];
+        $user = new User($id);
 
         if (empty($user)) {
             Session::set('error', 'Invalid user');
@@ -136,6 +151,12 @@ class UserController {
 
         if ($status) {
             Session::set('success', 'User deleted successfully');
+            // Redirect to home if the user is deleting his own account
+            if ($id === Session::get('user')) {
+                Router::redirect('logout');
+            } else {
+                Router::redirect('home');
+            }
         } else {
             Session::set('error', 'An error occurred while deleting the user');
         }
@@ -165,6 +186,7 @@ class UserController {
     }
 
     public static function reset_password($params) {
+
         $_GET['title'] = 'Reset password';
 
         if (isset($params['token']) && isset($params['id'])) {
@@ -211,6 +233,8 @@ class UserController {
     }
 
     public static function resend_email_validation() {
+        // TODO : Check csrf_token validity
+
         $user = Session::currentUser();
 
         if (empty($user)) {
@@ -228,7 +252,8 @@ class UserController {
     }
 
     public static function reset_password_request() {
-
+        // TODO : Check csrf_token validity
+        
         if (!isset($_POST['email'])) {
             Session::set('error', 'No email provided');
             Router::redirect('reset_password');

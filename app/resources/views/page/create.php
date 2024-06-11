@@ -10,7 +10,7 @@ get_header();
 
 <section class="page page--create">
     <div class="row">
-        <h1 class="the-title animate__animated animate__slideInUp">New page</h1>
+        <h1 class="the-title">New page</h1>
     </div>
 </section>
 

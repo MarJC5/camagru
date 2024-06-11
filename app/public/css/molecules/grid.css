@@ -19,6 +19,22 @@
     grid-template-rows: 1fr;
 }
 
+/* Variant 1-1 grid styling */
+.grid--2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    grid-gap: 5em;
+}
+
+/* Media query adjustments for the 1-1 grid */
+@media (max-width: 1024px) {
+    .grid--2 {
+        grid-template-columns: 1fr;
+        grid-gap: 1em;
+    }
+}
+
 /* Variant 1-2 grid styling */
 .grid--1-2 {
     display: grid;

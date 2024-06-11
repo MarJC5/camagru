@@ -37,6 +37,8 @@ class PostController {
     }
 
     public static function edit($id) {
+        // TODO : Check csrf_token validity
+
         $post = new Post($id);
 
         if (empty($post)) {
@@ -56,6 +58,8 @@ class PostController {
     }
 
     public static function store() {
+        // TODO : Check csrf_token validity
+
         $validation = new Validation();
         $page = new Post();
 
@@ -83,6 +87,8 @@ class PostController {
     }
 
     public static function update($id, $data) {
+        // TODO : Check csrf_token validity
+
         $post = new Post($id);
 
         if (empty($post)) {
@@ -113,6 +119,8 @@ class PostController {
     }
 
     public static function delete($id) {
+        // TODO : Check csrf_token validity
+        
         $post = new Post($id);
 
         if (empty($post)) {

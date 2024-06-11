@@ -1,6 +1,7 @@
 .form label {
     display: block;
     margin-bottom: var(--space-2);
+    font-weight: var(--font-weight-bold);
 }
 
 .form input[type="text"],
