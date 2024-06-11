@@ -77,14 +77,15 @@ class UserController {
                 'user_id' => $user->id(),
                 'old_username' => $user->username(),
                 'old_email' => $user->email(),
+                'notification' => $user->is_notification_enabled() ? 'Disable' : 'Enable',
             ]),
         ]);
     }
 
-    public static function update($data) {
+    public static function update() {
         // TODO : Check csrf_token validity
 
-        $id = $data['id'];
+        $id = $_POST['id'];
         $user = new User($id);
 
         if (empty($user)) {
@@ -183,6 +184,35 @@ class UserController {
         }
 
         $user->validate($token);
+    }
+
+    public static function toggle_notification()
+    {
+        // TODO : Check csrf_token validity
+
+        $user_id = $_POST['id'];
+        $user = User::where('id', $user_id)->first();
+
+        if (empty($user)) {
+            Session::set('error', 'Invalid user');
+            Router::redirect('error', ['code' => 404]);
+        }
+
+        $notification = 0;
+        if (!$user->is_notification_enabled()) {
+            $notification = 1;
+        } else {
+            $notification = 0;
+        }
+        $status = $user->update(['notification' => $notification]);
+
+        if ($status) {
+            Session::set('success', 'Notification settings updated successfully');
+        } else {
+            Session::set('error', 'An error occurred while updating the notification settings');
+        }
+
+        Router::redirect('profile');
     }
 
     public static function reset_password($params) {

@@ -65,6 +65,12 @@ class Web {
         return [
             [
                 'method' => 'POST',
+                'path' => '/profile/toggle-notification',
+                'name' => 'toggle_notification',
+                'action' => [UserController::class, 'toggle_notification']
+            ],
+            [
+                'method' => 'POST',
                 'path' => '/profile/resend-email-validation',
                 'name' => 'resend_email_validation',
                 'action' => [UserController::class, 'resend_email_validation']
@@ -126,8 +132,8 @@ class Web {
                 'action' => [UserController::class, 'show']
             ],
             [
-                'method' => 'POST', // PUT
-                'path' => '/user/{id}',
+                'method' => 'POST',
+                'path' => '/user',
                 'name' => 'update_user',
                 'action' => [UserController::class, 'update']
             ],
