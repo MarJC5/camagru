@@ -33,6 +33,8 @@ class Router
             if ($method == $route['method'] && self::matchRoute($path, $route['path'])) {
                 $params = self::extractParams($path, $route['path'] . $query);
                 $params = array_merge($params, self::extractQueryParams($query));
+
+                // Logger::log($route['method'] . ' ' .  $route['path']);
                 
                 // Capture the output of the controller action
                 $output = call_user_func_array($route['action'], [$params]);
@@ -60,19 +62,32 @@ class Router
     private static function extractParams($path, $routePath)
     {
         $params = [];
+        $paramNames = [];
+        preg_match_all('#\{([\w]+)\}#', $routePath, $paramNames);
+        $paramNames = $paramNames[1];
+        
         // Replace placeholders with regex patterns
         $pattern = preg_replace('#\{[\w]+\}#', '([^/]+)', $routePath);
+        
         if (preg_match('#^' . $pattern . '$#', $path, $matches)) {
             array_shift($matches);  // Remove the full match from the beginning
-            $params = array_values($matches);
+            foreach ($paramNames as $index => $name) {
+                $params[$name] = $matches[$index];
+            }
         }
+        
         return $params;
     }
 
     private static function extractQueryParams($queryParams)
     {
         $params = [];
-        parse_str($queryParams, $params);
+        parse_str($queryParams, $parsedParams);
+
+        foreach ($parsedParams as $key => $value) {
+            $params[$key] = $value;
+        }
+
         return $params;
     }
 
@@ -104,6 +119,12 @@ class Router
     {
         $query = http_build_query($params);
         header('Location: ' . $_SERVER['REQUEST_URI'] . '?' . $query);
+        exit();
+    }
+
+    public static function clearParams()
+    {
+        header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
         exit();
     }
 

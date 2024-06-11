@@ -159,6 +159,15 @@ class User extends AModel
     public function validation()
     {
         return [
+            'username' => 'required|min:3|max:20|alpha_num',
+            'email' => 'required|email',
+            'password' => 'optinal|min:6',
+        ];
+    }
+
+    public function registerValidation()
+    {
+        return [
             'username' => 'required|min:3|max:20|alpha_num|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',

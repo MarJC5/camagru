@@ -46,8 +46,8 @@ class UserController {
         ]);
     }
 
-    public static function show($id) {
-        $user = new User($id);
+    public static function show($data) {
+        $user = new User($data['id']);
 
         if (empty($user)) {
             Session::set('error', 'Invalid user');
@@ -61,8 +61,8 @@ class UserController {
         ]);
     }
 
-    public static function edit($id) {
-        $user = new User($id);
+    public static function edit($data) {
+        $user = new User($data['id']);
 
         if (empty($user)) {
             Session::set('error', 'Invalid user');
@@ -73,16 +73,30 @@ class UserController {
 
         echo loadView('user/edit.php', [
             'user' => $user,
+            'form' => loadView('user/forms/update-form.php', [
+                'user_id' => $user->id(),
+                'old_username' => $user->username(),
+                'old_email' => $user->email(),
+            ]),
         ]);
     }
 
-    public static function update($id, $data) {
+    public static function update($data) {
+        $id = $data['id'];
         $user = new User($id);
 
         if (empty($user)) {
             Session::set('error', 'Invalid user');
             Router::redirect('error', ['code' => 404]);
         }
+
+        // TODO Check csrf_token validity
+
+        // remove if empty
+        $data = array_filter($_POST);
+        // remove id
+        unset($data['id']);
+        unset($data['csrf_token']);
 
         $validation = new Validation();
         $rules = $user->validation();
@@ -98,7 +112,11 @@ class UserController {
 
             if ($status) {
                 Session::set('success', 'User updated successfully');
-                Router::redirect('user', ['id' => $id]);
+                if ($id === Session::currentUser()->id()) {
+                    Router::redirect('profile');
+                } else {
+                    Router::redirect('user', ['id' => $id]);
+                }
             } else {
                 Session::set('error', 'An error occurred while updating the user');
                 Router::redirect('edit_user', ['id' => $id]);
@@ -106,8 +124,8 @@ class UserController {
         }
     }
 
-    public static function delete($id) {
-        $user = new User($id);
+    public static function delete($data) {
+        $user = new User($data['id']);
 
         if (empty($user)) {
             Session::set('error', 'Invalid user');

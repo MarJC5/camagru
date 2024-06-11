@@ -26,8 +26,8 @@ class PageController {
         ]);
     }
 
-    public static function show($slug) {
-        $page = Page::where('slug', $slug)->first();
+    public static function show($data) {
+        $page = Page::where('slug', $data['slug'])->first();
 
         if (empty($page)) {
             Router::redirect('error', ['code' => 404]);
@@ -40,8 +40,8 @@ class PageController {
         ]);
     }
 
-    public static function edit($slug) {
-        $page = Page::where('slug', $slug)->first();
+    public static function edit($data) {
+        $page = Page::where('slug', $data['slug'])->first();
 
         if (empty($page)) {
             Router::redirect('error', ['code' => 404]);
@@ -87,7 +87,9 @@ class PageController {
         }
     }
 
-    public static function update($slug, $data) {
+    public static function update($data) {
+        $slug = $data['slug'];
+
         $page = Page::where('slug', $slug)->first();
 
         if (empty($page)) {
@@ -176,7 +178,9 @@ class PageController {
         }
     }
 
-    public static function delete($slug) {
+    public static function delete($data) {
+        $slug = $data['slug'];
+
         $page = Page::where('slug', $slug)->first();
 
         if (empty($page)) {
@@ -202,7 +206,9 @@ class PageController {
         return $pages;
     }
 
-    public static function show_json($slug) {
+    public static function show_json($data) {
+        $slug = $data['slug'];
+
         $page = Page::where('slug', $slug)->first();
 
         if (empty($page)) {

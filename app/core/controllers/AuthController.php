@@ -65,7 +65,7 @@ class AuthController
             'email' => filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)
         ];
 
-        $rules = $user->validation();
+        $rules = $user->registerValidation();
         $validation->validate($data, $rules);
 
         if ($validation->fails()) {

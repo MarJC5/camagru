@@ -3,6 +3,7 @@
 namespace Camagru\core\models;
 
 use Camagru\core\database\Database;
+use Camagru\helpers\Logger;
 
 abstract class AModel
 {
@@ -107,12 +108,18 @@ abstract class AModel
         $set = implode(', ', $set);
         $sql = "UPDATE {$this->table} SET {$set} WHERE id = " . $this->id();
 
+        $update = $this->db->execute($sql);
+
         // update the data property
-        foreach ($data as $key => $value) {
-            $this->data->$key = $value;
+        if ($update) {
+            foreach ($data as $key => $value) {
+                $this->data->$key = $value;
+            }
+        } else {
+            Logger::log("Failed to update {$this->table} with id {$this->id()}");
         }
 
-        return $this->db->execute($sql);
+        return $update;
     }
 
     public function delete()

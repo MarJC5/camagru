@@ -65,6 +65,8 @@ class Validation
             case 'exists':
                 $this->checkExists($field, $value, $ruleValue);
                 break;
+            case 'optional':
+                break;
         }
     }
 

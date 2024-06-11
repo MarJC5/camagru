@@ -126,7 +126,7 @@ class Web {
                 'action' => [UserController::class, 'show']
             ],
             [
-                'method' => 'PUT',
+                'method' => 'POST', // PUT
                 'path' => '/user/{id}',
                 'name' => 'update_user',
                 'action' => [UserController::class, 'update']
