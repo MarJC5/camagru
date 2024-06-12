@@ -12,29 +12,38 @@
 .alert {
     position: relative;
     padding: var(--space-4);
-    border-radius: var(--radius);
+    border-radius: var(--radius-md);
     box-shadow: var(--shadow);
     display: flex;
     gap: var(--space-4);
     align-items: center;
     justify-content: space-between;
-    background-color: var(--color-white);
+    color: var(--color-white);
     width: var(--phone);
 }
 
 .alert--success {
-    color: var(--color-success-text);
-    background-color: var(--color-success);
+    color: var(--green-950);
+    background-color: var(--green-100);
+    border: 1px solid var(--green-400);
 }
 
 .alert--danger {
-    color: var(--color-danger-text);
-    background-color: var(--color-danger);
+    color: var(--red-950);
+    background-color: var(--red-100);
+    border: 1px solid var(--red-400);
 }
 
 .alert--warning {
-    color: var(--color-warning-text);
-    background-color: var(--color-warning);
+    color: var(--yellow-950);
+    background-color: var(--yellow-100);
+    border: 1px solid var(--yellow-400);
+}
+
+.alert--info {
+    color: var(--blue-950);
+    background-color: var(--blue-100);
+    border: 1px solid var(--blue-400);
 }
 
 .fade {

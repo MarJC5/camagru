@@ -136,7 +136,9 @@ function get_footer() {
  */
 function partials($path, $data = []) {
     extract($data);
-    echo load_template(components_path($path));
+    ob_start();
+    include_once components_path($path);
+    return ob_get_clean();
 }
 
 function loadView($path, $data = []) {

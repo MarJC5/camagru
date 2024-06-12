@@ -22,4 +22,11 @@ class Migration {
         $sql = "DROP TABLE IF EXISTS {$tableName};";
         return $this->db->execute($sql);
     }
+
+    protected function alterTable($tableName, array $alterations) {
+        $sql = "ALTER TABLE {$tableName} ";
+        $sql .= implode(', ', $alterations);
+        $sql .= ";";
+        return $this->db->execute($sql);
+    }
 }

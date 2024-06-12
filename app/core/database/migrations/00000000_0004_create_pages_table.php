@@ -13,9 +13,10 @@ return new class extends Migration
             'title VARCHAR(255) NOT NULL',
             'content TEXT',
             'slug VARCHAR(255) NOT NULL UNIQUE',
-            'thumbnail VARCHAR(255)',
+            'media_id INT',
             'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP',
-            'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'
+            'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
+            'FOREIGN KEY (media_id) REFERENCES medias(id) ON DELETE SET NULL'
         ]);
     }
 

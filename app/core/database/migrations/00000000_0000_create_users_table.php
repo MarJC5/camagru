@@ -15,7 +15,7 @@ return new class extends Migration
             'last_name VARCHAR(255)',
             'email VARCHAR(255) NOT NULL UNIQUE',
             'password VARCHAR(255) NOT NULL',
-            'avatar VARCHAR(255) DEFAULT "default.jpg"',
+            'media_id INT',
             'role ENUM("admin", "user") DEFAULT "user"',
             'validated BOOLEAN DEFAULT 0',
             'token VARCHAR(255)',

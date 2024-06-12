@@ -4,14 +4,22 @@
 namespace Camagru;
 
 // Define the base path of the application one level above the public directory
-define('BASE_PATH', dirname(__DIR__) . '/app');
-require_once __DIR__ . '/main.php';
+define('BASE_PATH', dirname(__DIR__) . '/camagru');
+require_once BASE_PATH . '/main.php';
 
 // Register the autoloader...
-require_once __DIR__ . '/helpers/autoloader.php';
+require_once BASE_PATH . '/helpers/autoloader.php';
 
 use Camagru\core\database\Runner;
 use Camagru\core\database\Database;
+use Camagru\helpers\Config;
+use Camagru\helpers\Env;
+
+// Load environment variables
+Env::load(BASE_PATH . '/.env');
+
+// Load the application configuration
+Config::load(BASE_PATH . '/config/app.php');
 
 // Instantiate the database connection
 $db = new Database();

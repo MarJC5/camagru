@@ -4,8 +4,12 @@
 @import "atoms/normalize.css";
 @import "atoms/base.css";
 @import "atoms/root.css";
-@import "atoms/spacing.css";
+@import "atoms/colors.css";
+@import "atoms/height.css";
+@import "atoms/width.css";
+@import "atoms/radius.css";
 @import "atoms/typography.css";
+@import "atoms/spacing.css";
 @import "atoms/buttons.css";
 @import "atoms/title.css";
 

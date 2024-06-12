@@ -57,11 +57,16 @@ use function Camagru\public_url;
             </div>
             <?php if (Runner::isMigrated()) : ?>
                 <div class="nav">
-                    <ul class="flex justify-end reset-ul gap-4">
+                    <ul class="flex item-center justify-end reset-ul gap-4">
                         <li><a href="<?= Router::to('posts') ?>">Feed</a></li>
                         <?php if (Session::isLogged()) : ?>
                             <li><a href="<?= Router::to('profile') ?>">Profile</a></li>
                             <li><a href="<?= Router::to('logout') ?>">Logout</a></li>
+                            <li>
+                                <a href="<?= Router::to('create_post') ?>" class="button button--header button--icon flex gap-2">
+                                    <?= partials('svg/plus.php') ?> Post
+                                </a>
+                            </li>
                         <?php else : ?>
                             <li><a href="<?= Router::to('login') ?>">Login</a></li>
                             <li><a href="<?= Router::to('register_user') ?>">Register</a></li>

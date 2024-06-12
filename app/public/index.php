@@ -6,6 +6,7 @@ use Camagru\routes\Router;
 use Camagru\helpers\Env;
 use Camagru\helpers\Session;
 use Camagru\helpers\CSRF;
+use Camagru\helpers\Config;
 
 // Define the base path of the application one level above the public directory
 define('BASE_PATH', dirname(__DIR__));
@@ -15,6 +16,9 @@ require_once BASE_PATH . '/main.php';
 
 // Load environment variables
 Env::load(BASE_PATH . '/.env');
+
+// Load the application configuration
+Config::load(BASE_PATH . '/config/app.php');
 
 // Define the base URL of the application
 define('BASE_URL', Env::get('APP_URL'));

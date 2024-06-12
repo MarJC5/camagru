@@ -3,7 +3,6 @@
 namespace Camagru\core\database;
 
 use Camagru\core\database\Database;
-use Camagru\helpers\Logger;
 
 class Runner {
     private $db;
@@ -22,12 +21,12 @@ class Runner {
 
         foreach ($toRun as $migrationFile) {
             $filePath = $this->migrationsPath . '/' . $migrationFile;
-            $migration = include_once $filePath;
+            $migration = include $filePath;
         
             if ($migration && method_exists($migration, 'up')) {
                 $migration->up();
                 $this->logMigration($migrationFile, $batch);
-                Logger::log("Migrated: " . $migrationFile);
+                echo "Migrated: " . $migrationFile . PHP_EOL;
             }
         }
     }
@@ -38,12 +37,12 @@ class Runner {
 
         foreach (array_reverse($executed) as $migrationFile) {
             $filePath = $this->migrationsPath . '/' . $migrationFile;
-            $migration = include_once $filePath;
+            $migration = include $filePath;
         
             if ($migration && method_exists($migration, 'down')) {
                 $migration->down();
                 $this->db->execute("DELETE FROM migrations WHERE migration = ?", [$migrationFile]);
-                Logger::log("Rolled back: " . $migrationFile);
+                echo "Rolled back: " . $migrationFile . PHP_EOL;
             }
         }
     }

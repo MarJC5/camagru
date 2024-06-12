@@ -23,6 +23,6 @@ use Camagru\helpers\CSRF;
     </div>
     <div class="flex flex-column">
         <button class="button" type="submit" name="login">Register</button>
-        <p>Aleady have an account? <a href="<?= Router::to('login') ?>">Login</a></p>
+        <p>Aleady have an account? <a href="<?= Router::to('login') ?>" class="underline">Login</a></p>
     </div>
 </form>

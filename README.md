@@ -26,3 +26,17 @@ Here’s a high-level plan to tackle this project:
 6. Documentation and Final Review:
     - Document the application setup and user guide.
     - Review the entire application for any potential improvements or missing requirements.
+
+## Database
+
+### Summary of Relationships
+
+- `users -> medias` (media_id can be NULL, meaning a user may or may not have a profile picture)
+- `pages -> medias` (media_id can be NULL, meaning a page may or may not have a media attachment)
+- `posts -> users` (user_id references the creator of the post)
+- `posts -> medias` (media_id references the media attached to the post)
+- `likes -> users` (user_id references the user who liked the post)
+- `likes -> posts` (post_id references the liked post)
+- `comments -> users` (user_id references the user who made the comment)
+- `comments -> posts` (post_id references the post on which the comment was made)
+- `medias -> users` (user_id references the owner of the media)

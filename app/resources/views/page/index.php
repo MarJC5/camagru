@@ -17,6 +17,7 @@ get_header();
             <section>
                 <a href="<?= Router::to('page', ['slug' => 'about']) ?>" class="button">About</a>
                 <a href="<?= Router::to('posts') ?>" class="button button--secondary">View feed</a>
+                <a href="<?= Router::to('users') ?>" class="button button--secondary">See the community</a>
             </section>
         </div>
     </div>

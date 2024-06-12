@@ -3,6 +3,7 @@
 namespace Camagru\core\models;
 
 use Camagru\core\models\AModel;
+use Camagru\core\models\Media;
 use Camagru\helpers\Logger;
 use Camagru\mail\Mail;
 use Camagru\helpers\Session;
@@ -13,8 +14,10 @@ class User extends AModel
 {
     protected $table = 'users';
 
-    protected $fillable = ['username', 'email', 'password', 'avatar'];
+    protected $fillable = ['username', 'email', 'password', 'media_id'];
     protected $hidden = [];
+
+    const ROLES = ['admin', 'user'];
 
     public function __construct(?int $id = null)
     {
@@ -38,7 +41,7 @@ class User extends AModel
 
     public function avatar()
     {
-        return $this->data->avatar;
+        return new Media($this->data->media_id);
     }
 
     public function role()

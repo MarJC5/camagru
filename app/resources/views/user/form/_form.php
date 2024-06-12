@@ -4,28 +4,49 @@ namespace Camagru\views\user\forms;
 
 use Camagru\routes\Router;
 use Camagru\helpers\CSRF;
+use Camagru\core\models\User;
+use Camagru\helpers\Session;
 
 ?>
 
 <div class="grid grid--2">
-
-
     <div class="actions flex flex-column gap-8">
+        <?php if (Session::currentUser()->is_admin()) : ?>
+            <div class="roles">
+                <h4 class="the-title">Roles</h4>
+                <p class="w-half">Change the role of this user.</p>
+                <form action="<?= Router::to('edit_role') ?>" method="POST" class="form flex flex-column w-half">
+                    <?= CSRF::field('csrf_edit_role') ?>
+                    <input type="hidden" name="id" value="<?= $user_id ?>">
+                    <select name="role" id="role" class="select mb-4">
+                        <?php foreach (User::ROLES as $role) : ?>
+                            <option value="<?= $role ?>" <?= $role === $old['role'] ? 'selected' : '' ?>>
+                                <?= ucfirst($role) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <button type="submit" class="button">
+                        Update Role
+                    </button>
+                </form>
+            </div>
+        <?php endif; ?>
         <div class="notification">
             <h4 class="the-title">Notification</h4>
             <p class="w-half">Manage your email notification settings.</p>
             <form action="<?= Router::to('toggle_notification') ?>" method="POST">
-                <?= CSRF::field() ?>
+                <?= CSRF::field('csrf_toggle_notification') ?>
                 <input type="hidden" name="id" value="<?= $user_id ?>">
                 <button type="submit" class="button">
                     <?= $notification ?> Notifications
                 </button>
+            </form>
         </div>
         <div class="danger-zone">
             <h4 class="the-title">Danger Zone</h4>
             <p class="w-half">Deleting your account will remove all your data from the system.</p>
             <form action="<?= Router::to('delete_user') ?>" method="POST">
-                <?= CSRF::field() ?>
+                <?= CSRF::field('csrf_delete_user') ?>
                 <input type="hidden" name="id" value="<?= $user_id ?>">
                 <button type="submit" class="button button--danger">
                     Delete Account
@@ -35,15 +56,15 @@ use Camagru\helpers\CSRF;
     </div>
 
     <form action="<?= Router::to('update_user', ['id' => $user_id]) ?>" method="POST" class="form">
-        <?= CSRF::field() ?>
+        <?= CSRF::field('csrf_update_user') ?>
         <input type="number" id="id" name="id" class="hidden" value="<?= $user_id ?>">
         <div class="flex flex-column mb-4">
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required value="<?= $old_username ?>">
+            <input type="text" id="username" name="username" required value="<?= $old['username'] ?>">
         </div>
         <div class="flex flex-column mb-4">
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required value="<?= $old_email ?>">
+            <input type="email" id="email" name="email" required value="<?= $old['email'] ?>">
         </div>
         <div class="flex flex-column mb-4">
             <label for="password">Password:</label>

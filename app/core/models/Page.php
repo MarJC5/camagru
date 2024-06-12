@@ -3,12 +3,13 @@
 namespace Camagru\core\models;
 
 use Camagru\core\models\AModel;
+use Camagru\core\models\Media;
 
 class Page extends AModel
 {
     protected $table = 'pages';
 
-    protected $fillable = ['title', 'content', 'slug', 'thumbnail'];
+    protected $fillable = ['title', 'content', 'slug', 'media_id'];
 
     public function __construct(?int $id = null)
     {
@@ -30,12 +31,18 @@ class Page extends AModel
         return $this->data->slug;
     }
 
+    public function media()
+    {
+        return new Media($this->data->media_id);
+    }
+
     public function validation()
     {
         return [
             'title' => 'required|min:3|max:255',
             'content' => 'required',
             'slug' => 'required|min:3|max:255|alpha_dash|unique:pages',
+            'media_id' => 'required|exists:medias,id'
         ];
     }
 }

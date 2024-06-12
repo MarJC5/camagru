@@ -17,6 +17,11 @@ class UserController {
 
         $_GET['title'] = 'Users';
 
+        // Convert all to user models
+        $users = array_map(function ($user) {
+            return new User($user['id']);
+        }, $users);
+
         echo loadView('user/index.php', [
             'users' => $users,
         ]);
@@ -73,10 +78,13 @@ class UserController {
 
         echo loadView('user/edit.php', [
             'user' => $user,
-            'form' => loadView('user/forms/update-form.php', [
+            'form' => loadView('user/form/_form.php', [
                 'user_id' => $user->id(),
-                'old_username' => $user->username(),
-                'old_email' => $user->email(),
+                'old' => [
+                    'username' => $user->username(),
+                    'email' => $user->email(),
+                    'role' => $user->role(),
+                ],
                 'notification' => $user->is_notification_enabled() ? 'Disable' : 'Enable',
             ]),
         ]);
@@ -215,6 +223,30 @@ class UserController {
         Router::redirect('profile');
     }
 
+    public static function edit_role()
+    {
+        // TODO : Check csrf_token validity
+
+        $user_id = $_POST['id'];
+        $user = User::where('id', $user_id)->first();
+
+        if (empty($user)) {
+            Session::set('error', 'Invalid user');
+            Router::redirect('error', ['code' => 404]);
+        }
+
+        $role = $_POST['role'];
+        $status = $user->update(['role' => $role]);
+
+        if ($status) {
+            Session::set('success', 'Role updated successfully');
+        } else {
+            Session::set('error', 'An error occurred while updating the role');
+        }
+
+        Router::redirect('profile');
+    }
+
     public static function reset_password($params) {
 
         $_GET['title'] = 'Reset password';
@@ -240,14 +272,14 @@ class UserController {
             }
 
             echo loadView('user/reset-password.php', [
-                'form' => loadView('user/forms/new-password.php', [
+                'form' => loadView('user/form/_new-password.php', [
                     'user_id' => $user_id,
                 ]),
             ]);
 
         } else {
             echo loadView('user/reset-password.php', [
-                'form' => loadView('user/forms/reset-password.php'),
+                'form' => loadView('user/form/_reset-password.php'),
             ]);
         }
     }
@@ -256,7 +288,7 @@ class UserController {
         $_GET['title'] = 'Validation needed';
 
         echo loadView('user/validate.php', [
-            'form' => loadView('user/forms/resend-email-validation.php', [
+            'form' => loadView('user/form/_resend-email-validation.php', [
                 'token' => Session::currentUser()->token(),
             ]),
         ]);

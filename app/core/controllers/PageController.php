@@ -57,7 +57,16 @@ class PageController {
     public static function create() {
         $_GET['title'] = 'New page';
 
-        echo loadView('page/create.php');
+        echo loadView('page/create.php', [
+            'form' => loadView('page/form/_form.php', [
+                'type' => 'create',
+                'old' => [
+                    'title' => '',
+                    'slug' => '',
+                    'content' => ''
+                ],
+            ])
+        ]);
     }
 
     public static function store() {

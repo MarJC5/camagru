@@ -19,6 +19,120 @@ a:hover {
     text-decoration: underline;
 }
 
+/* Text size */
+
+.text-xxs {
+    font-size: var(--text-xxs);
+}
+
+.text-xs {
+    font-size: var(--text-xs);
+}
+
+.text-sm {
+    font-size: var(--text-sm);
+}
+
+.text-base {
+    font-size: var(--text-base);
+}
+
+.text-lg {
+    font-size: var(--text-lg);
+}
+
+.text-xl {
+    font-size: var(--text-xl);
+}
+
+.text-2xl {
+    font-size: var(--text-2xl);
+}
+
+.text-3xl {
+    font-size: var(--text-3xl);
+}
+
+.text-4xl {
+    font-size: var(--text-4xl);
+}
+
+.text-5xl {
+    font-size: var(--text-5xl);
+}
+
+.text-6xl {
+    font-size: var(--text-6xl);
+}
+
+.text-7xl {
+    font-size: var(--text-7xl);
+}
+
+.text-8xl {
+    font-size: var(--text-8xl);
+}
+
+.text-9xl {
+    font-size: var(--text-9xl);
+}
+
+/* Text weight */
+
+.text-regular {
+    font-weight: var(--font-weight-regular);
+}
+
+.text-medium {
+    font-weight: var(--font-weight-medium);
+}
+
+.text-semibold {
+    font-weight: var(--font-weight-semibold);
+}
+
 .text-bold {
     font-weight: var(--font-weight-bold);
+}
+
+/* Text alignment */
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+/* Text decoration */
+
+.underline {
+    text-decoration: underline;
+}
+
+.underline-none {
+    text-decoration: none;
+}
+
+.underline-none:hover {
+    text-decoration: none;
+}
+
+/* Text transform */
+
+.capitalize {
+    text-transform: capitalize;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.lowercase {
+    text-transform: lowercase;
 }

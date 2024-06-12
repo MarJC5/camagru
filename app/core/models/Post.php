@@ -3,12 +3,13 @@
 namespace Camagru\core\models;
 
 use Camagru\core\models\AModel;
+use Camagru\core\models\Media;
 
 class Post extends AModel
 {
     protected $table = 'posts';
 
-    protected $fillable = ['user_id', 'image', 'caption'];
+    protected $fillable = ['user_id', 'media_id', 'caption'];
 
     public function __construct(?int $id = null)
     {
@@ -30,11 +31,16 @@ class Post extends AModel
         return $this->data->caption;
     }
 
+    public function media()
+    {
+        return new Media($this->data->media_id);
+    }
+
     public function validation()
     {
         return [
             'user_id' => 'required|exists:users',
-            'image' => 'required|image',
+            'media_id' => 'required|exists:medias,id',
             'caption' => 'required|max:255'
         ];
     }

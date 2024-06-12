@@ -34,6 +34,18 @@ abstract class AModel
         return $this->data->id;
     }
 
+    public function save()
+    {
+        $data = (array) $this->data;
+        $data = array_intersect_key($data, array_flip($this->fillable));
+
+        if ($this->id()) {
+            return $this->update($data);
+        } else {
+            return $this->insert($data);
+        }
+    }
+
     public static function find($id)
     {
         $instance = new static();

@@ -6,6 +6,7 @@ use Camagru\core\controllers\PageController;
 use Camagru\core\controllers\PostController;
 use Camagru\core\controllers\UserController;
 use Camagru\core\controllers\AuthController;
+use Camagru\core\controllers\MediaController;
 
 class Web {
     public static function routes() {
@@ -15,6 +16,7 @@ class Web {
             self::users(),
             self::posts(),
             self::pages(),
+            self::media(),
             self::auth(),
         );
     }
@@ -68,6 +70,12 @@ class Web {
                 'path' => '/profile/toggle-notification',
                 'name' => 'toggle_notification',
                 'action' => [UserController::class, 'toggle_notification']
+            ],
+            [
+                'method' => 'POST',
+                'path' => '/profile/edit-role',
+                'name' => 'edit_role',
+                'action' => [UserController::class, 'edit_role']
             ],
             [
                 'method' => 'POST',
@@ -161,18 +169,21 @@ class Web {
                 'method' => 'GET',
                 'path' => '/post/{id}/edit',
                 'name' => 'edit_post',
+                'secure' => 'admin|author',
                 'action' => [PostController::class, 'edit']
             ],
             [
                 'method' => 'GET',
                 'path' => '/post/create',
                 'name' => 'create_post',
+                'secure' => 'authentified',
                 'action' => [PostController::class, 'create']
             ],
             [
                 'method' => 'POST',
                 'path' => '/post',
                 'name' => 'store_post',
+                'secure' => 'authentified',
                 'action' => [PostController::class, 'store']
             ],
             [
@@ -182,15 +193,17 @@ class Web {
                 'action' => [PostController::class, 'show']
             ],
             [
-                'method' => 'PUT',
+                'method' => 'POST',
                 'path' => '/post/{id}',
                 'name' => 'update_post',
+                'secure' => 'authentified',
                 'action' => [PostController::class, 'update']
             ],
             [
-                'method' => 'DELETE',
+                'method' => 'POST',
                 'path' => '/post/{id}',
                 'name' => 'delete_post',
+                'secure' => 'admin|author',
                 'action' => [PostController::class, 'delete']
             ]
         ];
@@ -215,20 +228,23 @@ class Web {
             ],
             [
                 'method' => 'GET',
-                'path' => '/{slug}/edit',
+                'path' => '/{id}/edit',
                 'name' => 'edit_page',
+                'secure' => 'admin',
                 'action' => [PageController::class, 'edit']
             ],
             [
                 'method' => 'GET',
                 'path' => '/page/create',
                 'name' => 'create_page',
+                'secure' => 'admin',
                 'action' => [PageController::class, 'create']
             ],
             [
                 'method' => 'POST',
                 'path' => '/page',
                 'name' => 'store_page',
+                'secure' => 'admin',
                 'action' => [PageController::class, 'store']
             ],
         ];
@@ -265,6 +281,32 @@ class Web {
                 'name' => 'setup',
                 'action' => [PageController::class, 'setup']
             ]
+        ];
+    }
+
+    /**
+     * Media routes
+     */
+    public static function media() {
+        return [
+            [
+                'method' => 'POST',
+                'path' => '/media/upload',
+                'name' => 'upload_media',
+                'action' => [MediaController::class, 'upload']
+            ],
+            [
+                'method' => 'POST',
+                'path' => '/media/delete',
+                'name' => 'delete_media',
+                'action' => [MediaController::class, 'delete']
+            ],
+            [
+                'method' => 'GET',
+                'path' => '/media/{id}',
+                'name' => 'media_show',
+                'action' => [MediaController::class, 'show']
+            ],
         ];
     }
 }

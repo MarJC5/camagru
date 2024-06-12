@@ -2,7 +2,7 @@
     --btn-text-color: var(--color-white);
     --btn-bg-color: var(--color-main);
     --btn-border: 1px solid var(--color-main);
-    --btn-radius: var(--radius);
+    --btn-radius: var(--radius-md);
     --btn-padding: var(--space-2) var(--space-4);
     --ease: ease-in-out;
 }
@@ -26,13 +26,17 @@
     text-decoration: none;
 }
 
+.button--header {
+    padding: var(--space-1) var(--space-3);
+}
+
 .button--icon svg {
-    width: 1.3em;
-    height: 1.3em;
+    width: var(--space-4);
+    height: var(--space-4);
 }
 
 .button--secondary {
-    color: var(--color-main);
+    color: var(--color-main-text);
     background-color: var(--color-white);
     border: 1px solid var(--color-main);
 }
@@ -49,7 +53,7 @@
 }
 
 .button--danger:hover {
-    color: var(--color-danger-text);
+    color: var(--color-danger);
     background-color: var(--color-white);
 }
 
@@ -60,7 +64,7 @@
 }
 
 .button--warning:hover {
-    color: var(--color-warning-text);
+    color: var(--color-warning);
     background-color: var(--color-white);
 }
 
@@ -71,15 +75,27 @@
 }
 
 .button--success:hover {
-    color: var(--color-success-text);
+    color: var(--color-success);
     background-color: var(--color-white);
 }
+
+.button--info {
+    color: var(--color-info-text);
+    background-color: var(--color-info);
+    border: 1px solid var(--color-info);
+}
+
+.button--info:hover {
+    color: var(--color-info);
+    background-color: var(--color-white);
+}
+
 
 .select {
     display: inline-block;
     padding: var(--space-2) var(--space-4);
     border: 1px solid var(--color-main);
-    border-radius: var(--radius);
+    border-radius: var(--radius-md);
     background-color: var(--color-white);
     color: var(--color-main);
     transition: all 0.3s var(--ease);
