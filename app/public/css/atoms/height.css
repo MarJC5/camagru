@@ -21,6 +21,19 @@
 .h-auto {
     height: auto;
 }
+
+.h-content {
+    height: calc(100vh - 215px);
+}
+
+.h-fit-content {
+    height: fit-content;
+}
+
+.max-h-half-vh {
+    max-height: 55vh;
+}
+
 .h-0 { height: var(--space-0); }
 .h-0-5 { height: var(--space-0-5); }
 .h-1 { height: var(--space-1); }

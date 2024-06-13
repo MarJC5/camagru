@@ -66,7 +66,9 @@ document.addEventListener("DOMContentLoaded", () => {
                             ? "rounded-top-md"
                             : ""
                         }">
-                        <a href="/post/${escapeHTML(post.id)}" class="absolute top-0 left-0 w-full h-full">
+                        <a href="/post/${escapeHTML(
+                          post.id
+                        )}" class="absolute top-0 left-0 w-full h-full">
                             <figure class="m-0">
                                 <picture>
                                     <img
@@ -112,12 +114,16 @@ document.addEventListener("DOMContentLoaded", () => {
                                             </button>
                                         <button class="button-share share share-facebook">
                                             <svg stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.1 23.7v-8H6.6V12h2.5v-1.5c0-4.1 1.8-6 5.9-6h1.4a8.7 8.7 0 0 1 1.2.3V8a8.6 8.6 0 0 0-.7 0 26.8 26.8 0 0 0-.7 0c-.7 0-1.3 0-1.7.3a1.7 1.7 0 0 0-.7.6c-.2.4-.3 1-.3 1.7V12h3.9l-.4 2.1-.3 1.6h-3.2V24a12 12 0 1 0-4.4-.3Z"/></svg>
-                                            </button>
+                                        </button>
                                         <button class="button-share share share-linkedin">
                                             <svg stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.4 20.5H17v-5.6c0-1.3 0-3-1.9-3-1.8 0-2 1.4-2 2.9v5.7H9.3V9h3.4v1.6c.5-1 1.6-1.9 3.4-1.9 3.6 0 4.2 2.4 4.2 5.5v6.3zm-15-13a2 2 0 1 1 0-4.2 2 2 0 0 1 0 4.1zm1.7 13H3.6V9H7v11.5zM22.2 0H1.8C.8 0 0 .8 0 1.7v20.6c0 1 .8 1.7 1.8 1.7h20.4c1 0 1.8-.8 1.8-1.7V1.7c0-1-.8-1.7-1.8-1.7z"/></svg>
                                         </button>
                                     </div>
-                                <div>
+                                  </div>
+                            </div>
+
+                            <div class="px-4 pb-3">
+                              <p class="m-0 ml-1-5 text-gray-500 text-sm">${escapeHTML(post.count_likes)} ${escapeHTML(post.count_likes) > 1 ? 'Likes' : 'Like'}</p>
                             </div>
                         </div>
                     `;
@@ -131,35 +137,40 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!shareAction) return;
 
             shareAction.addEventListener("click", (event) => {
-                let nodeItem = event.target;
-                if (nodeItem.tagName === "svg") {
-                    nodeItem = nodeItem.parentNode;
-                } else if (nodeItem.tagName === "path") {
-                    nodeItem = nodeItem.parentNode.parentNode;
+              let nodeItem = event.target;
+              if (nodeItem.tagName === "svg") {
+                nodeItem = nodeItem.parentNode;
+              } else if (nodeItem.tagName === "path") {
+                nodeItem = nodeItem.parentNode.parentNode;
+              }
+              const shareAction = document.querySelector(
+                `.share-actions-id-${nodeItem.dataset.shareActionsId}`
+              );
+              const shareActionId = nodeItem.dataset.shareActionsId;
+
+              // close all share actions
+              document
+                .querySelectorAll(".share-actions")
+                .forEach((shareAction) => {
+                  shareAction.classList.add("hidden");
+                  shareAction.classList.remove("flex");
+                });
+
+              shareAction.classList.remove("hidden");
+              shareAction.classList.add("flex");
+
+              // reset click outside
+              document.addEventListener("click", (event) => {
+                if (
+                  !shareAction.contains(event.target) &&
+                  !nodeItem.contains(event.target)
+                ) {
+                  shareAction.classList.add("hidden");
+                  shareAction.classList.remove("flex");
                 }
-                const shareAction = document.querySelector(
-                    `.share-actions-id-${nodeItem.dataset.shareActionsId}`
-                );
-                const shareActionId = nodeItem.dataset.shareActionsId;
+              });
 
-                // close all share actions
-                document.querySelectorAll(".share-actions").forEach((shareAction) => {
-                    shareAction.classList.add("hidden");
-                    shareAction.classList.remove("flex");
-                });
-
-                shareAction.classList.remove("hidden");
-                shareAction.classList.add("flex");
-
-                // reset click outside
-                document.addEventListener("click", (event) => {
-                    if (!shareAction.contains(event.target) && !nodeItem.contains(event.target)) {
-                        shareAction.classList.add("hidden");
-                        shareAction.classList.remove("flex");
-                    }
-                });
-
-                shareAction
+              shareAction
                 .querySelector(".share-facebook")
                 .addEventListener("click", () => {
                   const postUrl =
@@ -170,7 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   window.open(facebookShareUrl, "_blank");
                 });
 
-                shareAction
+              shareAction
                 .querySelector(".share-linkedin")
                 .addEventListener("click", () => {
                   const postUrl =
@@ -181,7 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   window.open(linkedinShareUrl, "_blank");
                 });
 
-                shareAction
+              shareAction
                 .querySelector(".share-x")
                 .addEventListener("click", () => {
                   const postUrl =

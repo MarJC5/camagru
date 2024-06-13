@@ -60,7 +60,7 @@ class UserController {
             Router::redirect('error', ['code' => 404]);
         }
 
-        if ($user->id() === Session::currentUser()->id()) {
+        if (Session::currentUser() && ($user->id() === Session::currentUser()->id())) {
             return self::profile();
         }
 

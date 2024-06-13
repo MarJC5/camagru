@@ -16,7 +16,7 @@ footer {
 .row {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: var(--space-4);
+    padding: var(--space-6);
 }
 
 .hidden {
@@ -70,4 +70,69 @@ footer {
 
 .object-cover {
     object-fit: cover;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.overflow-auto {
+    overflow: auto;
+}
+
+.overflow-x-auto {
+    overflow-x: auto;
+}
+
+.overflow-y-auto {
+    overflow-y: auto;
+}
+
+.overflow-visible {
+    overflow: visible;
+}
+
+.overflow-scroll {
+    overflow: scroll;
+}
+
+.overflow-y-scroll {
+    overflow-y: scroll;
+}
+
+.overflow-x-scroll {
+    overflow-x: scroll;
+}
+
+body {
+    --sb-track-color: transparent;
+    --sb-thumb-color: var(--gray-100);
+    --sb-size: 6px;
+}
+
+/* Webkit browsers (Chrome, Safari) */
+body::-webkit-scrollbar {
+    width: var(--sb-size);
+    height: var(--sb-size);
+}
+
+body::-webkit-scrollbar-track {
+    background: var(--sb-track-color);
+    border-radius: 3px;
+}
+
+body::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb-color);
+    border-radius: 3px;
+}
+
+/* Firefox */
+body {
+    scrollbar-width: thin;
+    scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+}
+
+/* Optional: Specific customization for scrollbar height in Firefox */
+body::-moz-scrollbar {
+    height: var(--sb-size);
 }

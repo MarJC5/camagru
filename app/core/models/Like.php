@@ -3,6 +3,7 @@
 namespace Camagru\core\models;
 
 use Camagru\core\models\AModel;
+use Camagru\helpers\Logger;
 
 class Like extends AModel
 {
@@ -24,6 +25,14 @@ class Like extends AModel
     {
         return $this->data->post_id;
     }
+
+    public static function hasLiked($user_id, $post_id)
+    {
+        // If the user has liked the post, return true else return false
+        $likes = self::where('user_id', $user_id)->andWhere('post_id', $post_id)->first();
+        return $likes ? $likes->id() : false;
+    }
+
 
     public function validation()
     {

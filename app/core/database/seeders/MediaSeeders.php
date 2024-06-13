@@ -23,32 +23,28 @@ class MediaSeeders extends ASeeders
     public function createInteractions()
     {
         $all = Post::all();
+
         // Create Fake comments & likes for each post
+        $all = array_map(function($post) {
+            return Post::where('id', $post['id'])->first();
+        }, $all);
         foreach ($all as $post) {
-            $this->createComments($post['id']);
-            $this->createLikes($post['id']);
+            $this->createComments($post->id());
+            $this->createLikes($post->id());
         }
     }
 
     private function createComments($post_id)
     {
-        $comments = [
-            [
+        $comments = [];
+
+        for ($i = 0; $i < 10; $i++) {
+            $comments[] = [
                 'post_id' => $post_id,
-                'user_id' => 1,
-                'comment' => 'This is a great photo!',
-            ],
-            [
-                'post_id' => $post_id,
-                'user_id' => 2,
-                'comment' => 'I love this photo!',
-            ],
-            [
-                'post_id' => $post_id,
-                'user_id' => 3,
-                'comment' => 'This photo is amazing!',
-            ],
-        ];
+                'user_id' => $i + 1,
+                'comment' => 'This is a comment ' . $i,
+            ];
+        }
 
         foreach ($comments as $comment) {
             $this->db->insertIfNotExists('comments', $comment, 'user_id');
@@ -57,20 +53,14 @@ class MediaSeeders extends ASeeders
 
     private function createLikes($post_id)
     {
-        $likes = [
-            [
+        $likes = [];
+
+        for ($i = 0; $i < 10; $i++) {
+            $likes[] = [
                 'post_id' => $post_id,
-                'user_id' => 1,
-            ],
-            [
-                'post_id' => $post_id,
-                'user_id' => 2,
-            ],
-            [
-                'post_id' => $post_id,
-                'user_id' => 3,
-            ],
-        ];
+                'user_id' => $i + 1,
+            ];
+        }
 
         foreach ($likes as $like) {
             $this->db->insertIfNotExists('likes', $like, 'user_id');

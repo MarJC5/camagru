@@ -103,6 +103,7 @@ abstract class AModel
         return $this;
     }
 
+
     public function get()
     {
         $data = $this->db->query($this->query);
@@ -180,10 +181,13 @@ abstract class AModel
         return (array) $this->data;
     }
 
-    public static function count()
+    public static function count($column = null, $value = null)
     {
         $instance = new static();
         $sql = "SELECT COUNT(*) FROM {$instance->table}";
+        if ($column && $value) {
+            $sql .= " WHERE {$column} = " . $instance->db->quote($value);
+        }
         return $instance->db->query($sql)[0]['COUNT(*)'];
     }
 

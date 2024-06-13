@@ -4,6 +4,7 @@ namespace Camagru\core\models;
 
 use Camagru\core\models\AModel;
 use Camagru\core\models\User;
+use function Camagru\getElapsedTime;
 
 class Comment extends AModel
 {
@@ -47,6 +48,7 @@ class Comment extends AModel
             'post_id' => $this->post(),
             'comment' => $this->comment(),
             'user' => User::where('id', $this->user())->first()->toJSON(),
+            'created_at' => getElapsedTime($this->created_at()),
         ];
     }
 }

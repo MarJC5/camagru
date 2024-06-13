@@ -1,0 +1,17 @@
+/* Border */
+
+.border-1 {
+    border: 1px solid;
+}
+
+/* Border Radius */
+
+.border-radius-md {
+    border-radius: var(--radius-md);
+}
+
+/* Border Color */
+
+.border-gray-300 {
+    border-color: var(--gray-300);
+}

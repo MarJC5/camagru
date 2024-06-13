@@ -200,3 +200,31 @@ function getHttpStatusMessage($code) {
 
     return $statusCodes[$code] ?? 'Unknown status';
 }
+
+/**
+ * Calculate the elapsed time between the given date and the current date.
+ */
+function getElapsedTime($dateString) {
+    // Timezone
+    date_default_timezone_set('Europe/Zurich');
+    // Create a DateTime object from the given date string
+    $date = new \DateTime($dateString);
+    // Get the current date and time
+    $now = new \DateTime();
+    // Calculate the difference
+    $interval = $date->diff($now);
+
+    if ($interval->y > 0) {
+        return $interval->y . ' years';
+    } elseif ($interval->m > 0) {
+        return $interval->m . ' months';
+    } elseif ($interval->d > 0) {
+        return $interval->d . ' days';
+    } elseif ($interval->h > 0) {
+        return $interval->h . ' hours';
+    } elseif ($interval->i > 0) {
+        return $interval->i . ' minutes';
+    } else {
+        return $interval->s . ' seconds';
+    }
+}

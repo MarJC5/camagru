@@ -7,6 +7,8 @@ use Camagru\core\controllers\PostController;
 use Camagru\core\controllers\UserController;
 use Camagru\core\controllers\AuthController;
 use Camagru\core\controllers\MediaController;
+use Camagru\core\controllers\CommentController;
+use Camagru\core\controllers\LikeController;
 
 class Web {
     public static function routes() {
@@ -14,6 +16,8 @@ class Web {
             
             self::errors(),
             self::setup(),
+            self::comments(),
+            self::likes(),
             self::media(),
             self::users(),
             self::posts(),
@@ -260,6 +264,51 @@ class Web {
     }
 
     /**
+     * Comment routes
+     */
+
+    private static function comments() {
+        return [
+            [
+                'method' => 'POST',
+                'path' => '/comment',
+                'name' => 'store_comment',
+                'secure' => 'authentified',
+                'action' => [CommentController::class, 'store']
+            ],
+            [
+                'method' => 'POST',
+                'path' => '/comment/{id}',
+                'name' => 'delete_comment',
+                'secure' => 'admin|self',
+                'action' => [CommentController::class, 'delete']
+            ]
+        ];
+    }
+
+    /**
+     * Like routes
+     */
+    private static function likes() {
+        return [
+            [
+                'method' => 'POST',
+                'path' => '/like',
+                'name' => 'store_like',
+                'secure' => 'authentified',
+                'action' => [LikeController::class, 'store']
+            ],
+            [
+                'method' => 'POST',
+                'path' => '/unlike',
+                'name' => 'delete_like',
+                'secure' => 'authentified',
+                'action' => [LikeController::class, 'delete']
+            ]
+        ];
+    }
+
+    /**
      * Handle errors
      */
     public static function errors() {
@@ -276,7 +325,7 @@ class Web {
     /**
      * Redirect to setup page if not installed
      */
-    public static function setup() {
+    private static function setup() {
         return [
             [
                 'method' => 'GET',
@@ -296,7 +345,7 @@ class Web {
     /**
      * Media routes
      */
-    public static function media() {
+    private static function media() {
         return [
             [
                 'method' => 'POST',

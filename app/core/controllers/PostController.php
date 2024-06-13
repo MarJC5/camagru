@@ -4,9 +4,7 @@ namespace Camagru\core\controllers;
 
 use Camagru\helpers\Session;
 use Camagru\routes\Router;
-use Camagru\core\models\Media;
 use Camagru\core\models\Post;
-use Camagru\core\models\User;
 use Camagru\core\middlewares\Validation;
 use Camagru\helpers\Logger;
 
@@ -36,14 +34,12 @@ class PostController {
             Router::redirect('error', ['code' => 404]);
         }
 
-        echo loadView('post/show.php', [
-            'post' => $post,
-        ]);
+        echo loadView('post/show.php', $post->toJSON());
     }
 
-    public static function edit($id) {
+    public static function edit($data) {
         // TODO : Check csrf_token validity
-
+        $id = $data['id'];
         $post = new Post($id);
 
         if (empty($post)) {
@@ -91,9 +87,9 @@ class PostController {
         }
     }
 
-    public static function update($id, $data) {
+    public static function update($data) {
         // TODO : Check csrf_token validity
-
+        $id = $data['id'];
         $post = new Post($id);
 
         if (empty($post)) {

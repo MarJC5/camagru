@@ -9,9 +9,23 @@ h1 {
     font-size: 2.986rem;
 }
 
+@media (max-width: 768px) {
+    .h1,
+    h1 {
+        font-size: var(--text-2xl);
+    }
+}
+
 .h2,
 h2 {
     font-size: 2.488rem;
+}
+
+@media (max-width: 768px) {
+    .h2,
+    h2 {
+        font-size: var(--text-xl);
+    }
 }
 
 .h3,
@@ -19,9 +33,23 @@ h3 {
     font-size: 2.074rem;
 }
 
+@media (max-width: 768px) {
+    .h3,
+    h3 {
+        font-size: var(--text-lg);
+    }
+}
+
 .h4,
 h4 {
     font-size: 1.728rem;
+}
+
+@media (max-width: 768px) {
+    .h4,
+    h4 {
+        font-size: var(--text-base);
+    }
 }
 
 .h5,
@@ -29,15 +57,30 @@ h5 {
     font-size: 1.44rem;
 }
 
+@media (max-width: 768px) {
+    .h5,
+    h5 {
+        font-size: var(--text-sm);
+    }
+}
+
 .h6,
 h6 {
     font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .h6,
+    h6 {
+        font-size: var(--text-xs);
+    }
 }
 
 .paragraph,
 p {
     font-size: 1rem;  /* Standard paragraph text */
 }
+
 
 .text-small,
 small {

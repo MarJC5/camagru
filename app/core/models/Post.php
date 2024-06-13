@@ -53,15 +53,15 @@ class Post extends AModel
         return [
             'id' => $this->id(),
             'caption' => $this->caption(),
-            'count_comments' => $this->comments()->count(),
-            'count_likes' => $this->likes()->count(),
+            'count_comments' => $this->comments()->count('post_id', $this->id()),
+            'count_likes' => $this->likes()->count('post_id', $this->id()),
             'created_at' => $this->created_at(),
             'updated_at' => $this->updated_at(),
             'user' => User::where('id', $this->user())->first()->toJSON(),
             'media' => $this->media()->toJSON(),
-            'comments' => $this->comments()->map(function ($comment) {
+            'comments' => array_reverse($this->comments()->map(function ($comment) {
                 return $comment->toJSON();
-            }),
+            })),
             'likes' => $this->likes()->map(function ($like) {
                 return $like->toJSON();
             }),
