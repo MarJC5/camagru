@@ -11,6 +11,8 @@ class Post extends AModel
 
     protected $fillable = ['user_id', 'media_id', 'caption'];
 
+    const PAGINATE = 6;
+
     public function __construct(?int $id = null)
     {
         parent::__construct($id);
@@ -34,6 +36,36 @@ class Post extends AModel
     public function media()
     {
         return new Media($this->data->media_id);
+    }
+
+    public function comments()
+    {
+        return Comment::where('post_id', $this->id());
+    }
+
+    public function likes()
+    {
+        return Like::where('post_id', $this->id());
+    }
+
+    public function toJSON()
+    {
+        return [
+            'id' => $this->id(),
+            'caption' => $this->caption(),
+            'count_comments' => $this->comments()->count(),
+            'count_likes' => $this->likes()->count(),
+            'created_at' => $this->created_at(),
+            'updated_at' => $this->updated_at(),
+            'user' => User::where('id', $this->user())->first()->toJSON(),
+            'media' => $this->media()->toJSON(),
+            'comments' => $this->comments()->map(function ($comment) {
+                return $comment->toJSON();
+            }),
+            'likes' => $this->likes()->map(function ($like) {
+                return $like->toJSON();
+            }),
+        ];
     }
 
     public function validation()

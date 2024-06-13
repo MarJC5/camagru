@@ -11,12 +11,13 @@ use Camagru\core\controllers\MediaController;
 class Web {
     public static function routes() {
         return array_merge(
+            
             self::errors(),
             self::setup(),
+            self::media(),
             self::users(),
             self::posts(),
             self::pages(),
-            self::media(),
             self::auth(),
         );
     }
@@ -69,18 +70,21 @@ class Web {
                 'method' => 'POST',
                 'path' => '/profile/toggle-notification',
                 'name' => 'toggle_notification',
+                'secure' => 'admin|self',
                 'action' => [UserController::class, 'toggle_notification']
             ],
             [
                 'method' => 'POST',
                 'path' => '/profile/edit-role',
                 'name' => 'edit_role',
+                'secure' => 'admin',
                 'action' => [UserController::class, 'edit_role']
             ],
             [
                 'method' => 'POST',
                 'path' => '/profile/resend-email-validation',
                 'name' => 'resend_email_validation',
+                'secure' => 'admin|self',
                 'action' => [UserController::class, 'resend_email_validation']
             ],
             [
@@ -106,6 +110,7 @@ class Web {
                 'method' => 'GET',
                 'path' => '/profile/validation-needed',
                 'name' => 'validation_needed',
+                'secure' => 'self',
                 'action' => [UserController::class, 'validation_needed']
             ],
             [
@@ -119,6 +124,7 @@ class Web {
                 'method' => 'GET',
                 'path' => '/profile',
                 'name' => 'profile',
+                'secure' => 'self',
                 'action' => [UserController::class, 'profile']
             ],
             [
@@ -131,6 +137,7 @@ class Web {
                 'method' => 'GET',
                 'path' => '/user/{id}/edit',
                 'name' => 'edit_user',
+                'secure' => 'admin|self',
                 'action' => [UserController::class, 'edit']
             ],
             [
@@ -143,12 +150,14 @@ class Web {
                 'method' => 'POST',
                 'path' => '/user',
                 'name' => 'update_user',
+                'secure' => 'admin|self',
                 'action' => [UserController::class, 'update']
             ],
             [
                 'method' => 'POST',
                 'path' => '/user',
                 'name' => 'delete_user',
+                'secure' => 'admin|self',
                 'action' => [UserController::class, 'delete']
             ],
         ];
@@ -169,7 +178,7 @@ class Web {
                 'method' => 'GET',
                 'path' => '/post/{id}/edit',
                 'name' => 'edit_post',
-                'secure' => 'admin|author',
+                'secure' => 'admin|self',
                 'action' => [PostController::class, 'edit']
             ],
             [
@@ -203,7 +212,7 @@ class Web {
                 'method' => 'POST',
                 'path' => '/post/{id}',
                 'name' => 'delete_post',
-                'secure' => 'admin|author',
+                'secure' => 'admin|self',
                 'action' => [PostController::class, 'delete']
             ]
         ];
@@ -299,11 +308,12 @@ class Web {
                 'method' => 'POST',
                 'path' => '/media/delete',
                 'name' => 'delete_media',
+                'secure' => 'admin|self',
                 'action' => [MediaController::class, 'delete']
             ],
             [
                 'method' => 'GET',
-                'path' => '/media/{id}',
+                'path' => '/medias/{filename}',
                 'name' => 'media_show',
                 'action' => [MediaController::class, 'show']
             ],

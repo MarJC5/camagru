@@ -26,6 +26,12 @@
     text-decoration: none;
 }
 
+.button--reset {
+    color: var(--color-main);
+    background-color: var(--color-white);
+    border: none;
+}
+
 .button--header {
     padding: var(--space-1) var(--space-3);
 }
@@ -33,6 +39,38 @@
 .button--icon svg {
     width: var(--space-4);
     height: var(--space-4);
+}
+
+.button--svg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.button--svg svg:hover {
+    color: var(--gray-500);
+}
+
+.button--svg svg {
+    width: var(--space-5);
+    height: var(--space-5);
+}
+
+.button-share {
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.button-share svg {
+    width: var(--space-4);
+    height: var(--space-4);
+    stroke: none;
 }
 
 .button--secondary {

@@ -113,7 +113,7 @@ function mail_path($path = '') {
  */
 function load_template($path) {
     ob_start();
-    include_once $path;
+    include $path;
     return ob_get_clean();
 }
 
@@ -137,14 +137,14 @@ function get_footer() {
 function partials($path, $data = []) {
     extract($data);
     ob_start();
-    include_once components_path($path);
+    include components_path($path);
     return ob_get_clean();
 }
 
 function loadView($path, $data = []) {
     extract($data);
     ob_start();
-    include_once views_path($path);
+    include views_path($path);
     return ob_get_clean();
 }
 

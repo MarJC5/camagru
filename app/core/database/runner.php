@@ -3,6 +3,7 @@
 namespace Camagru\core\database;
 
 use Camagru\core\database\Database;
+use Camagru\helpers\Config;
 
 class Runner {
     private $db;
@@ -44,6 +45,13 @@ class Runner {
                 $this->db->execute("DELETE FROM migrations WHERE migration = ?", [$migrationFile]);
                 echo "Rolled back: " . $migrationFile . PHP_EOL;
             }
+        }
+
+        // Delete all uploaded images inside the uploads folder
+        $dir = BASE_PATH . '/' . Config::get('media')['path'];
+        $files = array_diff(scandir($dir), ['.', '..']);
+        foreach ($files as $file) {
+            unlink($dir . '/' . $file);
         }
     }
 

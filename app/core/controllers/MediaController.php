@@ -5,24 +5,25 @@ namespace Camagru\core\controllers;
 use Camagru\routes\Router;
 use Camagru\core\models\Media;
 use Camagru\helpers\Session;
-
-use function Camagru\loadView;
+use Camagru\helpers\Logger;
 
 class MediaController
 {
     public static function show($data)
     {
-        $id = $data['id'];
-        $media = new Media($id );
+        $media_path = 'storage/uploads/medias/' . $data['filename'];
+        $media = Media::where('media_path', $media_path)->first();
         
         if (empty($media)) {
             Session::set('error', 'Invalid user');
             Router::redirect('error', ['code' => 404]);
         }
 
-        echo loadView('media/show.php', [
-            'media' => $media,
-        ]);
+        // Set the content type header to the media's mime type
+        header('Content-Type: ' . $media->mimeType());
+
+        // Read the file and output it
+        echo readfile(BASE_PATH . '/' . $media->path());
     }
 
     public static function upload()

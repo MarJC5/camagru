@@ -1,3 +1,15 @@
+.bg-main {
+    background-color: var(--color-main);
+}
+
+.bg-white {
+    background-color: var(--color-white);
+}
+
+.text-main {
+    color: var(--color-main);
+}
+
 /* Gray */
 .bg-gray-50 {
     background-color: var(--gray-50);

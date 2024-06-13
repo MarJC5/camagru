@@ -8,6 +8,7 @@ use Camagru\routes\Router;
 use Camagru\core\middlewares\Validation;
 use Camagru\helpers\CSRF;
 use Camagru\helpers\Logger;
+use Camagru\helpers\Slugify;
 
 use function Camagru\loadView;
 
@@ -59,6 +60,11 @@ class AuthController
     {
         $validation = new Validation();
         $user = new User();
+
+        if (isset($data['username'])) {
+            $data['username'] = Slugify::format($data['username']);
+        }
+        
         $data = [
             'username' => filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
             'password' => password_hash($_POST['password'], PASSWORD_DEFAULT), // Hashing the password

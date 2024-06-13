@@ -170,8 +170,7 @@ class PageController {
                 'UserSeeders',
                 'PageSeeders',
                 'PostSeeders',
-                'CommentSeeders',
-                'LikeSeeders',
+                'MediaSeeders',
             ];
     
             foreach ($seeders as $seeder) {

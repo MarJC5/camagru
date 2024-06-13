@@ -5,6 +5,7 @@ namespace Camagru\config;
 use Camagru\helpers\Env;
 
 return [
+    'site_url' => Env::get('APP_URL', 'https://localhost'),
     'name' => Env::get('APP_NAME', 'Camagru'),
     'timezone' => Env::get('APP_TIMEZONE', 'UTC'),
     'locale' => Env::get('APP_LOCALE', 'fr'),
@@ -17,6 +18,6 @@ return [
             'png' => 'image/png',
             'gif' => 'image/gif'
         ],
-        'path' => 'storage/uploads/medias/'
+        'path' => 'storage/uploads/medias/',
     ],
 ];

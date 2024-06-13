@@ -21,12 +21,14 @@ class Api {
             [
                 'method' => 'GET',
                 'path' => '/api/posts',
+                'query' => ['page', 'limit', 'sort', 'order', 'user_id'],
+                'name' => 'posts_json',
                 'action' => [PostController::class, 'json']
             ],
             [
                 'method' => 'GET',
                 'path' => '/api/post/{id}',
-                'name' => 'post',
+                'name' => 'show_json',
                 'action' => [PostController::class, 'show_json']
             ],
         ];

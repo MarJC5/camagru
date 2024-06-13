@@ -1,4 +1,5 @@
 docker/services/mysql/8
+/app/storage/uploads/medias/
 
 ##### Windows
 # Windows thumbnail cache files

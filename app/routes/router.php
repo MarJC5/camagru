@@ -35,6 +35,7 @@ class Router
                 $params = array_merge($params, self::extractQueryParams($query));
 
                 // Logger::log($route['method'] . ' ' .  $route['path']);
+                // Logger::log('PARAMS' . ' ' .  print_r($params, true));
                 
                 // Capture the output of the controller action
                 $output = call_user_func_array($route['action'], [$params]);

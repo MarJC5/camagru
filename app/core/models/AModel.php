@@ -34,6 +34,16 @@ abstract class AModel
         return $this->data->id;
     }
 
+    public function created_at()
+    {
+        return $this->data->created_at;
+    }
+
+    public function updated_at()
+    {
+        return $this->data->updated_at;
+    }
+
     public function save()
     {
         $data = (array) $this->data;
@@ -44,6 +54,31 @@ abstract class AModel
         } else {
             return $this->insert($data);
         }
+    }
+
+    public function map($callback)
+    {
+        $data = $this->get();
+        // convert all to self object
+        $data = array_map(function ($item) {
+            $instance = new static();
+            $instance->data = (object) $item;
+            return $instance;
+        }, $data);
+
+        return array_map($callback, $data);
+    }
+
+    public static function paginate($offset, $limit, $filter = []) {
+        $instance = new static();
+        $sql = "";
+        if ($filter) {
+            $sql = "SELECT * FROM {$instance->table} WHERE {$filter['key']} = {$filter['value']} LIMIT {$limit} OFFSET {$offset}";
+        } else {
+            $sql = "SELECT * FROM {$instance->table} LIMIT {$limit} OFFSET {$offset}";
+        }
+        
+        return $instance->db->query($sql);
     }
 
     public static function find($id)

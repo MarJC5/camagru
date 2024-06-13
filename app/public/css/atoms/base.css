@@ -46,3 +46,11 @@ span.anchor {
 .reset-ul {
     list-style-type: none;
 }
+
+hr {
+    height: 1px;
+    width: 100%;
+    border: none;
+    margin: 0;
+    background-color: var(--gray-100);
+}

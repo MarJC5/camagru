@@ -54,6 +54,21 @@ class User extends AModel
         return $this->data->token;
     }
 
+    public function likes()
+    {
+        return Like::where('user_id', $this->id());
+    }
+
+    public function comments()
+    {
+        return Comment::where('user_id', $this->id());
+    }
+
+    public function posts()
+    {
+        return Post::where('user_id', $this->id());
+    }
+
     public function is_validated()
     {
         return $this->data->validated;
@@ -72,6 +87,14 @@ class User extends AModel
     public function is_notification_enabled()
     {
         return $this->data->notification;
+    }
+
+    public function toJSON()
+    {
+        return [
+            'id' => $this->id(),
+            'username' => $this->username(),
+        ];
     }
 
     public function validate($token)

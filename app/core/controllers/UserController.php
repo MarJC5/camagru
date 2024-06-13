@@ -8,6 +8,7 @@ use Camagru\routes\Router;
 use Camagru\core\models\User;
 use Camagru\core\middlewares\Validation;
 use Camagru\helpers\Logger;
+use Camagru\helpers\Slugify;
 
 use function Camagru\loadView;
 
@@ -17,9 +18,9 @@ class UserController {
 
         $_GET['title'] = 'Users';
 
-        // Convert all to user models
-        $users = array_map(function ($user) {
-            return new User($user['id']);
+        // Convert to array
+        $users = array_map(function($user) {
+            return User::where('id', $user['id'])->first();
         }, $users);
 
         echo loadView('user/index.php', [
@@ -57,6 +58,10 @@ class UserController {
         if (empty($user)) {
             Session::set('error', 'Invalid user');
             Router::redirect('error', ['code' => 404]);
+        }
+
+        if ($user->id() === Session::currentUser()->id()) {
+            return self::profile();
         }
 
         $_GET['title'] = '@' . $user->username();
@@ -128,6 +133,10 @@ class UserController {
                 }
 
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+            }
+
+            if (isset($data['username'])) {
+                $data['username'] = Slugify::format($data['username']);
             }
 
             $status = $user->update($data);

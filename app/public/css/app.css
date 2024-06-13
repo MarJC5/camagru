@@ -1,9 +1,9 @@
 /**
 * ATOMS
 */
+@import "atoms/root.css";
 @import "atoms/normalize.css";
 @import "atoms/base.css";
-@import "atoms/root.css";
 @import "atoms/colors.css";
 @import "atoms/height.css";
 @import "atoms/width.css";
@@ -12,16 +12,16 @@
 @import "atoms/spacing.css";
 @import "atoms/buttons.css";
 @import "atoms/title.css";
+@import "atoms/container.css";
 
 /**
 * MOLECULES
 */
-@import "molecules/container.css";
 @import "molecules/grid.css";
 @import "molecules/flex-columns.css";
 @import "molecules/forms.css";
 @import "molecules/alerts.css";
-
+@import "molecules/modal.css";
 
 /**
 * ORGANISMS

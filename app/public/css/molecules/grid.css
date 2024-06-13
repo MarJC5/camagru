@@ -81,6 +81,12 @@
     }
 }
 
+@media (max-width: 768px) {
+    .grid--3 {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Variant 3-4 grid styling */
 .grid--3-4 {
     display: grid;
