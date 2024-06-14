@@ -4,50 +4,86 @@ namespace Camagru\core\models;
 
 use Camagru\core\models\AModel;
 use Camagru\core\models\Media;
+use Camagru\core\models\Comment;
+use Camagru\core\models\Like;
+use Camagru\core\models\User;
 
+/**
+ * Class Post
+ * Model representing a post in the application.
+ */
 class Post extends AModel
 {
     protected $table = 'posts';
-
     protected $fillable = ['user_id', 'media_id', 'caption'];
 
     const PAGINATE = 6;
 
+    /**
+     * Post constructor.
+     *
+     * @param int|null $id The ID of the post to load.
+     */
     public function __construct(?int $id = null)
     {
         parent::__construct($id);
     }
 
+    /**
+     * Get the user ID associated with the post.
+     *
+     * @return int
+     */
     public function user()
     {
         return $this->data->user_id;
     }
 
-    public function image()
-    {
-        return $this->data->image;
-    }
-
+    /**
+     * Get the caption of the post.
+     *
+     * @return string
+     */
     public function caption()
     {
         return $this->data->caption;
     }
 
+    /**
+     * Get the media associated with the post.
+     *
+     * @return Media
+     */
     public function media()
     {
         return new Media($this->data->media_id);
     }
 
+    /**
+     * Get the comments associated with the post.
+     *
+     * @return array
+     */
     public function comments()
     {
         return Comment::where('post_id', $this->id());
     }
 
+    /**
+     * Get the likes associated with the post.
+     *
+     * @return array
+     */
     public function likes()
     {
         return Like::where('post_id', $this->id());
     }
 
+    /**
+     * Convert the post to a JSON-serializable array.
+     *
+     * @return array
+     */
     public function toJSON()
     {
         return [
@@ -68,6 +104,11 @@ class Post extends AModel
         ];
     }
 
+    /**
+     * Get the validation rules for the post.
+     *
+     * @return array
+     */
     public function validation()
     {
         return [

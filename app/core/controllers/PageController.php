@@ -2,18 +2,29 @@
 
 namespace Camagru\core\controllers;
 
+use Camagru\core\models\Page;
 use Camagru\helpers\Session;
 use Camagru\routes\Router;
-use Camagru\core\models\Page;
-use Camagru\core\database\Runner;
 use Camagru\core\middlewares\Validation;
+use Camagru\core\database\Runner;
 use Camagru\core\database\Database;
 use Camagru\core\middlewares\Auth;
+
 use function Camagru\loadView;
 
-class PageController {
-
-    public static function index() {
+/**
+ * Class PageController
+ * Handles actions related to pages, such as displaying, creating, editing, and deleting pages.
+ */
+class PageController
+{
+    /**
+     * Display the homepage.
+     * 
+     * @return void
+     */
+    public static function index()
+    {
         $page = Page::where('slug', 'home')->first();
 
         if (empty($page)) {
@@ -27,7 +38,14 @@ class PageController {
         ]);
     }
 
-    public static function show($data) {
+    /**
+     * Display a specific page based on its slug.
+     * 
+     * @param array $data The data array containing 'slug'.
+     * @return void
+     */
+    public static function show($data)
+    {
         $page = Page::where('slug', $data['slug'])->first();
 
         if (empty($page)) {
@@ -41,21 +59,13 @@ class PageController {
         ]);
     }
 
-    public static function edit($data) {
-        $page = Page::where('slug', $data['slug'])->first();
-
-        if (empty($page)) {
-            Router::redirect('error', ['code' => 404]);
-        }
-
-        $_GET['title'] = $page->title() . ' - Edit';
-
-        echo loadView('page/edit.php', [
-            'page' => $page,
-        ]);
-    }
-
-    public static function create() {
+    /**
+     * Display the page creation form.
+     * 
+     * @return void
+     */
+    public static function create()
+    {
         $_GET['title'] = 'New page';
 
         echo loadView('page/create.php', [
@@ -70,7 +80,13 @@ class PageController {
         ]);
     }
 
-    public static function store() {
+    /**
+     * Store a new page in the database.
+     * 
+     * @return void
+     */
+    public static function store()
+    {
         $validation = new Validation();
         $page = new Page();
 
@@ -81,12 +97,10 @@ class PageController {
 
         if ($validation->fails()) {
             $errors = $validation->getErrors();
-
             Session::set('error', $errors);
             Router::redirect('create_page');
         } else {
             $status = $page->insert($data);
-
             if ($status) {
                 Session::set('success', 'Page created successfully');
                 Router::redirect('page', ['slug' => $data['slug']]);
@@ -97,9 +111,36 @@ class PageController {
         }
     }
 
-    public static function update($data) {
-        $slug = $data['slug'];
+    /**
+     * Display the edit page form.
+     * 
+     * @param array $data The data array containing 'slug'.
+     * @return void
+     */
+    public static function edit($data)
+    {
+        $page = Page::where('slug', $data['slug'])->first();
 
+        if (empty($page)) {
+            Router::redirect('error', ['code' => 404]);
+        }
+
+        $_GET['title'] = $page->title() . ' - Edit';
+
+        echo loadView('page/edit.php', [
+            'page' => $page,
+        ]);
+    }
+
+    /**
+     * Update a page in the database.
+     * 
+     * @param array $data The data array containing 'slug' and other page data.
+     * @return void
+     */
+    public static function update($data)
+    {
+        $slug = $data['slug'];
         $page = Page::where('slug', $slug)->first();
 
         if (empty($page)) {
@@ -112,12 +153,10 @@ class PageController {
 
         if ($validation->fails()) {
             $errors = $validation->getErrors();
-
             Session::set('error', $errors);
             Router::redirect('edit_page', ['slug' => $slug]);
         } else {
             $status = $page->update($data);
-            
             if ($status) {
                 Session::set('success', 'Page updated successfully');
                 Router::redirect('page', ['slug' => $slug]);
@@ -128,18 +167,51 @@ class PageController {
         }
     }
 
-    public static function error($data) {
+    /**
+     * Delete a page from the database.
+     * 
+     * @param array $data The data array containing 'slug'.
+     * @return void
+     */
+    public static function delete($data)
+    {
+        $slug = $data['slug'];
+        $page = Page::where('slug', $slug)->first();
+
+        if (empty($page)) {
+            Router::redirect('error', ['code' => 404]);
+        }
+
+        $status = $page->delete();
+
+        if ($status) {
+            Session::set('success', 'Page deleted successfully');
+        } else {
+            Session::set('error', 'An error occurred while deleting the page');
+        }
+    }
+
+    /**
+     * Display the error page.
+     * 
+     * @param array $data The data array containing 'code'.
+     * @return void
+     */
+    public static function error($data)
+    {
         $code = $data['code'];
-
         http_response_code($code);
-
         $_GET['title'] = $code;
-
         echo loadView('page/error.php', [
             'title' => $code
         ]);
     }
 
+    /**
+     * Display the installation page if the application is not migrated.
+     * 
+     * @return void
+     */
     public static function install()
     {
         if (Runner::isMigrated()) {
@@ -149,7 +221,13 @@ class PageController {
         echo loadView('page/install.php');
     }
 
-    public static function setup() {
+    /**
+     * Run the setup process, including running migrations and seeders.
+     * 
+     * @return void
+     */
+    public static function setup()
+    {
         $data = $_POST;
 
         // Check if the application has been migrated
@@ -185,25 +263,13 @@ class PageController {
         }
     }
 
-    public static function delete($data) {
-        $slug = $data['slug'];
-
-        $page = Page::where('slug', $slug)->first();
-
-        if (empty($page)) {
-            Router::redirect('error', ['code' => 404]);
-        }
-
-        $status = $page->delete();
-
-        if ($status) {
-            Session::set('success', 'Page deleted successfully');
-        } else {
-            Session::set('error', 'An error occurred while deleting the page');
-        }
-    }
-
-    public static function json() {
+    /**
+     * Return all pages as JSON.
+     * 
+     * @return array
+     */
+    public static function json()
+    {
         $pages = Page::all();
 
         if (empty($pages)) {
@@ -213,9 +279,15 @@ class PageController {
         return $pages;
     }
 
-    public static function show_json($data) {
+    /**
+     * Return a specific page as JSON based on its slug.
+     * 
+     * @param array $data The data array containing 'slug'.
+     * @return array
+     */
+    public static function show_json($data)
+    {
         $slug = $data['slug'];
-
         $page = Page::where('slug', $slug)->first();
 
         if (empty($page)) {

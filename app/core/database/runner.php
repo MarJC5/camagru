@@ -2,20 +2,40 @@
 
 namespace Camagru\core\database;
 
-use Camagru\core\database\Database;
 use Camagru\helpers\Config;
 
+/**
+ * Class Runner
+ * Handles the execution and rollback of database migrations.
+ */
 class Runner
 {
+    /**
+     * @var Database The database instance for executing queries.
+     */
     private $db;
+
+    /**
+     * @var string The path to the migrations directory.
+     */
     private $migrationsPath;
 
+    /**
+     * Runner constructor.
+     * Initializes the database connection and sets the migrations path.
+     *
+     * @param Database $db The database instance.
+     * @param string $migrationsPath The path to the migrations directory.
+     */
     public function __construct(Database $db, $migrationsPath = __DIR__ . '/migrations')
     {
         $this->db = $db;
         $this->migrationsPath = $migrationsPath;
     }
 
+    /**
+     * Runs the migrations that have not been executed yet.
+     */
     public function run()
     {
         $migrations = $this->getMigrations();
@@ -35,6 +55,9 @@ class Runner
         }
     }
 
+    /**
+     * Rolls back the last batch of migrations.
+     */
     public function rollback()
     {
         $executed = $this->getExecutedMigrations();
@@ -59,12 +82,20 @@ class Runner
         }
     }
 
+    /**
+     * Resets the database by rolling back all migrations and running them again.
+     */
     public function reset()
     {
         $this->rollback();
         $this->run();
     }
 
+    /**
+     * Retrieves the list of migration files.
+     *
+     * @return array The list of migration files.
+     */
     private function getMigrations()
     {
         $files = scandir($this->migrationsPath);
@@ -73,23 +104,42 @@ class Runner
         });
     }
 
+    /**
+     * Retrieves the list of executed migrations.
+     *
+     * @return array The list of executed migrations.
+     */
     private function getExecutedMigrations()
     {
         $result = $this->db->query("SELECT migration FROM migrations");
         return array_column($result, 'migration');
     }
 
+    /**
+     * Retrieves the current batch number.
+     *
+     * @return int The current batch number.
+     */
     private function getCurrentBatch()
     {
         $result = $this->db->query("SELECT MAX(batch) as batch FROM migrations");
         return $result[0]['batch'] ?? 0;
     }
 
+    /**
+     * Logs the migration to the migrations table.
+     *
+     * @param string $migrationName The name of the migration file.
+     * @param int $batch The batch number.
+     */
     private function logMigration($migrationName, $batch)
     {
         $this->db->execute("INSERT INTO migrations (migration, batch) VALUES (?, ?)", [$migrationName, $batch]);
     }
 
+    /**
+     * Creates the migrations table if it does not exist.
+     */
     public function createMigrationsTable()
     {
         $this->db->execute("CREATE TABLE IF NOT EXISTS migrations (
@@ -99,10 +149,16 @@ class Runner
         )");
     }
 
+    /**
+     * Checks if the database has been migrated.
+     *
+     * @return bool True if the database has been migrated, false otherwise.
+     */
     public static function isMigrated()
     {
         $shouldBeMigrated = ['migrations', 'pages'];
         $db = new Database();
+        
         // Check if the migrations table exists and has any records
         $tables = $db->query("SHOW TABLES");
         $tables = array_column($tables, 'Tables_in_camagru');

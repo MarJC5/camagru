@@ -9,8 +9,18 @@ use Camagru\core\middlewares\Auth;
 use Camagru\core\middlewares\Migration;
 use function Camagru\loadView;
 
+/**
+ * Class Router
+ * Handles routing for the application.
+ */
 class Router
 {
+    /**
+     * Route the incoming request to the appropriate controller action.
+     *
+     * @param string $requestUri The requested URI.
+     * @param string $method The HTTP method of the request.
+     */
     public static function route($requestUri, $method)
     {
         // Check if the application has been migrated
@@ -55,6 +65,13 @@ class Router
         Router::redirect('error', ['code' => 404]);
     }
 
+    /**
+     * Match the given path to a route pattern.
+     *
+     * @param string $path The requested path.
+     * @param string $routePath The route pattern to match against.
+     * @return bool True if the path matches the route pattern, false otherwise.
+     */
     private static function matchRoute($path, $routePath)
     {
         // Replace placeholders with regex patterns
@@ -62,6 +79,13 @@ class Router
         return preg_match('#^' . $pattern . '$#', $path);
     }
 
+    /**
+     * Extract parameters from the path based on the route pattern.
+     *
+     * @param string $path The requested path.
+     * @param string $routePath The route pattern to extract parameters from.
+     * @return array An associative array of parameters.
+     */
     private static function extractParams($path, $routePath)
     {
         $params = [];
@@ -82,6 +106,12 @@ class Router
         return $params;
     }
 
+    /**
+     * Extract query parameters from the URL.
+     *
+     * @param string $queryParams The query string from the URL.
+     * @return array An associative array of query parameters.
+     */
     private static function extractQueryParams($queryParams)
     {
         $params = [];
@@ -94,6 +124,12 @@ class Router
         return $params;
     }
 
+    /**
+     * Redirect to a named route with optional parameters.
+     *
+     * @param string $name The name of the route to redirect to.
+     * @param array $params An associative array of parameters for the route.
+     */
     public static function redirect($name, $params = [])
     {
         $path = self::to($name, $params);
@@ -101,23 +137,39 @@ class Router
         exit();
     }
 
+    /**
+     * Redirect to the previous page.
+     */
     public static function back()
     {
         header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit();
     }
 
+    /**
+     * Refresh the current page.
+     */
     public static function refresh()
     {
         header('Location: ' . $_SERVER['REQUEST_URI']);
         exit();
     }
 
+    /**
+     * Get the current URL.
+     *
+     * @return string The current URL.
+     */
     public static function current()
     {
         return $_SERVER['REQUEST_URI'];
     }
 
+    /**
+     * Refresh the page with new query parameters.
+     *
+     * @param array $params An associative array of query parameters.
+     */
     public static function refreshWith($params)
     {
         $query = http_build_query($params);
@@ -125,12 +177,22 @@ class Router
         exit();
     }
 
+    /**
+     * Clear all query parameters from the URL.
+     */
     public static function clearParams()
     {
         header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
         exit();
     }
 
+    /**
+     * Generate a URL for a named route with optional parameters.
+     *
+     * @param string $name The name of the route.
+     * @param array $params An associative array of parameters for the route.
+     * @return string The generated URL.
+     */
     public static function to($name, $params = [])
     {
         $routes = array_merge(Web::routes(), Api::routes());

@@ -4,67 +4,151 @@ namespace Camagru\helpers;
 
 use Camagru\core\models\User;
 
-class Session {
-    public static function start() {
+/**
+ * Class Session
+ * Helper class for managing session data and user authentication.
+ */
+class Session
+{
+    /**
+     * Start the session if it hasn't been started already.
+     */
+    public static function start()
+    {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
     }
 
-    public static function set($key, $value) {
+    /**
+     * Set a session variable.
+     *
+     * @param string $key The key for the session variable.
+     * @param mixed $value The value to set.
+     */
+    public static function set($key, $value)
+    {
         $_SESSION[$key] = $value;
     }
 
-    public static function get($key) {
+    /**
+     * Get a session variable.
+     *
+     * @param string $key The key for the session variable.
+     * @return mixed|null The session variable value, or null if not set.
+     */
+    public static function get($key)
+    {
         return $_SESSION[$key] ?? null;
     }
 
-    public static function destroy() {
+    /**
+     * Destroy the session.
+     */
+    public static function destroy()
+    {
         session_destroy();
     }
 
-    public static function flash($key) {
+    /**
+     * Get and delete a session variable.
+     *
+     * @param string $key The key for the session variable.
+     * @return mixed|null The session variable value, or null if not set.
+     */
+    public static function flash($key)
+    {
         $value = $_SESSION[$key] ?? null;
         unset($_SESSION[$key]);
         return $value;
     }
 
-    public static function has($key) {
+    /**
+     * Check if a session variable is set.
+     *
+     * @param string $key The key for the session variable.
+     * @return bool True if the session variable is set, false otherwise.
+     */
+    public static function has($key)
+    {
         return isset($_SESSION[$key]);
     }
 
-    public static function all() {
+    /**
+     * Get all session variables.
+     *
+     * @return array All session variables.
+     */
+    public static function all()
+    {
         return $_SESSION;
     }
 
-    public static function clear() {
+    /**
+     * Clear all session variables.
+     */
+    public static function clear()
+    {
         $_SESSION = [];
     }
 
-    public static function isLogged() {
+    /**
+     * Check if a user is logged in.
+     *
+     * @return bool True if a user is logged in, false otherwise.
+     */
+    public static function isLogged()
+    {
         if (self::has('user')) {
             $user = User::find(self::get('user'));
             return $user ? true : false;
         }
+        return false;
     }
 
-    public static function currentUser() {
+    /**
+     * Get the currently logged-in user.
+     *
+     * @return User|null The current user, or null if not logged in.
+     */
+    public static function currentUser()
+    {
         if (self::has('user')) {
             return new User(self::get('user'));
         }
+        return null;
     }
 
-    public static function getCSRFToken() {
+    /**
+     * Get the CSRF token from the session.
+     *
+     * @return string|null The CSRF token, or null if not set.
+     */
+    public static function getCSRFToken()
+    {
         return $_SESSION['csrf_token'] ?? null;
     }
 
-    public static function setTempResetToken($token) {
-        // keep the token for 10 minutes
+    /**
+     * Set a temporary reset token in the session.
+     *
+     * @param string $token The reset token.
+     */
+    public static function setTempResetToken($token)
+    {
+        // Keep the token for 10 minutes
         $_SESSION['reset_token'] = $token;
         $_SESSION['reset_token_expires'] = time() + 600;
     }
 
-    public static function checkTempResetToken($token) {
+    /**
+     * Check if a temporary reset token is valid.
+     *
+     * @param string $token The reset token to check.
+     * @return bool True if the reset token is valid, false otherwise.
+     */
+    public static function checkTempResetToken($token)
+    {
         $reset_token = $_SESSION['reset_token'] ?? null;
         $reset_token_expires = $_SESSION['reset_token_expires'] ?? null;
 
@@ -75,7 +159,11 @@ class Session {
         return true;
     }
 
-    public static function removeTempResetToken() {
+    /**
+     * Remove the temporary reset token from the session.
+     */
+    public static function removeTempResetToken()
+    {
         unset($_SESSION['reset_token']);
         unset($_SESSION['reset_token_expires']);
     }

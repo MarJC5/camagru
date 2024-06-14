@@ -11,13 +11,22 @@ use Camagru\core\middlewares\Auth;
 
 use function Camagru\loadView;
 
-class PostController {
-    public static function index() {
+/**
+ * Class PostController
+ * Handles actions related to posts, such as displaying, creating, editing, and deleting posts.
+ */
+class PostController
+{
+    /**
+     * Display all posts.
+     *
+     * @return void
+     */
+    public static function index()
+    {
         $posts = Post::all();
-
-        // Count all posts
         $total = Post::count();
-
+        
         $_GET['title'] = 'Posts';
 
         echo loadView('post/index.php', [
@@ -26,7 +35,14 @@ class PostController {
         ]);
     }
 
-    public static function show($data) {
+    /**
+     * Display a specific post based on its ID.
+     *
+     * @param array $data The data array containing 'id'.
+     * @return void
+     */
+    public static function show($data)
+    {
         $id = $data['id'];
         $post = new Post($id);
 
@@ -38,8 +54,61 @@ class PostController {
         echo loadView('post/show.php', $post->toJSON());
     }
 
-    public static function edit($data) {
+    /**
+     * Display the post creation form.
+     *
+     * @return void
+     */
+    public static function create()
+    {
+        $_GET['title'] = 'New page';
+
+        echo loadView('post/create.php');
+    }
+
+    /**
+     * Store a new post in the database.
+     *
+     * @return void
+     */
+    public static function store()
+    {
         // TODO : Check csrf_token validity
+
+        $validation = new Validation();
+        $page = new Post();
+
+        $data = $_POST;
+        $rules = $page->validation();
+
+        $validation->validate($data, $rules);
+
+        if ($validation->fails()) {
+            $errors = $validation->getErrors();
+            Session::set('error', $errors);
+            Router::redirect('create_post');
+        } else {
+            $status = $page->insert($data);
+            if ($status) {
+                Session::set('success', 'Post created successfully');
+                Router::redirect('post', ['id' => $page->id()]);
+            } else {
+                Session::set('error', 'An error occurred while creating the post');
+                Router::redirect('create_post');
+            }
+        }
+    }
+
+    /**
+     * Display the edit post form.
+     *
+     * @param array $data The data array containing 'id'.
+     * @return void
+     */
+    public static function edit($data)
+    {
+        // TODO : Check csrf_token validity
+
         $id = $data['id'];
         $post = new Post($id);
 
@@ -58,43 +127,16 @@ class PostController {
         ]);
     }
 
-    public static function create() {
-        $_GET['title'] = 'New page';
-
-        echo loadView('post/create.php');
-    }
-
-    public static function store() {
+    /**
+     * Update a post in the database.
+     *
+     * @param array $data The data array containing 'id' and other post data.
+     * @return void
+     */
+    public static function update($data)
+    {
         // TODO : Check csrf_token validity
 
-        $validation = new Validation();
-        $page = new Post();
-
-        $data = $_POST;
-        $rules = $page->validation();
-
-        $validation->validate($data, $rules);
-
-        if ($validation->fails()) {
-            $errors = $validation->getErrors();
-
-            Session::set('error', $errors);
-            Router::redirect('create_post');
-        } else {
-            $status = $page->insert($data);
-
-            if ($status) {
-                Session::set('success', 'Post created successfully');
-                Router::redirect('post', ['id' => $page->id()]);
-            } else {
-                Session::set('error', 'An error occurred while creating the post');
-                Router::redirect('create_post');
-            }
-        }
-    }
-
-    public static function update($data) {
-        // TODO : Check csrf_token validity
         $id = $data['id'];
         $post = new Post($id);
 
@@ -114,12 +156,10 @@ class PostController {
 
         if ($validation->fails()) {
             $errors = $validation->getErrors();
-
             Session::set('error', $errors);
             Router::redirect('edit_post', ['id' => $id]);
         } else {
             $status = $post->update($data);
-
             if ($status) {
                 Session::set('success', 'Post updated successfully');
                 Router::redirect('post', ['id' => $id]);
@@ -130,9 +170,17 @@ class PostController {
         }
     }
 
-    public static function delete($id) {
+    /**
+     * Delete a post from the database.
+     *
+     * @param array $data The data array containing 'id'.
+     * @return void
+     */
+    public static function delete($data)
+    {
         // TODO : Check csrf_token validity
-        
+
+        $id = $data['id'];
         $post = new Post($id);
 
         if (empty($post)) {
@@ -146,7 +194,6 @@ class PostController {
         }
 
         $status = $post->delete();
-
         if ($status) {
             Session::set('success', 'Post deleted successfully');
         } else {
@@ -154,7 +201,14 @@ class PostController {
         }
     }
 
-    public static function posts_json($data) {
+    /**
+     * Return paginated posts as JSON.
+     *
+     * @param array $data The data array containing pagination and filter parameters.
+     * @return array
+     */
+    public static function json($data)
+    {
         $user_id = isset($data['user_id']) ? (int)$data['user_id'] : 0;
         $page = isset($data['page']) ? (int)$data['page'] : 1;
         $limit = isset($data['limit']) ? $data['limit'] : Post::PAGINATE; // Number of posts per page
@@ -181,12 +235,19 @@ class PostController {
         foreach ($posts as &$post) {
             $post = Post::where('id', $post['id'])->first()->toJSON();
         }
-        unset($post); 
+        unset($post);
 
         return $posts;
     }
 
-    public static function post_show_json($data) {
+    /**
+     * Return a specific post as JSON based on its ID.
+     *
+     * @param array $data The data array containing 'id'.
+     * @return array
+     */
+    public static function show_json($data)
+    {
         $id = $data['id'];
         $post = new Post($id);
 

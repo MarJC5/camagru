@@ -4,10 +4,21 @@ namespace Camagru\core\middlewares;
 
 use Camagru\core\database\Database;
 
+/**
+ * Class Validation
+ * Handles validation of input data against a set of rules.
+ */
 class Validation
 {
     private $errors = [];
 
+    /**
+     * Validate the given data against the provided rules.
+     *
+     * @param array $data The data to validate.
+     * @param array $rules The validation rules.
+     * @return $this
+     */
     public function validate($data, $rules)
     {
         foreach ($rules as $field => $ruleset) {
@@ -21,6 +32,13 @@ class Validation
         return $this;
     }
 
+    /**
+     * Apply a single validation rule to a field.
+     *
+     * @param string $field The field name.
+     * @param mixed $value The field value.
+     * @param string $rule The validation rule.
+     */
     private function applyRule($field, $value, $rule)
     {
         list($ruleName, $ruleValue) = explode(':', $rule) + [null, null];
@@ -70,28 +88,50 @@ class Validation
         }
     }
 
+    /**
+     * Check if a value is unique in the specified table.
+     *
+     * @param string $field The field name.
+     * @param mixed $value The field value.
+     * @param string $table The table name.
+     */
     private function checkUnique($field, $value, $table)
     {
         $db = new Database();
         $result = $db->query("SELECT COUNT(*) FROM {$table} WHERE {$field} = ?", [$value]);
-        if ($result[0][0] > 0) {
+        if ($result[0]['COUNT(*)'] > 0) {
             $this->addError($field, "The {$field} has already been taken.");
         }
     }
 
+    /**
+     * Add an error message for a specific field.
+     *
+     * @param string $field The field name.
+     * @param string $message The error message.
+     */
     private function addError($field, $message)
     {
         $this->errors[$field][] = $message;
     }
 
+    /**
+     * Check if there are any validation errors.
+     *
+     * @return bool True if there are errors, false otherwise.
+     */
     public function fails()
     {
         return !empty($this->errors);
     }
 
+    /**
+     * Get the validation errors as a formatted HTML string.
+     *
+     * @return string The formatted error messages.
+     */
     public function getErrors()
     {
-        // convert to ul list string safe for html
         $errors = '';
         foreach ($this->errors as $field => $messages) {
             $field = htmlspecialchars($field);
@@ -102,6 +142,12 @@ class Validation
         return "<ul>{$errors}</ul>";
     }
 
+    /**
+     * Check if a file is a valid image.
+     *
+     * @param string $field The field name.
+     * @param array $value The file data.
+     */
     private function checkImage($field, $value)
     {
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
@@ -111,11 +157,18 @@ class Validation
         }
     }
 
+    /**
+     * Check if a value exists in the specified table.
+     *
+     * @param string $field The field name.
+     * @param mixed $value The field value.
+     * @param string $table The table name.
+     */
     private function checkExists($field, $value, $table)
     {
         $db = new Database();
         $result = $db->query("SELECT COUNT(*) FROM {$table} WHERE {$field} = ?", [$value]);
-        if ($result[0][0] == 0) {
+        if ($result[0]['COUNT(*)'] == 0) {
             $this->addError($field, "The {$field} does not exist.");
         }
     }

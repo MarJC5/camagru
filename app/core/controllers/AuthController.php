@@ -7,13 +7,18 @@ use Camagru\helpers\Session;
 use Camagru\routes\Router;
 use Camagru\core\middlewares\Validation;
 use Camagru\helpers\CSRF;
-use Camagru\helpers\Logger;
 use Camagru\helpers\Slugify;
-
 use function Camagru\loadView;
 
+/**
+ * Class AuthController
+ * Handles authentication-related actions such as login, register, and logout.
+ */
 class AuthController
 {
+    /**
+     * Display the login page.
+     */
     public static function login()
     {
         $_GET['title'] = 'Login';
@@ -23,6 +28,9 @@ class AuthController
         ]);
     }
 
+    /**
+     * Display the registration page.
+     */
     public static function register()
     {
         $_GET['title'] = 'Register';
@@ -32,6 +40,9 @@ class AuthController
         ]);
     }
 
+    /**
+     * Handle user logout and redirect to home page.
+     */
     public static function logout()
     {
         Session::clear();
@@ -39,6 +50,9 @@ class AuthController
         Router::redirect('home');
     }
 
+    /**
+     * Handle user login.
+     */
     public static function connect()
     {
         $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -56,17 +70,16 @@ class AuthController
         }
     }
 
+    /**
+     * Handle user registration.
+     */
     public static function create()
     {
         $validation = new Validation();
         $user = new User();
-
-        if (isset($data['username'])) {
-            $data['username'] = Slugify::format($data['username']);
-        }
         
         $data = [
-            'username' => filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+            'username' => Slugify::format(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS)),
             'password' => password_hash($_POST['password'], PASSWORD_DEFAULT), // Hashing the password
             'email' => filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)
         ];
@@ -92,7 +105,6 @@ class AuthController
                 Router::redirect('register_user');
             }
 
-            // Send email validation link
             $user->update([
                 'token' => password_hash(CSRF::generate(), PASSWORD_DEFAULT)
             ]);

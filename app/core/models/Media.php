@@ -6,31 +6,60 @@ use Camagru\core\models\AModel;
 use Camagru\core\models\User;
 use Camagru\helpers\Config;
 
+/**
+ * Class Media
+ * Model representing media in the application.
+ */
 class Media extends AModel
 {
     protected $table = 'medias';
     protected $fillable = ['media_path', 'user_id', 'title', 'alt', 'legende'];
 
+    /**
+     * Media constructor.
+     *
+     * @param int|null $id The ID of the media to load.
+     */
     public function __construct(?int $id = null)
     {
         parent::__construct($id);
     }
 
+    /**
+     * Get the path of the media file.
+     *
+     * @return string
+     */
     public function path()
     {
         return $this->data->media_path;
     }
 
+    /**
+     * Get the alt text of the media.
+     *
+     * @return string
+     */
     public function alt()
     {
         return $this->data->alt;
     }
 
+    /**
+     * Get the legende (caption) of the media.
+     *
+     * @return string
+     */
     public function legende()
     {
         return $this->data->legende;
     }
 
+    /**
+     * Get the public URL of the media.
+     *
+     * @return string
+     */
     public function publicURL()
     {
         $config = Config::get('media');
@@ -39,6 +68,11 @@ class Media extends AModel
         return $siteURL . '/medias/' . $mediaPath;
     }
 
+    /**
+     * Get the validation rules for the media.
+     *
+     * @return array
+     */
     public function validation()
     {
         $config = Config::get('media');
@@ -48,6 +82,12 @@ class Media extends AModel
         ];
     }
 
+    /**
+     * Upload the media file and save its path.
+     *
+     * @param array $media The media file to upload.
+     * @return bool
+     */
     public function uploadMedia($media): bool
     {
         $mediaPath = $this->uploadFile($media);
@@ -58,21 +98,41 @@ class Media extends AModel
         return false;
     }
 
+    /**
+     * Get the user who uploaded the media.
+     *
+     * @return User
+     */
     public function user()
     {
         return new User($this->data->user_id);
     }
 
+    /**
+     * Set the media path.
+     *
+     * @param string $mediaPath The media path to set.
+     */
     public function setMediaPath($mediaPath)
     {
         $this->data->media_path = $mediaPath;
     }
 
+    /**
+     * Get the MIME type of the media.
+     *
+     * @return string
+     */
     public function mimeType()
     {
         return mime_content_type(BASE_PATH . '/' . $this->path());
     }
 
+    /**
+     * Convert the media to a JSON-serializable format.
+     *
+     * @return array
+     */
     public function toJSON()
     {
         return [
@@ -83,6 +143,12 @@ class Media extends AModel
         ];
     }
 
+    /**
+     * Upload a file to the server.
+     *
+     * @param array $file The file to upload.
+     * @return string|false The path to the uploaded file, or false on failure.
+     */
     public function uploadFile($file)
     {
         $config = Config::get('media');
@@ -132,6 +198,12 @@ class Media extends AModel
         return false;
     }
 
+    /**
+     * Upload a media file from a URL.
+     *
+     * @param string|null $link The URL of the media file to upload.
+     * @return string|false The path to the uploaded file, or false on failure.
+     */
     public function uploadFromURL($link = null)
     {
         $url = $link ?? $_POST['url'];

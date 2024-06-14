@@ -14,7 +14,7 @@ use Camagru\routes\Router;
                 </div>
                 <p class="m-0">@<?= $user->username() ?></p>
             </div>
-            <a href="<?= Router::to('user', ['id' => $user->id()]) ?>">View</a>
+            <a href="<?= Router::to('user', ['id' => $user->id()]) ?>" class="underline-none">View</a>
         </a>
     </div>
 <?php endif; ?>

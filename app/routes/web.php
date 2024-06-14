@@ -10,7 +10,17 @@ use Camagru\core\controllers\MediaController;
 use Camagru\core\controllers\CommentController;
 use Camagru\core\controllers\LikeController;
 
+/**
+ * Class Web
+ * Defines the Web routes for the application.
+ */
 class Web {
+
+     /**
+     * Get all API routes.
+     *
+     * @return array
+     */
     public static function routes() {
         return array_merge(
             self::setup(),
@@ -26,7 +36,9 @@ class Web {
     }
 
     /**
-     * Auth routes
+     * Get the routes for authentication.
+     * 
+     * @return array
      */
     private static function auth() {
         return [
@@ -65,7 +77,9 @@ class Web {
     }
 
     /**
-     * User routes
+     * Get the routes for users.
+     * 
+     * @return array
      */
     private static function users() {
         return [
@@ -168,7 +182,9 @@ class Web {
     }
 
     /**
-     * Post routes
+     * Get the routes for posts.
+     * 
+     * @return array
      */
     private static function posts() {
         return [
@@ -223,7 +239,9 @@ class Web {
     }
 
     /**
-     * Page routes
+     * Get the routes for pages.
+     * 
+     * @return array
      */
     private static function pages() {
         return [
@@ -264,9 +282,10 @@ class Web {
     }
 
     /**
-     * Comment routes
+     * Get the routes for comments.
+     * 
+     * @return array
      */
-
     private static function comments() {
         return [
             [
@@ -287,7 +306,9 @@ class Web {
     }
 
     /**
-     * Like routes
+     * Get the routes for likes.
+     * 
+     * @return array
      */
     private static function likes() {
         return [
@@ -309,7 +330,9 @@ class Web {
     }
 
     /**
-     * Handle errors
+     * Get the routes for errors.
+     * 
+     * @return array
      */
     public static function errors() {
         return [
@@ -323,7 +346,9 @@ class Web {
     }
 
     /**
-     * Redirect to setup page if not installed
+     * Get the routes for setup.
+     * 
+     * @return array
      */
     private static function setup() {
         return [
@@ -343,7 +368,9 @@ class Web {
     }
 
     /**
-     * Media routes
+     * Get the routes for media.
+     * 
+     * @return array
      */
     private static function media() {
         return [

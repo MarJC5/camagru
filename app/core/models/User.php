@@ -1,94 +1,195 @@
-<?php 
+<?php
 
 namespace Camagru\core\models;
 
 use Camagru\core\models\AModel;
 use Camagru\core\models\Media;
+use Camagru\core\models\Comment;
+use Camagru\core\models\Like;
+use Camagru\core\models\Post;
 use Camagru\helpers\Logger;
 use Camagru\mail\Mail;
 use Camagru\helpers\Session;
 use Camagru\routes\Router;
 use Camagru\core\middlewares\Validation;
 
+/**
+ * Class User
+ * Model representing a user in the application.
+ */
 class User extends AModel
 {
     protected $table = 'users';
-
-    protected $fillable = ['username', 'email', 'password', 'media_id'];
+    protected $fillable = ['username', 'first_name', 'last_name', 'email', 'password', 'media_id', 'role', 'validated', 'token', 'notification'];
     protected $hidden = [];
 
     const ROLES = ['admin', 'user'];
 
+    /**
+     * User constructor.
+     *
+     * @param int|null $id The ID of the user to load.
+     */
     public function __construct(?int $id = null)
     {
         parent::__construct($id);
     }
 
+    /**
+     * Get the username of the user.
+     *
+     * @return string
+     */
     public function username()
     {
         return $this->data->username;
     }
 
+    /**
+     * Get the first name of the user.
+     *
+     * @return string
+     */
+    public function first_name()
+    {
+        return $this->data->first_name;
+    }
+
+    /**
+     * Get the last name of the user.
+     *
+     * @return string
+     */
+    public function last_name()
+    {
+        return $this->data->last_name;
+    }
+
+    /**
+     * Get the email of the user.
+     *
+     * @return string
+     */
     public function email()
     {
         return $this->data->email;
     }
 
+    /**
+     * Get the hashed password of the user.
+     *
+     * @return string
+     */
     public function password()
     {
         return $this->data->password;
     }
 
+    /**
+     * Get the avatar media associated with the user.
+     *
+     * @return Media
+     */
     public function avatar()
     {
         return new Media($this->data->media_id);
     }
 
+    /**
+     * Get the role of the user.
+     *
+     * @return string
+     */
     public function role()
     {
         return $this->data->role;
     }
 
+    /**
+     * Get the token associated with the user.
+     *
+     * @return string
+     */
     public function token()
     {
         return $this->data->token;
     }
 
+    /**
+     * Get the likes made by the user.
+     *
+     * @return array
+     */
     public function likes()
     {
         return Like::where('user_id', $this->id());
     }
 
+    /**
+     * Get the comments made by the user.
+     *
+     * @return array
+     */
     public function comments()
     {
         return Comment::where('user_id', $this->id());
     }
 
+    /**
+     * Get the posts created by the user.
+     *
+     * @return array
+     */
     public function posts()
     {
         return Post::where('user_id', $this->id());
     }
 
+    /**
+     * Check if the user is validated.
+     *
+     * @return bool
+     */
     public function is_validated()
     {
         return $this->data->validated;
     }
 
+    /**
+     * Check if the user has admin role.
+     *
+     * @return bool
+     */
     public function is_admin()
     {
         return $this->role() === 'admin';
     }
 
+    /**
+     * Check if the user has user role.
+     *
+     * @return bool
+     */
     public function is_user()
     {
         return $this->role() === 'user';
     }
 
+    /**
+     * Check if the user has notifications enabled.
+     *
+     * @return bool
+     */
     public function is_notification_enabled()
     {
         return $this->data->notification;
     }
 
+    /**
+     * Convert the user to a JSON-serializable array.
+     *
+     * @return array
+     */
     public function toJSON()
     {
         return [
@@ -97,6 +198,11 @@ class User extends AModel
         ];
     }
 
+    /**
+     * Validate the user account.
+     *
+     * @param string $token
+     */
     public function validate($token)
     {
         if ($this->is_validated()) {
@@ -104,13 +210,12 @@ class User extends AModel
             Router::redirect('profile');
         }
 
-        if (password_verify($token, $this->token())) {
+        if (!password_verify($token, $this->token())) {
             Session::set('error', 'Invalid token.');
             return;
         }
 
-        if ($this->update(['validated' => 1]))
-        {
+        if ($this->update(['validated' => 1])) {
             Session::set('success', 'Your account has been validated.');
             Router::redirect('profile');
         } else {
@@ -119,6 +224,11 @@ class User extends AModel
         }
     }
 
+    /**
+     * Resend the email validation link.
+     *
+     * @return bool
+     */
     public function resend_email_validation()
     {
         if ($this->is_validated()) {
@@ -128,7 +238,7 @@ class User extends AModel
 
         // Send email
         return Mail::send(
-            $this->email(), 
+            $this->email(),
             'Email validation',
             'email-validation',
             [
@@ -137,11 +247,17 @@ class User extends AModel
         );
     }
 
+    /**
+     * Send a password reset request email.
+     *
+     * @param string $token
+     * @return bool
+     */
     public function reset_password_request($token)
     {
         // Send email
         return Mail::send(
-            $this->email(), 
+            $this->email(),
             'Password reset',
             'reset-password',
             [
@@ -152,12 +268,17 @@ class User extends AModel
         );
     }
 
+    /**
+     * Update the user's password.
+     *
+     * @param string $password
+     */
     public function new_password($password)
     {
         $validation = new Validation();
         $rules = $this->validation();
 
-        // only validate the password, so unset the other fields
+        // Only validate the password, so unset the other fields
         foreach ($rules as $key => $value) {
             if ($key !== 'password') {
                 unset($rules[$key]);
@@ -172,8 +293,7 @@ class User extends AModel
             Router::redirect('reset_password');
         }
 
-        if ($this->update(['password' => password_hash($password, PASSWORD_DEFAULT)]))
-        {
+        if ($this->update(['password' => password_hash($password, PASSWORD_DEFAULT)])) {
             Session::set('success', 'Password updated successfully.');
             Router::redirect('login');
         } else {
@@ -182,15 +302,25 @@ class User extends AModel
         }
     }
 
+    /**
+     * Get the validation rules for the user.
+     *
+     * @return array
+     */
     public function validation()
     {
         return [
             'username' => 'required|min:3|max:20|alpha_num',
             'email' => 'required|email',
-            'password' => 'optinal|min:6',
+            'password' => 'optional|min:6',
         ];
     }
 
+    /**
+     * Get the validation rules for registering a user.
+     *
+     * @return array
+     */
     public function registerValidation()
     {
         return [

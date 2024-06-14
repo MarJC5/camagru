@@ -5,6 +5,10 @@ namespace Camagru\core\models;
 use Camagru\core\database\Database;
 use Camagru\helpers\Logger;
 
+/**
+ * Class AModel
+ * Base model class providing common functionalities for all models.
+ */
 abstract class AModel
 {
     protected $db;
@@ -14,13 +18,17 @@ abstract class AModel
     protected $fillable = [];
     protected $hidden = [];
 
+    /**
+     * AModel constructor.
+     *
+     * @param int|null $id The ID of the model to load.
+     */
     public function __construct(?int $id = null)
     {
         $this->db = new Database();
-        
+
         if ($id) {
             $this->query = "SELECT * FROM {$this->table} WHERE id = " . $this->db->quote($id);
-
             return $this->first();
         } else {
             $this->query = "";
@@ -29,21 +37,41 @@ abstract class AModel
         return $this;
     }
 
+    /**
+     * Get the ID of the model.
+     *
+     * @return int
+     */
     public function id()
     {
         return $this->data->id;
     }
 
+    /**
+     * Get the created_at timestamp.
+     *
+     * @return string
+     */
     public function created_at()
     {
         return $this->data->created_at;
     }
 
+    /**
+     * Get the updated_at timestamp.
+     *
+     * @return string
+     */
     public function updated_at()
     {
         return $this->data->updated_at;
     }
 
+    /**
+     * Save the model to the database.
+     *
+     * @return bool
+     */
     public function save()
     {
         $data = (array) $this->data;
@@ -56,10 +84,15 @@ abstract class AModel
         }
     }
 
+    /**
+     * Map a callback function to each item in the collection.
+     *
+     * @param callable $callback The callback function.
+     * @return array The resulting collection.
+     */
     public function map($callback)
     {
         $data = $this->get();
-        // convert all to self object
         $data = array_map(function ($item) {
             $instance = new static();
             $instance->data = (object) $item;
@@ -69,7 +102,16 @@ abstract class AModel
         return array_map($callback, $data);
     }
 
-    public static function paginate($offset, $limit, $filter = []) {
+    /**
+     * Paginate the results.
+     *
+     * @param int $offset The offset of the first result.
+     * @param int $limit The maximum number of results to return.
+     * @param array $filter Optional filter criteria.
+     * @return array The paginated results.
+     */
+    public static function paginate($offset, $limit, $filter = [])
+    {
         $instance = new static();
         $sql = "";
         if ($filter) {
@@ -77,10 +119,16 @@ abstract class AModel
         } else {
             $sql = "SELECT * FROM {$instance->table} LIMIT {$limit} OFFSET {$offset}";
         }
-        
+
         return $instance->db->query($sql);
     }
 
+    /**
+     * Find a model by its ID.
+     *
+     * @param int $id The ID of the model.
+     * @return static|null The found model, or null if not found.
+     */
     public static function find($id)
     {
         $instance = new static();
@@ -89,6 +137,13 @@ abstract class AModel
         return $instance->first();
     }
 
+    /**
+     * Get models that match a specific condition.
+     *
+     * @param string $column The column to match.
+     * @param mixed $value The value to match.
+     * @return static
+     */
     public static function where($column, $value)
     {
         $instance = new static();
@@ -97,13 +152,24 @@ abstract class AModel
         return $instance;
     }
 
+    /**
+     * Add an additional condition to the query.
+     *
+     * @param string $column The column to match.
+     * @param mixed $value The value to match.
+     * @return $this
+     */
     public function andWhere($column, $value)
     {
         $this->query .= " AND {$column} = " . $this->db->quote($value);
         return $this;
     }
 
-
+    /**
+     * Get the results of the query.
+     *
+     * @return array The results of the query.
+     */
     public function get()
     {
         $data = $this->db->query($this->query);
@@ -118,6 +184,11 @@ abstract class AModel
         return $data;
     }
 
+    /**
+     * Get the first result of the query.
+     *
+     * @return static|null The first result, or null if not found.
+     */
     public function first()
     {
         $sql = $this->query . " LIMIT 1";
@@ -131,6 +202,11 @@ abstract class AModel
         return null;
     }
 
+    /**
+     * Get all models.
+     *
+     * @return array All models.
+     */
     public static function all()
     {
         $instance = new static();
@@ -138,6 +214,12 @@ abstract class AModel
         return $instance->db->query($sql);
     }
 
+    /**
+     * Insert a new model into the database.
+     *
+     * @param array $data The data to insert.
+     * @return bool True if the insert was successful, false otherwise.
+     */
     public function insert($data)
     {
         $columns = implode(', ', array_keys($data));
@@ -146,6 +228,12 @@ abstract class AModel
         return $this->db->execute($sql);
     }
 
+    /**
+     * Update an existing model in the database.
+     *
+     * @param array $data The data to update.
+     * @return bool True if the update was successful, false otherwise.
+     */
     public function update($data)
     {
         $set = [];
@@ -158,7 +246,7 @@ abstract class AModel
 
         $update = $this->db->execute($sql);
 
-        // update the data property
+        // Update the data property
         if ($update) {
             foreach ($data as $key => $value) {
                 $this->data->$key = $value;
@@ -170,17 +258,34 @@ abstract class AModel
         return $update;
     }
 
+    /**
+     * Delete the model from the database.
+     *
+     * @return bool True if the delete was successful, false otherwise.
+     */
     public function delete()
     {
         $sql = "DELETE FROM {$this->table} WHERE id = " . $this->id();
         return $this->db->execute($sql);
     }
 
+    /**
+     * Convert the model data to an array.
+     *
+     * @return array The model data as an array.
+     */
     public function toArray()
     {
         return (array) $this->data;
     }
 
+    /**
+     * Count the number of models in the database.
+     *
+     * @param string|null $column Optional column to match.
+     * @param mixed|null $value Optional value to match.
+     * @return int The number of models.
+     */
     public static function count($column = null, $value = null)
     {
         $instance = new static();
@@ -191,6 +296,12 @@ abstract class AModel
         return $instance->db->query($sql)[0]['COUNT(*)'];
     }
 
+    /**
+     * Quote a value for use in a query.
+     *
+     * @param mixed $value The value to quote.
+     * @return string The quoted value.
+     */
     protected function quote($value)
     {
         return $this->db->quote($value);
