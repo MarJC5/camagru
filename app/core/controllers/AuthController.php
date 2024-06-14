@@ -21,6 +21,10 @@ class AuthController
      */
     public static function login()
     {
+        if (Session::get('user')) {
+            Router::redirect('profile');
+        }
+
         $_GET['title'] = 'Login';
 
         echo loadView('auth/login.php', [
@@ -33,6 +37,10 @@ class AuthController
      */
     public static function register()
     {
+        if (Session::get('user')) {
+            Router::redirect('profile');
+        }
+
         $_GET['title'] = 'Register';
 
         echo loadView('auth/register.php', [
@@ -45,6 +53,10 @@ class AuthController
      */
     public static function logout()
     {
+        if (!Session::get('user')) {
+            Router::redirect('home');
+        }
+        
         Session::clear();
         Session::set('success', 'You have been logged out');
         Router::redirect('home');
@@ -55,6 +67,12 @@ class AuthController
      */
     public static function connect()
     {
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_connect_user'], 'csrf_connect_user')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
+
         $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $password = $_POST['password'];
 
@@ -75,6 +93,12 @@ class AuthController
      */
     public static function create()
     {
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_create_user'], 'csrf_create_user')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
+
         $validation = new Validation();
         $user = new User();
         

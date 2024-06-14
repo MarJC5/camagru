@@ -8,7 +8,7 @@ use Camagru\helpers\CSRF;
 ?>
 
 <form action="<?= Router::to($type === 'create' ? 'create_page' : 'edit_page') ?>" method="POST" class="form w-half">
-    <?= CSRF::field() ?>
+    <?= CSRF::field('csrf_' . ($type === 'create' ? 'create_page' : 'edit_page')) ?>
     <?php if ($type === 'edit') : ?>
         <input type="number" id="id" name="id" class="hidden" value="<?= $id ?>">
     <?php endif; ?>

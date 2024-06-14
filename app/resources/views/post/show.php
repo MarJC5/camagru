@@ -42,7 +42,7 @@ get_header();
                     <?php if (Session::currentUser()) : ?>
                         <div class="flex gap-4 px-2 mt-6">
                             <form action="<?= Router::to('comment') ?>" method="POST" class="form flex gap-4 w-full">
-                                <?= CSRF::field('comment') ?>
+                                <?= CSRF::field('csrf_comment') ?>
                                 <input type="hidden" name="post_id" value="<?= $id ?>">
                                 <input type="hidden" name="user_id" value="<?= Session::currentUser()->id() ?>">
                                 <input type="text" name="comment" class="input w-full" placeholder="Add a comment...">
@@ -54,7 +54,7 @@ get_header();
                         <?php if (Session::currentUser()) : ?>
                             <?php if (Like::hasLiked(Session::currentUser()->id(), $id)) : ?>
                                 <form action="<?= Router::to('unlike') ?>" method="POST">
-                                    <?= CSRF::field('unlike') ?>
+                                    <?= CSRF::field('csrf_unlike') ?>
                                     <input type="hidden" name="id" value="<?= Like::hasLiked(Session::currentUser()->id(), $id) ?>">
                                     <input type="hidden" name="post_id" value="<?= $id ?>">
                                     <button type="submit" class="button button--svg  flex gap-1">
@@ -64,7 +64,7 @@ get_header();
                                 </form>
                             <?php else : ?>
                                 <form action="<?= Router::to('like') ?>" method="POST">
-                                    <?= CSRF::field('like') ?>
+                                    <?= CSRF::field('csrf_like') ?>
                                     <input type="hidden" name="user_id" value="<?= Session::currentUser()->id() ?>">
                                     <input type="hidden" name="post_id" value="<?= $id ?>">
                                     <button type="submit" class="button button--svg flex gap-1">

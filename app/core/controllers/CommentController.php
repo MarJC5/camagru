@@ -6,6 +6,7 @@ use Camagru\core\models\Comment;
 use Camagru\helpers\Session;
 use Camagru\routes\Router;
 use Camagru\core\middlewares\Auth;
+use Camagru\helpers\CSRF;
 
 /**
  * Class CommentController
@@ -21,6 +22,12 @@ class CommentController
      */
     public static function store() 
     {
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_comment'], 'csrf_comment')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
+
         // Validate the presence of required parameters
         if (!isset($_POST['comment']) || !isset($_POST['user_id']) || !isset($_POST['post_id'])) {
             Session::set('error', 'Invalid request, missing parameters');
@@ -58,6 +65,12 @@ class CommentController
      */
     public static function delete($data) 
     {
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_delete_comment'], 'csrf_delete_comment')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
+
         // Retrieve the comment ID from the data array
         $id = $data['id'];
         $comment = new Comment($id);

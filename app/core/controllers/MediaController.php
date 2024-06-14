@@ -6,6 +6,7 @@ use Camagru\routes\Router;
 use Camagru\core\models\Media;
 use Camagru\helpers\Session;
 use Camagru\helpers\Logger;
+use Camagru\helpers\CSRF;
 
 /**
  * Class MediaController
@@ -47,6 +48,12 @@ class MediaController
      */
     public static function upload()
     {
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_upload_media'], 'csrf_upload_media')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
+
         $media = new Media();
         if ($media->uploadMedia($_FILES['media'])) {
             Session::set('success', 'File uploaded successfully.');
@@ -63,6 +70,12 @@ class MediaController
      */
     public static function delete()
     {
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_delete_media'], 'csrf_delete_media')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
+
         if (!isset($_POST['id'])) {
             Session::set('error', 'Invalid request, missing parameters');
             Router::redirect('profile');

@@ -107,7 +107,11 @@ class UserController {
     }
 
     public static function update() {
-        // TODO : Check csrf_token validity
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_update_user'], 'csrf_update_user')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
 
         $id = $_POST['id'];
         $user = new User($id);
@@ -172,7 +176,12 @@ class UserController {
     }
 
     public static function delete() {
-        // TODO : Check csrf_token validity
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_delete_user'], 'csrf_delete_user')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
+
         $id = $_POST['id'];
         $user = new User($id);
 
@@ -226,7 +235,11 @@ class UserController {
 
     public static function toggle_notification()
     {
-        // TODO : Check csrf_token validity
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_toggle_notification'], 'csrf_toggle_notification')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
 
         $user_id = $_POST['id'];
         $user = User::where('id', $user_id)->first();
@@ -266,7 +279,11 @@ class UserController {
 
     public static function edit_role()
     {
-        // TODO : Check csrf_token validity
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_edit_role'], 'csrf_edit_role')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
 
         $user_id = $_POST['id'];
         $user = User::where('id', $user_id)->first();
@@ -342,7 +359,11 @@ class UserController {
     }
 
     public static function resend_email_validation() {
-        // TODO : Check csrf_token validity
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_resend_email_validation'], 'csrf_resend_email_validation')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
 
         $user = Session::currentUser();
 
@@ -361,7 +382,11 @@ class UserController {
     }
 
     public static function reset_password_request() {
-        // TODO : Check csrf_token validity
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_reset_password_request'], 'csrf_reset_password_request')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
         
         if (!isset($_POST['email'])) {
             Session::set('error', 'No email provided');
@@ -397,6 +422,12 @@ class UserController {
 
     public static function new_password()
     {
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_new_password'], 'csrf_new_password')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
+
         if (!isset($_POST['password']) || !isset($_POST['password_confirmation'])) {
             Session::set('error', 'No password provided');
             Router::redirect('login');

@@ -11,7 +11,7 @@ use Camagru\helpers\CSRF;
 <div class="the-content w-half">
     <p class="the-text">Please set a new password for your account.</p>
     <form action="<?= Router::to('new_password') ?>" method="POST" class="form w-third">
-        <?= CSRF::field() ?>
+        <?= CSRF::field('csrf_new_password') ?>
         <input type="hidden" name="user_id" value="<?= $user_id ?>" required>
         <div class="flex flex-column mb-4">
             <label for="password">Password:</label>

@@ -8,7 +8,7 @@ use Camagru\routes\Router;
 use Camagru\core\middlewares\Validation;
 use Camagru\core\database\Runner;
 use Camagru\core\database\Database;
-use Camagru\core\middlewares\Auth;
+use Camagru\helpers\CSRF;
 
 use function Camagru\loadView;
 
@@ -87,6 +87,12 @@ class PageController
      */
     public static function store()
     {
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_create_page'], 'csrf_create_page')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
+
         $validation = new Validation();
         $page = new Page();
 
@@ -140,6 +146,12 @@ class PageController
      */
     public static function update($data)
     {
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_update_page'], 'csrf_update_page')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
+
         $slug = $data['slug'];
         $page = Page::where('slug', $slug)->first();
 
@@ -175,6 +187,12 @@ class PageController
      */
     public static function delete($data)
     {
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_delete_page'], 'csrf_delete_page')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
+
         $slug = $data['slug'];
         $page = Page::where('slug', $slug)->first();
 

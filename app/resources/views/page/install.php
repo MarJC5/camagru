@@ -21,7 +21,7 @@ get_header();
 
             <p>Or you can click the button below to install the application:</p>
             <form action="<?= Router::to('setup') ?>" method="POST">
-                <?= CSRF::field() ?>
+                <?= CSRF::field('csrf_setup') ?>
                 <input type="hidden" name="install" value="1">
                 <button type="submit" class="button">Install</button>
             </form>

@@ -8,7 +8,7 @@ use Camagru\helpers\CSRF;
 ?>
 
 <form action="<?= Router::to('create_user') ?>" method="POST" class="form w-third">
-    <?= CSRF::field() ?>
+    <?= CSRF::field('csrf_create_user') ?>
     <div class="flex flex-column mb-4">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>

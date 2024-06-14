@@ -11,7 +11,7 @@ use Camagru\helpers\CSRF;
 <div class="the-content w-half">
     <p class="the-text">Click on the link we sent you by email to reset your password.</p>
     <form action="<?= Router::to('reset_password_request') ?>" method="POST" class="form w-third">
-        <?= CSRF::field() ?>
+        <?= CSRF::field('csrf_reset_password_request') ?>
         <div class="flex flex-column mb-4">
             <input type="email" name="email" id="email" required placeholder="email@camagru.local">
         </div>

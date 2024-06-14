@@ -247,6 +247,18 @@ class Web {
         return [
             [
                 'method' => 'GET',
+                'path' => '/login',
+                'name' => 'login',
+                'action' => [AuthController::class, 'login']
+            ],
+            [
+                'method' => 'GET',
+                'path' => '/register',
+                'name' => 'register_user',
+                'action' => [AuthController::class, 'register']
+            ],
+            [
+                'method' => 'GET',
                 'path' => '/',
                 'name' => 'home',
                 'action' => [PageController::class, 'index']
@@ -278,6 +290,20 @@ class Web {
                 'secure' => 'admin',
                 'action' => [PageController::class, 'store']
             ],
+            [
+                'method' => 'POST',
+                'path' => '/page/{id}',
+                'name' => 'update_page',
+                'secure' => 'admin',
+                'action' => [PageController::class, 'update']
+            ],
+            [
+                'method' => 'POST',
+                'path' => '/page/{id}',
+                'name' => 'delete_page',
+                'secure' => 'admin',
+                'action' => [PageController::class, 'delete']
+            ]
         ];
     }
 

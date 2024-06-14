@@ -8,6 +8,7 @@ use Camagru\core\models\Post;
 use Camagru\core\middlewares\Validation;
 use Camagru\helpers\Logger;
 use Camagru\core\middlewares\Auth;
+use Camagru\helpers\CSRF;
 
 use function Camagru\loadView;
 
@@ -73,7 +74,11 @@ class PostController
      */
     public static function store()
     {
-        // TODO : Check csrf_token validity
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_store_post'], 'csrf_store_post')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
 
         $validation = new Validation();
         $page = new Post();
@@ -107,8 +112,6 @@ class PostController
      */
     public static function edit($data)
     {
-        // TODO : Check csrf_token validity
-
         $id = $data['id'];
         $post = new Post($id);
 
@@ -135,7 +138,11 @@ class PostController
      */
     public static function update($data)
     {
-        // TODO : Check csrf_token validity
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_update_post'], 'csrf_update_post')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
 
         $id = $data['id'];
         $post = new Post($id);
@@ -178,7 +185,11 @@ class PostController
      */
     public static function delete($data)
     {
-        // TODO : Check csrf_token validity
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_delete_post'], 'csrf_delete_post')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
 
         $id = $data['id'];
         $post = new Post($id);

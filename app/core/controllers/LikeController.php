@@ -6,6 +6,7 @@ use Camagru\core\models\Like;
 use Camagru\helpers\Session;
 use Camagru\routes\Router;
 use Camagru\core\middlewares\Auth;
+use Camagru\helpers\CSRF;
 
 /**
  * Class LikeController
@@ -21,6 +22,11 @@ class LikeController
      */
     public static function store() 
     {
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_like'], 'csrf_like')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
         // Validate the presence of required parameters
         if (!isset($_POST['user_id']) || !isset($_POST['post_id'])) {
             Session::set('error', 'Invalid request, missing parameters');
@@ -55,6 +61,12 @@ class LikeController
      */
     public static function delete() 
     {
+        // Verify the CSRF token
+        if (!CSRF::verify($_POST['csrf_unlike'], 'csrf_unlike')) {
+            Session::set('error', 'Invalid CSRF token');
+            Router::redirect('login');
+        }
+
         // Validate the presence of required parameters
         if (!isset($_POST['id']) || !isset($_POST['post_id'])) {
             Session::set('error', 'Invalid request, missing parameters');
