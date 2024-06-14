@@ -5,6 +5,7 @@ namespace Camagru\core\controllers;
 use Camagru\core\models\Like;
 use Camagru\helpers\Session;
 use Camagru\routes\Router;
+use Camagru\core\middlewares\Auth;
 
 class LikeController {
     public static function store() {
@@ -36,6 +37,11 @@ class LikeController {
         if (empty($like)) {
             Session::set('error', 'Invalid like');
             Router::redirect('post', ['id' => $_POST['post_id']]);
+        }
+
+        // Check if user is allowed to access this page
+        if (!Auth::handle('self', ['id' => $like->user()])) {
+            return;
         }
 
         $status = $like->delete();

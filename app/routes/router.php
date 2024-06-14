@@ -4,35 +4,37 @@ namespace Camagru\routes;
 
 use Camagru\routes\Web;
 use Camagru\routes\Api;
-use Camagru\helpers\Session;
-use Camagru\core\database\Runner;
 use Camagru\helpers\Logger;
+use Camagru\core\middlewares\Auth;
+use Camagru\core\middlewares\Migration;
 use function Camagru\loadView;
 
 class Router
 {
-    public static function route($requestUri, $requestMethod)
+    public static function route($requestUri, $method)
     {
         // Check if the application has been migrated
-        if (!Runner::isMigrated() && $requestUri !== '/setup') {
+        if (!Migration::ready($requestUri, $method)) {
             $requestUri = '/install';
-        } else if (!Runner::isMigrated() && $requestUri === '/setup' && $requestMethod === 'GET') {
-            // Show the installation page
-            echo loadView('page/install.php');
-            return;
         }
-
+        
         $parsedUrl = parse_url($requestUri);
         $path = $parsedUrl['path'] ?? '/';
         $query = $parsedUrl['query'] ?? ''; // Capture the query part
-
-        $method = $requestMethod;
         $routes = array_merge(Web::routes(), Api::routes());
-        
+
         foreach ($routes as $route) {
             if ($method == $route['method'] && self::matchRoute($path, $route['path'])) {
+                $routeInfo = ['method' => $method, 'path' => $path, 'uri' => $requestUri, 'query' => $query, 'route' => $route];
                 $params = self::extractParams($path, $route['path'] . $query);
-                $params = array_merge($params, self::extractQueryParams($query));
+                $params = array_merge($params, self::extractQueryParams($query), $routeInfo);
+
+                // Check for secure option and call middleware if present
+                if (isset($route['secure'])) {
+                    if (!Auth::handle($route['secure'], $params)) {
+                        return;
+                    }
+                }
 
                 // Logger::log($route['method'] . ' ' .  $route['path']);
                 // Logger::log('PARAMS' . ' ' .  print_r($params, true));

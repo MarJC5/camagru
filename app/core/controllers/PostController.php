@@ -7,6 +7,7 @@ use Camagru\routes\Router;
 use Camagru\core\models\Post;
 use Camagru\core\middlewares\Validation;
 use Camagru\helpers\Logger;
+use Camagru\core\middlewares\Auth;
 
 use function Camagru\loadView;
 
@@ -45,6 +46,11 @@ class PostController {
         if (empty($post)) {
             Session::set('error', 'Invalid post');
             Router::redirect('error', ['code' => 404]);
+        }
+
+        // Check if user is allowed to access this page
+        if (!Auth::handle('admin|self', ['id' => $post->user()])) {
+            return;
         }
 
         echo loadView('post/edit.php', [
@@ -97,6 +103,11 @@ class PostController {
             Router::redirect('error', ['code' => 404]);
         }
 
+        // Check if user is allowed to access this page
+        if (!Auth::handle('admin|self', ['id' => $post->user()])) {
+            return;
+        }
+
         $validation = new Validation();
         $rules = $post->validation();
         $validation->validate($data, $rules);
@@ -129,6 +140,11 @@ class PostController {
             Router::redirect('error', ['code' => 404]);
         }
 
+        // Check if user is allowed to access this page
+        if (!Auth::handle('admin|self', ['id' => $post->user()])) {
+            return;
+        }
+
         $status = $post->delete();
 
         if ($status) {
@@ -138,7 +154,7 @@ class PostController {
         }
     }
 
-    public static function json($data) {
+    public static function posts_json($data) {
         $user_id = isset($data['user_id']) ? (int)$data['user_id'] : 0;
         $page = isset($data['page']) ? (int)$data['page'] : 1;
         $limit = isset($data['limit']) ? $data['limit'] : Post::PAGINATE; // Number of posts per page
@@ -168,5 +184,16 @@ class PostController {
         unset($post); 
 
         return $posts;
+    }
+
+    public static function post_show_json($data) {
+        $id = $data['id'];
+        $post = new Post($id);
+
+        if (empty($post)) {
+            return ['message' => 'Post not found'];
+        }
+
+        return $post->toJSON();
     }
 }

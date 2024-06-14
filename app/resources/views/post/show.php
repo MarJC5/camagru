@@ -41,8 +41,8 @@ get_header();
                     </div>
                     <?php if (Session::currentUser()) : ?>
                         <div class="flex gap-4 px-2 mt-6">
-                            <form action="<?= Router::to('store_comment') ?>" method="POST" class="form flex gap-4 w-full">
-                                <?= CSRF::field('store_comment') ?>
+                            <form action="<?= Router::to('comment') ?>" method="POST" class="form flex gap-4 w-full">
+                                <?= CSRF::field('comment') ?>
                                 <input type="hidden" name="post_id" value="<?= $id ?>">
                                 <input type="hidden" name="user_id" value="<?= Session::currentUser()->id() ?>">
                                 <input type="text" name="comment" class="input w-full" placeholder="Add a comment...">
@@ -53,8 +53,8 @@ get_header();
                     <div class="flex item-center mt-4 px-2 gap-4">
                         <?php if (Session::currentUser()) : ?>
                             <?php if (Like::hasLiked(Session::currentUser()->id(), $id)) : ?>
-                                <form action="<?= Router::to('delete_like') ?>" method="POST">
-                                    <?= CSRF::field('delete_like') ?>
+                                <form action="<?= Router::to('unlike') ?>" method="POST">
+                                    <?= CSRF::field('unlike') ?>
                                     <input type="hidden" name="id" value="<?= Like::hasLiked(Session::currentUser()->id(), $id) ?>">
                                     <input type="hidden" name="post_id" value="<?= $id ?>">
                                     <button type="submit" class="button button--svg  flex gap-1">
@@ -63,8 +63,8 @@ get_header();
                                     </button>
                                 </form>
                             <?php else : ?>
-                                <form action="<?= Router::to('store_like') ?>" method="POST">
-                                    <?= CSRF::field('store_like') ?>
+                                <form action="<?= Router::to('like') ?>" method="POST">
+                                    <?= CSRF::field('like') ?>
                                     <input type="hidden" name="user_id" value="<?= Session::currentUser()->id() ?>">
                                     <input type="hidden" name="post_id" value="<?= $id ?>">
                                     <button type="submit" class="button button--svg flex gap-1">

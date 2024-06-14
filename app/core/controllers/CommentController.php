@@ -6,6 +6,7 @@ use Camagru\core\models\Comment;
 use Camagru\helpers\Logger;
 use Camagru\helpers\Session;
 use Camagru\routes\Router;
+use Camagru\core\middlewares\Auth;
 
 class CommentController {
     public static function store() {
@@ -32,13 +33,18 @@ class CommentController {
         }
     }
 
-    public static function destroy($data) {
+    public static function delete($data) {
         $id = $data['id'];
         $comment = new Comment($id);
 
         if (empty($comment)) {
             Session::set('error', 'Invalid comment');
             Router::redirect('error', ['code' => 404]);
+        }
+
+        // Check if user is allowed to access this page
+        if (!Auth::handle('admin|self', ['id' => $comment->user()])) {
+            return;
         }
 
         $status = $comment->delete();

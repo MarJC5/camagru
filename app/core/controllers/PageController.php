@@ -8,6 +8,7 @@ use Camagru\core\models\Page;
 use Camagru\core\database\Runner;
 use Camagru\core\middlewares\Validation;
 use Camagru\core\database\Database;
+use Camagru\core\middlewares\Auth;
 use function Camagru\loadView;
 
 class PageController {
@@ -127,10 +128,8 @@ class PageController {
         }
     }
 
-    public static function error($code) {
-        if (is_array($code)) {
-            $code = 404;
-        }
+    public static function error($data) {
+        $code = $data['code'];
 
         http_response_code($code);
 

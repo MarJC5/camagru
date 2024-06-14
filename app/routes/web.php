@@ -13,9 +13,8 @@ use Camagru\core\controllers\LikeController;
 class Web {
     public static function routes() {
         return array_merge(
-            
-            self::errors(),
             self::setup(),
+            self::errors(),
             self::comments(),
             self::likes(),
             self::media(),
@@ -74,7 +73,7 @@ class Web {
                 'method' => 'POST',
                 'path' => '/profile/toggle-notification',
                 'name' => 'toggle_notification',
-                'secure' => 'admin|self',
+                'secure' => 'authentified',
                 'action' => [UserController::class, 'toggle_notification']
             ],
             [
@@ -88,7 +87,7 @@ class Web {
                 'method' => 'POST',
                 'path' => '/profile/resend-email-validation',
                 'name' => 'resend_email_validation',
-                'secure' => 'admin|self',
+                'secure' => 'authentified',
                 'action' => [UserController::class, 'resend_email_validation']
             ],
             [
@@ -114,7 +113,7 @@ class Web {
                 'method' => 'GET',
                 'path' => '/profile/validation-needed',
                 'name' => 'validation_needed',
-                'secure' => 'self',
+                'secure' => 'authentified',
                 'action' => [UserController::class, 'validation_needed']
             ],
             [
@@ -122,13 +121,14 @@ class Web {
                 'path' => '/profile/validate',
                 'query' => ['token'],
                 'name' => 'validate_email',
+                'secure' => 'authentified',
                 'action' => [UserController::class, 'validate']
             ],
             [
                 'method' => 'GET',
                 'path' => '/profile',
                 'name' => 'profile',
-                'secure' => 'self',
+                'secure' => 'authentified',
                 'action' => [UserController::class, 'profile']
             ],
             [
@@ -141,7 +141,7 @@ class Web {
                 'method' => 'GET',
                 'path' => '/user/{id}/edit',
                 'name' => 'edit_user',
-                'secure' => 'admin|self',
+                'secure' => 'authentified',
                 'action' => [UserController::class, 'edit']
             ],
             [
@@ -154,14 +154,14 @@ class Web {
                 'method' => 'POST',
                 'path' => '/user',
                 'name' => 'update_user',
-                'secure' => 'admin|self',
+                'secure' => 'authentified',
                 'action' => [UserController::class, 'update']
             ],
             [
                 'method' => 'POST',
                 'path' => '/user',
                 'name' => 'delete_user',
-                'secure' => 'admin|self',
+                'secure' => 'authentified',
                 'action' => [UserController::class, 'delete']
             ],
         ];
@@ -182,7 +182,7 @@ class Web {
                 'method' => 'GET',
                 'path' => '/post/{id}/edit',
                 'name' => 'edit_post',
-                'secure' => 'admin|self',
+                'secure' => 'authentified',
                 'action' => [PostController::class, 'edit']
             ],
             [
@@ -216,7 +216,7 @@ class Web {
                 'method' => 'POST',
                 'path' => '/post/{id}',
                 'name' => 'delete_post',
-                'secure' => 'admin|self',
+                'secure' => 'authentified',
                 'action' => [PostController::class, 'delete']
             ]
         ];
@@ -272,7 +272,7 @@ class Web {
             [
                 'method' => 'POST',
                 'path' => '/comment',
-                'name' => 'store_comment',
+                'name' => 'comment',
                 'secure' => 'authentified',
                 'action' => [CommentController::class, 'store']
             ],
@@ -280,7 +280,7 @@ class Web {
                 'method' => 'POST',
                 'path' => '/comment/{id}',
                 'name' => 'delete_comment',
-                'secure' => 'admin|self',
+                'secure' => 'authentified',
                 'action' => [CommentController::class, 'delete']
             ]
         ];
@@ -294,14 +294,14 @@ class Web {
             [
                 'method' => 'POST',
                 'path' => '/like',
-                'name' => 'store_like',
+                'name' => 'like',
                 'secure' => 'authentified',
                 'action' => [LikeController::class, 'store']
             ],
             [
                 'method' => 'POST',
                 'path' => '/unlike',
-                'name' => 'delete_like',
+                'name' => 'unlike',
                 'secure' => 'authentified',
                 'action' => [LikeController::class, 'delete']
             ]
@@ -351,13 +351,14 @@ class Web {
                 'method' => 'POST',
                 'path' => '/media/upload',
                 'name' => 'upload_media',
+                'secure' => 'authentified',
                 'action' => [MediaController::class, 'upload']
             ],
             [
                 'method' => 'POST',
                 'path' => '/media/delete',
                 'name' => 'delete_media',
-                'secure' => 'admin|self',
+                'secure' => 'authentified',
                 'action' => [MediaController::class, 'delete']
             ],
             [

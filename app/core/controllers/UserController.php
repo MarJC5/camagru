@@ -9,6 +9,7 @@ use Camagru\core\models\User;
 use Camagru\core\middlewares\Validation;
 use Camagru\helpers\Logger;
 use Camagru\helpers\Slugify;
+use Camagru\core\middlewares\Auth;
 
 use function Camagru\loadView;
 
@@ -38,6 +39,11 @@ class UserController {
         if (empty($user)) {
             Session::set('error', 'Invalid user');
             Router::redirect('error', ['code' => 404]);
+        }
+
+        // Check if user is allowed to access this page
+        if (!Auth::handle('self', ['id' => $user->id()])) {
+            return;
         }
 
         // Is user validated?
@@ -79,6 +85,11 @@ class UserController {
             Router::redirect('error', ['code' => 404]);
         }
 
+        // Check if user is allowed to access this page
+        if (!Auth::handle('admin|self', ['id' => $user->id()])) {
+            return;
+        }
+
         $_GET['title'] = '@' . $user->username() . ' - Edit';
 
         echo loadView('user/edit.php', [
@@ -104,6 +115,11 @@ class UserController {
         if (empty($user)) {
             Session::set('error', 'Invalid user');
             Router::redirect('error', ['code' => 404]);
+        }
+
+        // Check if user is allowed to access this page
+        if (!Auth::handle('admin|self', ['id' => $user->id()])) {
+            return;
         }
 
         // remove if empty
@@ -165,6 +181,11 @@ class UserController {
             Router::redirect('error', ['code' => 404]);
         }
 
+        // Check if user is allowed to access this page
+        if (!Auth::handle('admin|self', ['id' => $user->id()])) {
+            return;
+        }
+
         $status = $user->delete();
 
         if ($status) {
@@ -215,6 +236,11 @@ class UserController {
             Router::redirect('error', ['code' => 404]);
         }
 
+        // Check if user is allowed to access this page
+        if (!Auth::handle('admin|self', ['id' => $user->id()])) {
+            return;
+        }
+
         $notification = 0;
         if (!$user->is_notification_enabled()) {
             $notification = 1;
@@ -225,8 +251,14 @@ class UserController {
 
         if ($status) {
             Session::set('success', 'Notification settings updated successfully');
+            if ($user->id() === Session::currentUser()->id()) {
+                Router::redirect('profile');
+            } else {
+                Router::redirect('user', ['id' => $user->id()]);
+            }
         } else {
             Session::set('error', 'An error occurred while updating the notification settings');
+            Router::redirect('edit_user', ['id' => $user->id()]);
         }
 
         Router::redirect('profile');
@@ -249,8 +281,14 @@ class UserController {
 
         if ($status) {
             Session::set('success', 'Role updated successfully');
+            if ($user->id() === Session::currentUser()->id()) {
+                Router::redirect('profile');
+            } else {
+                Router::redirect('user', ['id' => $user->id()]);
+            }
         } else {
             Session::set('error', 'An error occurred while updating the role');
+            Router::redirect('edit_user', ['id' => $user->id()]);
         }
 
         Router::redirect('profile');
