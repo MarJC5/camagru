@@ -104,11 +104,10 @@ const loadMorePosts = async () => {
           });
         }
     } else {
-      console.log("No more posts to load.");
       window.removeEventListener("scroll", handleScroll);
     }
   } catch (error) {
-    console.error("Error fetching posts:", error);
+    console.log("No more posts to load.");
   }
 };
 

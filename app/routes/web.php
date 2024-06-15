@@ -9,6 +9,8 @@ use Camagru\core\controllers\AuthController;
 use Camagru\core\controllers\MediaController;
 use Camagru\core\controllers\CommentController;
 use Camagru\core\controllers\LikeController;
+use Camagru\core\controllers\ErrorController;
+use Camagru\core\controllers\SetupController;
 
 /**
  * Class Web
@@ -28,10 +30,10 @@ class Web {
             self::comments(),
             self::likes(),
             self::media(),
+            self::auth(),
             self::users(),
             self::posts(),
             self::pages(),
-            self::auth(),
         );
     }
 
@@ -42,6 +44,18 @@ class Web {
      */
     private static function auth() {
         return [
+            [
+                'method' => 'GET',
+                'path' => '/login',
+                'name' => 'login',
+                'action' => [AuthController::class, 'login']
+            ],
+            [
+                'method' => 'GET',
+                'path' => '/register',
+                'name' => 'register_user',
+                'action' => [AuthController::class, 'register']
+            ],
             [
                 'method' => 'GET',
                 'path' => '/auth/login',
@@ -247,18 +261,6 @@ class Web {
         return [
             [
                 'method' => 'GET',
-                'path' => '/login',
-                'name' => 'login',
-                'action' => [AuthController::class, 'login']
-            ],
-            [
-                'method' => 'GET',
-                'path' => '/register',
-                'name' => 'register_user',
-                'action' => [AuthController::class, 'register']
-            ],
-            [
-                'method' => 'GET',
                 'path' => '/',
                 'name' => 'home',
                 'action' => [PageController::class, 'index']
@@ -366,7 +368,7 @@ class Web {
                 'method' => 'GET',
                 'path' => '/error/{code}',
                 'name' => 'error',
-                'action' => [PageController::class, 'error']
+                'action' => [ErrorController::class, 'error']
             ]
         ];
     }
@@ -382,13 +384,13 @@ class Web {
                 'method' => 'GET',
                 'path' => '/install',
                 'name' => 'install',
-                'action' => [PageController::class, 'install']
+                'action' => [SetupController::class, 'install']
             ],
             [
                 'method' => 'POST',
                 'path' => '/setup',
                 'name' => 'setup',
-                'action' => [PageController::class, 'setup']
+                'action' => [SetupController::class, 'setup']
             ]
         ];
     }

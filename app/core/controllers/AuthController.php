@@ -28,7 +28,7 @@ class AuthController
         $_GET['title'] = 'Login';
 
         echo loadView('auth/login.php', [
-            'form' => loadView('auth/forms/login-form.php')
+            'form' => loadView('auth/forms/_login-form.php')
         ]);
     }
 
@@ -44,7 +44,7 @@ class AuthController
         $_GET['title'] = 'Register';
 
         echo loadView('auth/register.php', [
-            'form' => loadView('auth/forms/register-form.php')
+            'form' => loadView('auth/forms/_register-form.php')
         ]);
     }
 

@@ -7,7 +7,6 @@ use Camagru\routes\Api;
 use Camagru\helpers\Logger;
 use Camagru\core\middlewares\Auth;
 use Camagru\core\middlewares\Migration;
-use function Camagru\loadView;
 
 /**
  * Class Router
