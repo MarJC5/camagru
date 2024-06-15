@@ -7,6 +7,8 @@ use Camagru\core\models\Media;
 use Camagru\core\models\Comment;
 use Camagru\core\models\Like;
 use Camagru\core\models\User;
+use Camagru\helpers\Session;
+use Camagru\helpers\CSRF;
 
 /**
  * Class Post
@@ -86,6 +88,8 @@ class Post extends AModel
      */
     public function toJSON()
     {
+        $current_user = Session::currentUser() ? Session::currentUser()->id() : 0;
+
         return [
             'id' => $this->id(),
             'caption' => $this->caption(),
@@ -101,6 +105,20 @@ class Post extends AModel
             'likes' => $this->likes()->map(function ($like) {
                 return $like->toJSON();
             }),
+            'current_user' => [
+                'id' => $current_user,
+                'has_liked' => $current_user ? Like::hasLiked(Session::currentUser()->id(), $this->id()) : 0,
+                'like' => [
+                    'csrf'=> $current_user ? CSRF::token('csrf_like_' . $this->id() . '_' . Session::currentUser()->id()) : null,
+                    'csrf_name' => $current_user ? 'csrf_like_' . $this->id() . '_' . Session::currentUser()->id() : null,
+                    'path' => $current_user ? 'like' : 'login'
+                ],
+                'unlike' => [
+                    'csrf'=> $current_user ? CSRF::token('csrf_unlike_' . $this->id() . '_' . Session::currentUser()->id()) : null,
+                    'csrf_name' => $current_user ? 'csrf_unlike_' . $this->id() . '_' . Session::currentUser()->id() : null,
+                    'path' => $current_user ? 'unlike' : 'login',
+                ]
+            ],
         ];
     }
 

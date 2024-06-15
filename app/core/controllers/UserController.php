@@ -10,10 +10,21 @@ use Camagru\core\middlewares\Validation;
 use Camagru\helpers\Logger;
 use Camagru\helpers\Slugify;
 use Camagru\core\middlewares\Auth;
+use PgSql\Lob;
 
 use function Camagru\loadView;
 
+/**
+ * Class UserController
+ * Handles actions related to users, such as displaying, creating, editing, and deleting users.
+ */
 class UserController {
+
+    /**
+     * Display all users.
+     *
+     * @return void
+     */
     public static function index() {
         $users = User::all();
 
@@ -29,6 +40,11 @@ class UserController {
         ]);
     }
 
+    /**
+     * Display the user creation form.
+     *
+     * @return void
+     */
     public static function profile() {
         if (!Session::isLogged()) {
             Router::redirect('login');
@@ -58,6 +74,11 @@ class UserController {
         ]);
     }
 
+    /**
+     * Display the user creation form.
+     *
+     * @return void
+     */
     public static function show($data) {
         $user = new User($data['id']);
 
@@ -77,6 +98,11 @@ class UserController {
         ]);
     }
 
+    /**
+     * Display the user creation form.
+     *
+     * @return void
+     */
     public static function edit($data) {
         $user = new User($data['id']);
 
@@ -105,7 +131,12 @@ class UserController {
             ]),
         ]);
     }
-
+    
+    /**
+     * Display the user creation form.
+     *
+     * @return void
+     */
     public static function update() {
         // Verify the CSRF token
         if (!CSRF::verify($_POST['csrf_update_user'], 'csrf_update_user')) {
@@ -175,6 +206,11 @@ class UserController {
         }
     }
 
+    /**
+     * Display the user creation form.
+     *
+     * @return void
+     */
     public static function delete() {
         // Verify the CSRF token
         if (!CSRF::verify($_POST['csrf_delete_user'], 'csrf_delete_user')) {
@@ -210,6 +246,11 @@ class UserController {
         }
     }
 
+    /**
+     * Display the user creation form.
+     *
+     * @return void
+     */
     public static function validate($params) {
 
         if (!isset($params['token'])) {
@@ -223,7 +264,7 @@ class UserController {
             Router::redirect('error', ['code' => 404]);
         }
 
-        $user = User::where('token', $token)->first();
+        $user = User::where('id', $params['id'])->first();
 
         if (empty($user)) {
             Session::set('error', 'Invalid user');
@@ -233,6 +274,11 @@ class UserController {
         $user->validate($token);
     }
 
+    /**
+     * Display the user creation form.
+     *
+     * @return void
+     */
     public static function toggle_notification()
     {
         // Verify the CSRF token
@@ -277,6 +323,11 @@ class UserController {
         Router::redirect('profile');
     }
 
+    /**
+     * Display the user creation form.
+     *
+     * @return void
+     */
     public static function edit_role()
     {
         // Verify the CSRF token
@@ -311,6 +362,11 @@ class UserController {
         Router::redirect('profile');
     }
 
+    /**
+     * Display the user creation form.
+     *
+     * @return void
+     */
     public static function reset_password($params) {
 
         $_GET['title'] = 'Reset password';
@@ -348,6 +404,11 @@ class UserController {
         }
     }
 
+    /**
+     * Display the user creation form.
+     *
+     * @return void
+     */
     public static function validation_needed() {
         $_GET['title'] = 'Validation needed';
 
@@ -358,6 +419,11 @@ class UserController {
         ]);
     }
 
+    /**
+     * Display the user creation form.
+     *
+     * @return void
+     */
     public static function resend_email_validation() {
         // Verify the CSRF token
         if (!CSRF::verify($_POST['csrf_resend_email_validation'], 'csrf_resend_email_validation')) {
@@ -381,6 +447,11 @@ class UserController {
         Router::redirect('profile');
     }
 
+    /**
+     * Display the user creation form.
+     *
+     * @return void
+     */
     public static function reset_password_request() {
         // Verify the CSRF token
         if (!CSRF::verify($_POST['csrf_reset_password_request'], 'csrf_reset_password_request')) {
@@ -420,6 +491,11 @@ class UserController {
         Router::redirect('home');
     }
 
+    /**
+     * Display the user creation form.
+     *
+     * @return void
+     */
     public static function new_password()
     {
         // Verify the CSRF token

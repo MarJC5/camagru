@@ -15,11 +15,10 @@ get_header();
     <div class="row">
         <?= partials('layouts/user/head.php', ['user' => $user]); ?>
         <!-- Infinite scroll Start -->
-        <section id="infinit-posts-scroll" class="posts grid grid--3 gap-6">
+        <section id="infinit-posts-scroll" class="posts grid grid--3 gap-6" data-user-id="<?= $user->id() ?>">
             <!-- Posts -->
         </section>
         <!-- Infinite scroll End -->
-    </div>
     </div>
 </section>
 <?php get_footer(); ?>

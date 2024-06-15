@@ -12,6 +12,7 @@ use Camagru\mail\Mail;
 use Camagru\helpers\Session;
 use Camagru\routes\Router;
 use Camagru\core\middlewares\Validation;
+use Camagru\helpers\CSRF;
 
 /**
  * Class User
@@ -208,6 +209,7 @@ class User extends AModel
         if ($this->is_validated()) {
             Session::set('success', 'Your account is already validated.');
             Router::redirect('profile');
+            return;
         }
 
         if (!password_verify($token, $this->token())) {
@@ -215,7 +217,11 @@ class User extends AModel
             return;
         }
 
-        if ($this->update(['validated' => 1])) {
+            // New token for security
+            $plainToken = CSRF::generate();
+            $hashedToken = password_hash($plainToken, PASSWORD_DEFAULT);
+
+        if ($this->update(['token' => $hashedToken, 'validated' => 1])) {
             Session::set('success', 'Your account has been validated.');
             Router::redirect('profile');
         } else {
@@ -234,18 +240,25 @@ class User extends AModel
         if ($this->is_validated()) {
             Session::set('success', 'Your account is already validated.');
             Router::redirect('profile');
+            return; // Ensuring redirection by stopping further execution.
         }
 
-        // Send email
+        // Generate a new plain token and store its hash in the database
+        $plainToken = CSRF::generate(); // Generate a new token
+        $hashedToken = password_hash($plainToken, PASSWORD_DEFAULT);
+        $this->update(['token' => $hashedToken]); // Update the stored hash token in the database
+
+        // Send email with the plain token
         return Mail::send(
             $this->email(),
             'Email validation',
             'email-validation',
             [
-                'activation_link' => BASE_URL . Router::to('validate_email') . '?token=' . $this->token(),
+                'activation_link' => BASE_URL . Router::to('validate_email') . '?token=' . $plainToken . '&id=' . $this->id(),
             ]
         );
     }
+
 
     /**
      * Send a password reset request email.

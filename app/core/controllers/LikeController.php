@@ -7,6 +7,7 @@ use Camagru\helpers\Session;
 use Camagru\routes\Router;
 use Camagru\core\middlewares\Auth;
 use Camagru\helpers\CSRF;
+use Camagru\helpers\Logger;
 
 /**
  * Class LikeController
@@ -23,7 +24,7 @@ class LikeController
     public static function store() 
     {
         // Verify the CSRF token
-        if (!CSRF::verify($_POST['csrf_like'], 'csrf_like')) {
+        if (!CSRF::verify($_POST['csrf_like_' . $_POST['post_id'] . '_' . Session::currentUser()->id()], 'csrf_like_' . $_POST['post_id'] . '_' . Session::currentUser()->id())) {
             Session::set('error', 'Invalid CSRF token');
             Router::redirect('login');
         }
@@ -45,6 +46,7 @@ class LikeController
 
         // Redirect based on the result of the insertion
         if ($status) {
+            Session::set('success', 'Liked');
             Router::redirect('post', ['id' => $_POST['post_id']]);
         } else {
             Session::set('error', 'Failed to add like');
@@ -62,7 +64,7 @@ class LikeController
     public static function delete() 
     {
         // Verify the CSRF token
-        if (!CSRF::verify($_POST['csrf_unlike'], 'csrf_unlike')) {
+        if (!CSRF::verify($_POST['csrf_unlike_' . $_POST['post_id'] . '_' . Session::currentUser()->id()], 'csrf_unlike_' . $_POST['post_id'] . '_' . Session::currentUser()->id())) {
             Session::set('error', 'Invalid CSRF token');
             Router::redirect('login');
         }
@@ -75,6 +77,7 @@ class LikeController
 
         // Retrieve the like ID from the POST request
         $id = $_POST['id'];
+        Logger::log('Like ID: ' . $id);
         $like = new Like($id);
 
         // Check if the like exists
@@ -93,10 +96,11 @@ class LikeController
 
         // Redirect based on the result of the deletion
         if ($status) {
-            Router::redirect('post', ['id' => $like->post()]);
+            Session::set('success', 'Unlike');
+            Router::redirect('post', ['id' => $_POST['post_id']]);
         } else {
             Session::set('error', 'Failed to delete like');
-            Router::redirect('post', ['id' => $like->post()]);
+            Router::redirect('post', ['id' => $_POST['post_id']]);
         }
     }
 }

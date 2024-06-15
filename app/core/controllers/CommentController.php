@@ -63,16 +63,17 @@ class CommentController
      * 
      * @param array $data The data array containing the comment ID.
      */
-    public static function delete($data) 
+    public static function delete() 
     {
+        $id = $_POST['id'];
+
         // Verify the CSRF token
-        if (!CSRF::verify($_POST['csrf_delete_comment'], 'csrf_delete_comment')) {
+        if (!CSRF::verify($_POST['csrf_delete_comment_' . $id], 'csrf_delete_comment_' . $id)) {
             Session::set('error', 'Invalid CSRF token');
             Router::redirect('login');
         }
 
         // Retrieve the comment ID from the data array
-        $id = $data['id'];
         $comment = new Comment($id);
 
         // Check if the comment exists

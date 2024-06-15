@@ -1,5 +1,6 @@
 const escapeHTML = (str, allowTags = false) => {
     if (typeof str === "number") {
+
       str = str.toString();
     }
 

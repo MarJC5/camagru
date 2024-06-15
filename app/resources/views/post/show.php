@@ -54,7 +54,7 @@ get_header();
                         <?php if (Session::currentUser()) : ?>
                             <?php if (Like::hasLiked(Session::currentUser()->id(), $id)) : ?>
                                 <form action="<?= Router::to('unlike') ?>" method="POST">
-                                    <?= CSRF::field('csrf_unlike') ?>
+                                    <?= CSRF::field('csrf_unlike_' . $id . '_' . Session::currentUser()->id()) ?>
                                     <input type="hidden" name="id" value="<?= Like::hasLiked(Session::currentUser()->id(), $id) ?>">
                                     <input type="hidden" name="post_id" value="<?= $id ?>">
                                     <button type="submit" class="button button--svg  flex gap-1">
@@ -64,7 +64,7 @@ get_header();
                                 </form>
                             <?php else : ?>
                                 <form action="<?= Router::to('like') ?>" method="POST">
-                                    <?= CSRF::field('csrf_like') ?>
+                                    <?= CSRF::field('csrf_like_' . $id . '_' . Session::currentUser()->id()) ?>
                                     <input type="hidden" name="user_id" value="<?= Session::currentUser()->id() ?>">
                                     <input type="hidden" name="post_id" value="<?= $id ?>">
                                     <button type="submit" class="button button--svg flex gap-1">

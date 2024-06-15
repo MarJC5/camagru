@@ -3,6 +3,7 @@
 namespace Camagru\core\models;
 
 use Camagru\core\models\AModel;
+use Camagru\helpers\Logger;
 
 /**
  * Class Like
@@ -54,7 +55,7 @@ class Like extends AModel
     public static function hasLiked($user_id, $post_id)
     {
         $like = self::where('user_id', $user_id)->andWhere('post_id', $post_id)->first();
-        return $like ? $like->id() : false;
+        return $like ? $like->id() : 0;
     }
 
     /**
