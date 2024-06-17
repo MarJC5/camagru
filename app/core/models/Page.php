@@ -75,7 +75,7 @@ class Page extends AModel
             'title' => 'required|min:3|max:255',
             'content' => 'required',
             'slug' => 'required|min:3|max:255|alpha_dash|unique:pages',
-            'media_id' => 'required|exists:medias,id'
+            'media_id' => 'required|exists:medias,id',
         ];
     }
 }

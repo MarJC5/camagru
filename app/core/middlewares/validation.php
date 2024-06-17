@@ -3,6 +3,7 @@
 namespace Camagru\core\middlewares;
 
 use Camagru\core\database\Database;
+use Camagru\helpers\Config;
 
 /**
  * Class Validation
@@ -23,8 +24,14 @@ class Validation
     {
         foreach ($rules as $field => $ruleset) {
             $value = $data[$field] ?? null;
+            $rulesArray = explode('|', $ruleset);
 
-            foreach (explode('|', $ruleset) as $rule) {
+            // Check if the field is optional and empty
+            if (in_array('optional', $rulesArray) && empty($value)) {
+                continue;  // Skip further validation for this field
+            }
+
+            foreach ($rulesArray as $rule) {
                 $this->applyRule($field, $value, $rule);
             }
         }
@@ -77,8 +84,13 @@ class Validation
             case 'unique':
                 $this->checkUnique($field, $value, $ruleValue);
                 break;
-            case 'image':
+            case 'mimes':
                 $this->checkImage($field, $value);
+                break;
+            case 'size':
+                if ($value['size'] > $ruleValue) {
+                    $this->addError($field, "The {$field} may not be greater than {$ruleValue} bytes.");
+                }
                 break;
             case 'exists':
                 $this->checkExists($field, $value, $ruleValue);
@@ -93,12 +105,21 @@ class Validation
      *
      * @param string $field The field name.
      * @param mixed $value The field value.
-     * @param string $table The table name.
+     * @param string $parameters The table name, id column and id value.
      */
-    private function checkUnique($field, $value, $table)
+    private function checkUnique($field, $value, $parameters)
     {
+        list($table, $idColumn, $id) = array_pad(explode(',', $parameters), 3, null);
         $db = new Database();
-        $result = $db->query("SELECT COUNT(*) FROM {$table} WHERE {$field} = ?", [$value]);
+        $query = "SELECT COUNT(*) FROM {$table} WHERE {$field} = ?";
+        $params = [$value];
+
+        if ($id) {
+            $query .= " AND {$idColumn} != ?";
+            $params[] = $id;
+        }
+
+        $result = $db->query($query, $params);
         if ($result[0]['COUNT(*)'] > 0) {
             $this->addError($field, "The {$field} has already been taken.");
         }
@@ -150,9 +171,10 @@ class Validation
      */
     private function checkImage($field, $value)
     {
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $config = Config::get('media');
+        $allowedExtensions = array_keys($config['allowed']);
         $image = getimagesize($value['tmp_name']);
-        if (!in_array($image['mime'], $allowedTypes)) {
+        if (!in_array($image['mime'], $allowedExtensions)) {
             $this->addError($field, "The {$field} must be an image.");
         }
     }

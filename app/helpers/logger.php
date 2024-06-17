@@ -26,6 +26,13 @@ class Logger
             }
             fwrite($logFile, date('Y-m-d H:i:s') . ' - ' . $message . PHP_EOL);
             fclose($logFile);
+        } else {
+            $logFile = fopen($logFilePath, 'w');
+            if (!$logFile) {
+                return;
+            }
+            fwrite($logFile, date('Y-m-d H:i:s') . ' - ' . $message . PHP_EOL);
+            fclose($logFile);
         }
     }
 }

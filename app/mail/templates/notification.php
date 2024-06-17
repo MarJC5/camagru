@@ -15,6 +15,7 @@
     <h1>Camagru Notification</h1>
     <p>Hello {{user_name}},</p>
     <p>{{notification_body}}</p>
+    <p>Click <a href="{{site_url}}">here</a> to view the post.</p>
     <p>Thank you for using Camagru.</p>
     <p>Regards,</p>
 </div>

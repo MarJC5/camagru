@@ -78,7 +78,7 @@ class Media extends AModel
         $config = Config::get('media');
         $allowedExtensions = implode(',', array_keys($config['allowed']));
         return [
-            'media_path' => "required|max:{$config['size']}|mimes:{$allowedExtensions}",
+            'media' => "required|size:{$config['size']}|mimes:{$allowedExtensions}",
         ];
     }
 

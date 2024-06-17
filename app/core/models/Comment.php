@@ -4,6 +4,8 @@ namespace Camagru\core\models;
 
 use Camagru\core\models\AModel;
 use Camagru\core\models\User;
+use Camagru\mail\Mail;
+use Camagru\routes\Router;
 use function Camagru\getElapsedTime;
 
 /**
@@ -55,6 +57,35 @@ class Comment extends AModel
     {
         return $this->data->post_id;
     }
+
+    /**
+     * Send notification email to the post owner.
+     */
+    public function sendNotificationEmail($post_id)
+    {
+        $post = Post::where('id', $post_id)->first();
+        $user = User::where('id', $post->user())->first();
+
+        if (!$user) {
+            return false;
+        }
+
+        if ($user->is_notification_enabled()) {
+            $status = Mail::send(
+                $user->email(), 
+                'New Comment',
+                'notification',
+                [
+                    'user_name' => $user->username(),
+                    'notification_body' => 'A new comment has been added to your post.',
+                    'site_url' => BASE_URL . Router::to('post', ['id' => $post_id]),
+                ]
+            );
+    
+            return $status;
+        }
+    }
+
 
     /**
      * Get the validation rules for the comment.

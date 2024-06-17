@@ -323,8 +323,8 @@ class User extends AModel
     public function validation()
     {
         return [
-            'username' => 'required|min:3|max:20|alpha_num',
-            'email' => 'required|email',
+            'username' => 'required|min:3|max:20|alpha_num|unique:users,username,' . $this->id(),
+            'email' => 'required|email|unique:users,email,' . $this->id(),
             'password' => 'optional|min:6',
         ];
     }

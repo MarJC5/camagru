@@ -7,6 +7,7 @@ use Camagru\helpers\Session;
 use Camagru\routes\Router;
 use Camagru\core\middlewares\Auth;
 use Camagru\helpers\CSRF;
+use Camagru\helpers\Logger;
 
 /**
  * Class CommentController
@@ -48,6 +49,9 @@ class CommentController
         // Redirect based on the result of the insertion
         if ($status) {
             Session::set('success', 'Comment added');
+
+            // Sent email notification to the post owner if enabled
+            $comment->sendNotificationEmail($_POST['post_id']);
         } else {
             Session::set('error', 'Failed to add comment');
         }

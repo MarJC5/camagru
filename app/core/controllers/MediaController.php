@@ -7,6 +7,7 @@ use Camagru\core\models\Media;
 use Camagru\helpers\Session;
 use Camagru\helpers\Logger;
 use Camagru\helpers\CSRF;
+use Camagru\core\middlewares\Validation;
 
 /**
  * Class MediaController
@@ -55,10 +56,28 @@ class MediaController
         }
 
         $media = new Media();
-        if ($media->uploadMedia($_FILES['media'])) {
-            Session::set('success', 'File uploaded successfully.');
+
+        $validation = new Validation();
+        $rules = $media->validation();
+        $data = [
+            'media' => [
+                'size' => $_FILES['media']['size'],
+                'mimes' => $_FILES['media']['type'],
+            ]
+        ];
+        $validation->validate($data, $rules);
+
+        if ($validation->fails()) {
+            $errors = $validation->getErrors();
+
+            Session::set('error', $errors);
+            Router::redirect('home');
         } else {
-            Session::set('error', 'Error uploading file.');
+            if ($media->uploadMedia($_FILES['media'])) {
+                Session::set('success', 'File uploaded successfully.');
+            } else {
+                Session::set('error', 'Error uploading file.');
+            }
         }
     }
 
