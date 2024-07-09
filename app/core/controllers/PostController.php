@@ -9,6 +9,7 @@ use Camagru\core\middlewares\Validation;
 use Camagru\helpers\Logger;
 use Camagru\core\middlewares\Auth;
 use Camagru\helpers\CSRF;
+use Camagru\helpers\Sanitize;
 
 use function Camagru\loadView;
 
@@ -74,6 +75,9 @@ class PostController
      */
     public static function store()
     {
+        // Sanitize the data
+        $_POST = Sanitize::escapeArray($_POST);
+        
         // Verify the CSRF token
         if (!CSRF::verify($_POST['csrf_store_post'], 'csrf_store_post')) {
             Session::set('error', 'Invalid CSRF token');
@@ -138,6 +142,9 @@ class PostController
      */
     public static function update($data)
     {
+        // Sanitize the data
+        $_POST = Sanitize::escapeArray($_POST);
+
         // Verify the CSRF token
         if (!CSRF::verify($_POST['csrf_update_post'], 'csrf_update_post')) {
             Session::set('error', 'Invalid CSRF token');
@@ -185,13 +192,16 @@ class PostController
      */
     public static function delete($data)
     {
+        // Sanitize the data
+        $_POST = Sanitize::escapeArray($_POST);
+        
         // Verify the CSRF token
-        if (!CSRF::verify($_POST['csrf_delete_post'], 'csrf_delete_post')) {
+        if (!CSRF::verify($_POST['csrf_delete_post_' . $_POST['id']], 'csrf_delete_post_' . $_POST['id'])) {
             Session::set('error', 'Invalid CSRF token');
             Router::redirect('login');
         }
 
-        $id = $data['id'];
+        $id = $_POST['id'];
         $post = new Post($id);
 
         if (empty($post)) {
@@ -238,7 +248,9 @@ class PostController
             $posts = Post::paginate($offset, $limit);
         }
 
-        if (empty($posts)) {
+        if (empty($posts) && $page > 1) {
+            return ['message' => 'No more posts'];
+        } elseif (empty($posts)) {
             return ['message' => 'No posts found'];
         }
 

@@ -2,6 +2,7 @@
 
 namespace Camagru\core\controllers;
 
+use Camagru\helpers\Sanitize;
 use Camagru\helpers\Session;
 use Camagru\routes\Router;
 use Camagru\core\database\Runner;
@@ -22,6 +23,9 @@ class SetupController
      */
     public static function setup()
     {
+        // Sanitize the data
+        $_POST = Sanitize::escapeArray($_POST);
+
         $data = $_POST;
 
         // Check if the application has been migrated

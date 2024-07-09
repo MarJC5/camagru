@@ -17,11 +17,11 @@ use Camagru\helpers\Session;
                 <p class="w-half">Change the role of this user.</p>
                 <form action="<?= Router::to('edit_role') ?>" method="POST" class="form flex flex-column w-half">
                     <?= CSRF::field('csrf_edit_role') ?>
-                    <input type="hidden" name="id" value="<?= $user_id ?>">
+                    <input type="hidden" name="id" value="<?= htmlspecialchars($user_id) ?>">
                     <select name="role" id="role" class="select mb-4">
                         <?php foreach (User::ROLES as $role) : ?>
                             <option value="<?= $role ?>" <?= $role === $old['role'] ? 'selected' : '' ?>>
-                                <?= ucfirst($role) ?>
+                                <?= htmlspecialchars(ucfirst($role)) ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -36,7 +36,7 @@ use Camagru\helpers\Session;
             <p class="w-half">Manage your email notification settings.</p>
             <form action="<?= Router::to('toggle_notification') ?>" method="POST">
                 <?= CSRF::field('csrf_toggle_notification') ?>
-                <input type="hidden" name="id" value="<?= $user_id ?>">
+                <input type="hidden" name="id" value="<?= htmlspecialchars($user_id) ?>">
                 <button type="submit" class="button">
                     <?= $notification ?> Notifications
                 </button>
@@ -47,7 +47,7 @@ use Camagru\helpers\Session;
             <p class="w-half">Deleting your account will remove all your data from the system.</p>
             <form action="<?= Router::to('delete_user') ?>" method="POST">
                 <?= CSRF::field('csrf_delete_user') ?>
-                <input type="hidden" name="id" value="<?= $user_id ?>">
+                <input type="hidden" name="id" value="<?= htmlspecialchars($user_id) ?>">
                 <button type="submit" class="button button--danger">
                     Delete Account
                 </button>
@@ -57,21 +57,25 @@ use Camagru\helpers\Session;
 
     <form action="<?= Router::to('update_user', ['id' => $user_id]) ?>" method="POST" class="form">
         <?= CSRF::field('csrf_update_user') ?>
-        <input type="number" id="id" name="id" class="hidden" value="<?= $user_id ?>">
+        <input type="number" id="id" name="id" class="hidden" value="<?= htmlspecialchars($user_id) ?>">
         <div class="flex flex-column mb-4">
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required value="<?= $old['username'] ?>">
+            <input type="text" id="username" name="username" required value="<?= htmlspecialchars($old['username']) ?>">
         </div>
         <div class="flex flex-column mb-4">
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required value="<?= $old['email'] ?>">
+            <input type="email" id="email" name="email" required value="<?= htmlspecialchars($old['email']) ?>">
         </div>
         <div class="flex flex-column mb-4">
-            <label for="password">Password:</label>
+            <label for="old_password">Old Password:</label>
+            <input type="password" id="old_password" name="old_password">
+        </div>
+        <div class="flex flex-column mb-4">
+            <label for="password">New Password:</label>
             <input type="password" id="password" name="password">
         </div>
         <div class="flex flex-column mb-4">
-            <label for="password_confirmation">Password Confirmation:</label>
+            <label for="password_confirmation">New Password Confirmation:</label>
             <input type="password" id="password_confirmation" name="password_confirmation">
         </div>
         <div class="flex flex-row gap-4">

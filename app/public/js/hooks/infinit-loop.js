@@ -1,5 +1,7 @@
 import { escapeHTML } from "./utils.js";
 let currentPage = 0;
+let lastFetchedPage = null;
+let isAllPostsFetched = false;
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Ready to look for infinite posts loop");
@@ -15,6 +17,17 @@ const loadMorePosts = async () => {
   const params = [`page=${nextPage}`];
   const postsContainer = document.querySelector("#infinit-posts-scroll");
 
+  // Check if the page has already fetched all posts
+  if (isAllPostsFetched) {
+    return;
+  }
+
+  // Check if the nextPage has already been fetched to prevent duplicate fetches
+  if (lastFetchedPage === nextPage) {
+    console.log("Page already fetched:", nextPage);
+    return; // Stop further execution if this page was already fetched
+  }
+
   if (currentPathname.includes("/user/") || currentPathname.includes("/profile")) {
     params.push(`user_id=${postsContainer.dataset.userId}`);
   }
@@ -23,92 +36,78 @@ const loadMorePosts = async () => {
     const response = await fetch(`/api/posts?${params.join("&")}`);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const posts = await response.json();
-    console.log(posts);
-    if (posts.length > 0) {
-      currentPage = nextPage; // Only increment if new posts are loaded
+
+    // DEBUG ONLY
+    // console.log(posts);
+
+    if (posts.length > 0 && lastFetchedPage !== nextPage) {
+      currentPage = nextPage; // Update current page only if new posts are added
+      lastFetchedPage = nextPage; // Update the last fetched page to the current page
       posts.forEach(createPostElement);
-
-      const shareActions = document.querySelectorAll(".run-share-actions");
-
-        if (shareActions) {
-          shareActions.forEach((shareAction) => {
-            if (!shareAction) return;
-
-            shareAction.addEventListener("click", (event) => {
-              let nodeItem = event.target;
-              if (nodeItem.tagName === "svg") {
-                nodeItem = nodeItem.parentNode;
-              } else if (nodeItem.tagName === "path") {
-                nodeItem = nodeItem.parentNode.parentNode;
-              }
-              const shareAction = document.querySelector(
-                `.share-actions-id-${nodeItem.dataset.shareActionsId}`
-              );
-              const shareActionId = nodeItem.dataset.shareActionsId;
-
-              // close all share actions
-              document
-                .querySelectorAll(".share-actions")
-                .forEach((shareAction) => {
-                  shareAction.classList.add("hidden");
-                  shareAction.classList.remove("flex");
-                });
-
-              shareAction.classList.remove("hidden");
-              shareAction.classList.add("flex");
-
-              // reset click outside
-              document.addEventListener("click", (event) => {
-                if (
-                  !shareAction.contains(event.target) &&
-                  !nodeItem.contains(event.target)
-                ) {
-                  shareAction.classList.add("hidden");
-                  shareAction.classList.remove("flex");
-                }
-              });
-
-              shareAction
-                .querySelector(".share-facebook")
-                .addEventListener("click", () => {
-                  const postUrl =
-                    window.location.origin + `/post/${shareActionId}`;
-                  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                    postUrl
-                  )}`;
-                  window.open(facebookShareUrl, "_blank");
-                });
-
-              shareAction
-                .querySelector(".share-linkedin")
-                .addEventListener("click", () => {
-                  const postUrl =
-                    window.location.origin + `/post/${shareActionId}`;
-                  const linkedinShareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-                    postUrl
-                  )}`;
-                  window.open(linkedinShareUrl, "_blank");
-                });
-
-              shareAction
-                .querySelector(".share-x")
-                .addEventListener("click", () => {
-                  const postUrl =
-                    window.location.origin + `/post/${shareActionId}`;
-                  const linkedinShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                    postUrl
-                  )}`;
-                  window.open(linkedinShareUrl, "_blank");
-                });
-            });
-          });
-        }
+      addEventListenersToShareButtons();
+      console.log("Posts loaded successfully. \nTotal posts:", posts.length, 
+        "\nCurrent page:", currentPage, 
+        "\nLast fetched page:", lastFetchedPage);
     } else {
-      window.removeEventListener("scroll", handleScroll);
+      if (posts.message === "No more posts" && !isAllPostsFetched) {
+        isAllPostsFetched = true;
+        console.info(posts.message);
+      }
     }
   } catch (error) {
-    console.log("No more posts to load.");
+    console.error("Error fetching posts:", error);
   }
+};
+
+const addEventListenersToShareButtons = () => {
+  const shareActions = document.querySelectorAll(".run-share-actions");
+  if (shareActions) {
+    shareActions.forEach((shareAction) => {
+      shareAction.addEventListener("click", event => handleShareButtonClick(event));
+    });
+  }
+};
+
+const handleShareButtonClick = (event) => {
+  let nodeItem = event.target;
+  if (nodeItem.tagName === "svg") {
+    nodeItem = nodeItem.parentNode;
+  } else if (nodeItem.tagName === "path") {
+    nodeItem = nodeItem.parentNode.parentNode;
+  }
+  const shareAction = document.querySelector(`.share-actions-id-${nodeItem.dataset.shareActionsId}`);
+  const shareActionId = nodeItem.dataset.shareActionsId;
+
+  // Close all other share actions and open the clicked one
+  document.querySelectorAll(".share-actions").forEach((action) => {
+    if (action !== shareAction) {
+      action.classList.add("hidden");
+      action.classList.remove("flex");
+    }
+  });
+
+  shareAction.classList.toggle("hidden");
+  shareAction.classList.toggle("flex");
+
+  document.addEventListener("click", (e) => {
+    if (!shareAction.contains(e.target) && !nodeItem.contains(e.target)) {
+      shareAction.classList.add("hidden");
+      shareAction.classList.remove("flex");
+    }
+  });
+
+  // Setup individual share buttons
+  setupShareActionButtons(shareAction, shareActionId);
+};
+
+const setupShareActionButtons = (shareAction, shareActionId) => {
+  shareAction.querySelector(".share-facebook").onclick = () => openShareWindow(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.origin + `/post/${shareActionId}`)}`, "facebook");
+  shareAction.querySelector(".share-linkedin").onclick = () => openShareWindow(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(window.location.origin + `/post/${shareActionId}`)}`, "linkedin");
+  shareAction.querySelector(".share-x").onclick = () => openShareWindow(`https://twitter.com/intent/tweet?text=${encodeURIComponent(window.location.origin + `/post/${shareActionId}`)}`, "twitter");
+};
+
+const openShareWindow = (url, title) => {
+  window.open(url, title, 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=400');
 };
 
 const createPostElement = (post) => {
@@ -262,8 +261,10 @@ const setupScrollListener = () => {
     const clientHeight =
       window.innerHeight || document.documentElement.clientHeight;
     if (scrollTop + clientHeight >= scrollHeight - 5) {
+      // avoid fetching the same page multiple times
       loadMorePosts();
     }
   };
+
   window.addEventListener("scroll", handleScroll);
 };

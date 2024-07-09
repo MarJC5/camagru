@@ -224,7 +224,7 @@ class Web {
             ],
             [
                 'method' => 'POST',
-                'path' => '/post',
+                'path' => '/post/store',
                 'name' => 'store_post',
                 'secure' => 'authentified',
                 'action' => [PostController::class, 'store']
@@ -244,7 +244,7 @@ class Web {
             ],
             [
                 'method' => 'POST',
-                'path' => '/post/{id}',
+                'path' => '/post/delete',
                 'name' => 'delete_post',
                 'secure' => 'authentified',
                 'action' => [PostController::class, 'delete']

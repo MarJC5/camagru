@@ -85,6 +85,25 @@ abstract class AModel
     }
 
     /**
+     * Get a random record(s) from the database.
+     * 
+     * @param int $limit The number of records to return.
+     * @return array An array of model instances.
+     */
+    public static function random($limit = 3)
+    {
+        $instance = new static();
+        $sql = "SELECT * FROM {$instance->table} ORDER BY RAND() LIMIT {$limit}";
+        
+        $results = $instance->db->query($sql);
+        return array_map(function ($item) {
+            $model = new static();
+            $model->data = (object) $item;
+            return $model;
+        }, $results);
+    }
+
+    /**
      * Map a callback function to each item in the collection.
      *
      * @param callable $callback The callback function.

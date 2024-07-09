@@ -9,6 +9,7 @@ use Camagru\core\middlewares\Validation;
 use Camagru\core\database\Runner;
 use Camagru\core\database\Database;
 use Camagru\helpers\CSRF;
+use Camagru\helpers\Sanitize;
 
 use function Camagru\loadView;
 
@@ -87,6 +88,9 @@ class PageController
      */
     public static function store()
     {
+        // Sanitize the data
+        $_POST = Sanitize::escapeArray($_POST);
+
         // Verify the CSRF token
         if (!CSRF::verify($_POST['csrf_create_page'], 'csrf_create_page')) {
             Session::set('error', 'Invalid CSRF token');
@@ -146,6 +150,9 @@ class PageController
      */
     public static function update($data)
     {
+        // Sanitize the data
+        $_POST = Sanitize::escapeArray($_POST);
+
         // Verify the CSRF token
         if (!CSRF::verify($_POST['csrf_update_page'], 'csrf_update_page')) {
             Session::set('error', 'Invalid CSRF token');
@@ -187,6 +194,9 @@ class PageController
      */
     public static function delete($data)
     {
+        // Sanitize the data
+        $_POST = Sanitize::escapeArray($_POST);
+
         // Verify the CSRF token
         if (!CSRF::verify($_POST['csrf_delete_page'], 'csrf_delete_page')) {
             Session::set('error', 'Invalid CSRF token');

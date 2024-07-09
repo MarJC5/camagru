@@ -6,7 +6,6 @@ use Camagru\helpers\Session;
 use function Camagru\js_url;
 use function Camagru\get_header;
 use function Camagru\get_footer;
-use function Camagru\partials;
 
 get_header();
 ?>

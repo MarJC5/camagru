@@ -1,8 +1,9 @@
-<?php 
+<?php
 
 namespace Camagru\views\page;
 
 use Camagru\routes\Router;
+use Camagru\core\models\Post;
 use function Camagru\get_header;
 use function Camagru\get_footer;
 

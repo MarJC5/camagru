@@ -10,7 +10,7 @@ use Camagru\core\middlewares\Validation;
 use Camagru\helpers\Logger;
 use Camagru\helpers\Slugify;
 use Camagru\core\middlewares\Auth;
-use PgSql\Lob;
+use Camagru\helpers\Sanitize;
 
 use function Camagru\loadView;
 
@@ -138,6 +138,9 @@ class UserController {
      * @return void
      */
     public static function update() {
+        // Sanitize the data
+        $_POST = Sanitize::escapeArray($_POST);
+
         // Verify the CSRF token
         if (!CSRF::verify($_POST['csrf_update_user'], 'csrf_update_user')) {
             Session::set('error', 'Invalid CSRF token');
@@ -183,6 +186,12 @@ class UserController {
                     Router::redirect('edit_user', ['id' => $id]);
                 }
 
+                // Confirm old password
+                if (!password_verify($data['old_password'], $user->password())) {
+                    Session::set('error', 'Invalid old password');
+                    Router::redirect('edit_user', ['id' => $id]);
+                }
+
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
             }
 
@@ -212,6 +221,9 @@ class UserController {
      * @return void
      */
     public static function delete() {
+        // Sanitize the data
+        $_POST = Sanitize::escapeArray($_POST);
+
         // Verify the CSRF token
         if (!CSRF::verify($_POST['csrf_delete_user'], 'csrf_delete_user')) {
             Session::set('error', 'Invalid CSRF token');
@@ -281,6 +293,9 @@ class UserController {
      */
     public static function toggle_notification()
     {
+        // Sanitize the data
+        $_POST = Sanitize::escapeArray($_POST);
+
         // Verify the CSRF token
         if (!CSRF::verify($_POST['csrf_toggle_notification'], 'csrf_toggle_notification')) {
             Session::set('error', 'Invalid CSRF token');
@@ -330,6 +345,9 @@ class UserController {
      */
     public static function edit_role()
     {
+        // Sanitize the data
+        $_POST = Sanitize::escapeArray($_POST);
+
         // Verify the CSRF token
         if (!CSRF::verify($_POST['csrf_edit_role'], 'csrf_edit_role')) {
             Session::set('error', 'Invalid CSRF token');
@@ -344,7 +362,7 @@ class UserController {
             Router::redirect('error', ['code' => 404]);
         }
 
-        $role = $_POST['role'];
+        $role = Sanitize::escape($_POST['role']);
         $status = $user->update(['role' => $role]);
 
         if ($status) {
@@ -425,6 +443,9 @@ class UserController {
      * @return void
      */
     public static function resend_email_validation() {
+        // Sanitize the data
+        $_POST = Sanitize::escapeArray($_POST);
+
         // Verify the CSRF token
         if (!CSRF::verify($_POST['csrf_resend_email_validation'], 'csrf_resend_email_validation')) {
             Session::set('error', 'Invalid CSRF token');
@@ -453,6 +474,9 @@ class UserController {
      * @return void
      */
     public static function reset_password_request() {
+        // Sanitize the data
+        $_POST = Sanitize::escapeArray($_POST);
+
         // Verify the CSRF token
         if (!CSRF::verify($_POST['csrf_reset_password_request'], 'csrf_reset_password_request')) {
             Session::set('error', 'Invalid CSRF token');
@@ -498,6 +522,9 @@ class UserController {
      */
     public static function new_password()
     {
+        // Sanitize the data
+        $_POST = Sanitize::escapeArray($_POST);
+        
         // Verify the CSRF token
         if (!CSRF::verify($_POST['csrf_new_password'], 'csrf_new_password')) {
             Session::set('error', 'Invalid CSRF token');

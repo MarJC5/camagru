@@ -35,6 +35,14 @@ footer {
     position: absolute;
 }
 
+.z-0 {
+    z-index: 0;
+}
+
+.z-10 {
+    z-index: 10;
+}
+
 .fixed {
     position: fixed;
 }
@@ -43,8 +51,16 @@ footer {
     top: 0;
 }
 
+.top-4 {
+    top: var(--space-4);
+}
+
 .right-0 {
     right: 0;
+}
+
+.right-4 {
+    right: var(--space-4);
 }
 
 .bottom-0 {
