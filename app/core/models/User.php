@@ -43,7 +43,7 @@ class User extends AModel
      */
     public function username()
     {
-        return $this->data->username;
+        return $this->data->username ?? '';
     }
 
     /**
@@ -53,7 +53,7 @@ class User extends AModel
      */
     public function first_name()
     {
-        return $this->data->first_name;
+        return $this->data->first_name ?? '';
     }
 
     /**
@@ -63,7 +63,7 @@ class User extends AModel
      */
     public function last_name()
     {
-        return $this->data->last_name;
+        return $this->data->last_name ?? '';
     }
 
     /**
@@ -73,7 +73,7 @@ class User extends AModel
      */
     public function email()
     {
-        return $this->data->email;
+        return $this->data->email ?? '';
     }
 
     /**
@@ -83,7 +83,7 @@ class User extends AModel
      */
     public function password()
     {
-        return $this->data->password;
+        return $this->data->password ?? '';
     }
 
     /**
@@ -93,7 +93,7 @@ class User extends AModel
      */
     public function avatar()
     {
-        return new Media($this->data->media_id);
+        return new Media($this->data->media_id) ?? null;
     }
 
     /**
@@ -103,7 +103,7 @@ class User extends AModel
      */
     public function role()
     {
-        return $this->data->role;
+        return $this->data->role ?? 'user';
     }
 
     /**
@@ -113,7 +113,7 @@ class User extends AModel
      */
     public function token()
     {
-        return $this->data->token;
+        return $this->data->token ?? '';
     }
 
     /**
@@ -153,7 +153,7 @@ class User extends AModel
      */
     public function is_validated()
     {
-        return $this->data->validated;
+        return $this->data->validated ?? false;
     }
 
     /**
@@ -183,7 +183,7 @@ class User extends AModel
      */
     public function is_notification_enabled()
     {
-        return $this->data->notification;
+        return $this->data->notification ?? false;
     }
 
     /**
@@ -193,6 +193,10 @@ class User extends AModel
      */
     public function toJSON()
     {
+        if (!$this->id()) {
+            return [];
+        }
+        
         return [
             'id' => $this->id(),
             'username' => $this->username(),

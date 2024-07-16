@@ -32,6 +32,8 @@ abstract class AModel
             return $this->first();
         } else {
             $this->query = "";
+
+            return null;
         }
 
         return $this;
@@ -44,7 +46,7 @@ abstract class AModel
      */
     public function id()
     {
-        return $this->data->id;
+        return $this->data->id ?? null;
     }
 
     /**
@@ -54,7 +56,7 @@ abstract class AModel
      */
     public function created_at()
     {
-        return $this->data->created_at;
+        return $this->data->created_at ?? null;
     }
 
     /**
@@ -64,7 +66,7 @@ abstract class AModel
      */
     public function updated_at()
     {
-        return $this->data->updated_at;
+        return $this->data->updated_at ?? null;
     }
 
     /**
@@ -295,7 +297,7 @@ abstract class AModel
      */
     public function toArray()
     {
-        return (array) $this->data;
+        return (array) $this->data ?? [];
     }
 
     /**

@@ -35,7 +35,7 @@ class Comment extends AModel
      */
     public function comment()
     {
-        return $this->data->comment;
+        return $this->data->comment ?? '';
     }
 
     /**
@@ -45,7 +45,7 @@ class Comment extends AModel
      */
     public function user()
     {
-        return $this->data->user_id;
+        return $this->data->user_id ?? 0;
     }
 
     /**
@@ -55,7 +55,7 @@ class Comment extends AModel
      */
     public function post()
     {
-        return $this->data->post_id;
+        return $this->data->post_id ?? 0;
     }
 
     /**
@@ -108,6 +108,10 @@ class Comment extends AModel
      */
     public function toJSON()
     {
+        if (!$this->id()) {
+            return [];
+        }
+
         return [
             'id' => $this->id(),
             'post_id' => $this->post(),

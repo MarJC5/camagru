@@ -230,10 +230,11 @@ class Web {
                 'action' => [PostController::class, 'store']
             ],
             [
-                'method' => 'GET',
-                'path' => '/post/{id}',
-                'name' => 'post',
-                'action' => [PostController::class, 'show']
+                'method' => 'POST',
+                'path' => '/post/delete',
+                'name' => 'delete_post',
+                'secure' => 'authentified',
+                'action' => [PostController::class, 'delete']
             ],
             [
                 'method' => 'POST',
@@ -243,12 +244,11 @@ class Web {
                 'action' => [PostController::class, 'update']
             ],
             [
-                'method' => 'POST',
-                'path' => '/post/delete',
-                'name' => 'delete_post',
-                'secure' => 'authentified',
-                'action' => [PostController::class, 'delete']
-            ]
+                'method' => 'GET',
+                'path' => '/post/{id}',
+                'name' => 'post',
+                'action' => [PostController::class, 'show']
+            ],
         ];
     }
 

@@ -38,7 +38,7 @@ class Post extends AModel
      */
     public function user()
     {
-        return $this->data->user_id;
+        return $this->data->user_id ?? null;
     }
 
     /**
@@ -48,7 +48,7 @@ class Post extends AModel
      */
     public function caption()
     {
-        return $this->data->caption;
+        return $this->data->caption ?? null;
     }
 
     /**
@@ -58,7 +58,7 @@ class Post extends AModel
      */
     public function media()
     {
-        return new Media($this->data->media_id);
+        return new Media($this->data->media_id) ?? null;
     }
 
     /**
@@ -88,6 +88,10 @@ class Post extends AModel
      */
     public function toJSON()
     {
+        if (!$this->id()) {
+            return [];
+        }
+
         $current_user = Session::currentUser() ? Session::currentUser()->id() : 0;
 
         return [

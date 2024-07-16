@@ -43,7 +43,7 @@ uated. To have an idea, here are some stuff that is NOT considered as SECURE:
   - [ ] Offer the ability to inject HTML or “user” JavaScript in badly protected variables.
   - [ ] Offer the ability to upload unwanted content on the server.
   - [ ] Offer the possibility of altering an SQL query.
-  - [ ] Use an extern form to manipulate so-called private data
+  - [x] Use an extern form to manipulate so-called private data
 
 ### User features
 
@@ -69,7 +69,7 @@ user’s preferences.
 
 ### Editing features
 
-- [ ] A main section containing the preview of the user’s webcam, the list of superposable
+- [x] A main section containing the preview of the user’s webcam, the list of superposable
 images and a button allowing to capture a picture.
 - [x] A side section displaying thumbnails of all previous pictures taken.
 - [ ] Superposable images must be selectable and the button allowing to take the pic-
@@ -79,7 +79,7 @@ selected.
 must be done on the server side.
 - [ ] Because not everyone has a webcam, you should allow the upload of a user image
 instead of capturing one with the webcam.
-- [ ] The user should be able to delete his edited images, but only his, not other users’
+- [x] The user should be able to delete his edited images, but only his, not other users’
 creations.
 
 ### Constraints and Mandatory things

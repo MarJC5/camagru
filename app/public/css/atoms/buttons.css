@@ -95,6 +95,11 @@
     background-color: var(--color-white);
 }
 
+.button--danger:hover.button--svg svg:hover {
+    color: var(--color-danger);
+}
+
+
 .button--warning {
     color: var(--color-warning-text);
     background-color: var(--color-warning);
@@ -106,6 +111,10 @@
     background-color: var(--color-white);
 }
 
+.button--warning:hover.button--svg svg:hover {
+    color: var(--color-warning);
+}
+
 .button--success {
     color: var(--color-success-text);
     background-color: var(--color-success);
@@ -115,6 +124,10 @@
 .button--success:hover {
     color: var(--color-success);
     background-color: var(--color-white);
+}
+
+.button--success:hover.button--svg svg:hover {
+    color: var(--color-success);
 }
 
 .button--info {

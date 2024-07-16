@@ -70,6 +70,9 @@ class Database
      */
     public function quote($value)
     {
+        if (is_null($value)) {
+            return 'NULL';
+        }
         return $this->pdo->quote($value);
     }
 

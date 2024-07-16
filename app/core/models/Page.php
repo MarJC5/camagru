@@ -31,7 +31,7 @@ class Page extends AModel
      */
     public function title()
     {
-        return $this->data->title;
+        return $this->data->title ?? null;
     }
 
     /**
@@ -41,7 +41,7 @@ class Page extends AModel
      */
     public function content()
     {
-        return $this->data->content;
+        return $this->data->content ?? null;
     }
 
     /**
@@ -51,7 +51,7 @@ class Page extends AModel
      */
     public function slug()
     {
-        return $this->data->slug;
+        return $this->data->slug ?? null;
     }
 
     /**
@@ -78,4 +78,27 @@ class Page extends AModel
             'media_id' => 'required|exists:medias,id',
         ];
     }
+
+    /**
+     * Convert the page to a JSON-serializable array.
+     *
+     * @return array
+     */
+    public function toJSON()
+    {
+        if (!$this->id()) {
+            return [];
+        }
+
+        return [
+            'id' => $this->id(),
+            'title' => $this->title(),
+            'content' => $this->content(),
+            'slug' => $this->slug(),
+            'media' => $this->media()->toJSON(),
+            'created_at' => $this->created_at(),
+            'updated_at' => $this->updated_at(),
+        ];
+    }
+
 }

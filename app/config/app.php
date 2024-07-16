@@ -21,6 +21,16 @@ return [
         ],
         'path' => 'storage/uploads/medias/',
     ],
+    'collage' => [
+        'size' => 3 * 1024 * 1024, // 3MB
+        'allowed' => [
+            'jpeg' => 'image/jpeg',
+            'jpg' => 'image/jpeg',
+            'png' => 'image/png',
+            'gif' => 'image/gif'
+        ],
+        'path' => 'storage/uploads/collages/',
+    ],
     'mail' => [
         'host' => Env::get('MAIL_HOST', 'mailpit'),
         'port' => Env::get('MAIL_PORT', 1025),

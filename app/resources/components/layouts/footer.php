@@ -4,9 +4,9 @@ namespace Camagru\resources\components\layouts;
 
 use Camagru\core\database\Runner;
 use Camagru\helpers\Env;
+use Camagru\helpers\Logger;
 use Camagru\routes\Router;
 use Camagru\helpers\Session;
-
 use function Camagru\js_url;
 
 ?>
@@ -32,3 +32,19 @@ use function Camagru\js_url;
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

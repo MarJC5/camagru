@@ -207,6 +207,7 @@ class PageController
         $page = Page::where('slug', $slug)->first();
 
         if (empty($page)) {
+            Session::set('error', 'Invalid page');
             Router::redirect('error', ['code' => 404]);
         }
 

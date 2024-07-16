@@ -45,10 +45,10 @@ class PostController
      */
     public static function show($data)
     {
-        $id = $data['id'];
+        $id = $data['id'] ?? 0;
         $post = new Post($id);
 
-        if (empty($post)) {
+        if (!$post->toJSON()) {
             Session::set('error', 'Invalid post');
             Router::redirect('error', ['code' => 404]);
         }
@@ -220,6 +220,8 @@ class PostController
         } else {
             Session::set('error', 'An error occurred while deleting the post');
         }
+
+        Router::redirect('posts');
     }
 
     /**

@@ -29,6 +29,17 @@ class Config
      */
     public static function get($key)
     {
-        return self::$config[$key] ?? null;
+        $keys = explode('.', $key);
+        $value = self::$config;
+
+        foreach ($keys as $key) {
+            if (isset($value[$key])) {
+                $value = $value[$key];
+            } else {
+                return null;
+            }
+        }
+
+        return $value;
     }
 }

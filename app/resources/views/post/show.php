@@ -20,11 +20,11 @@ get_header();
                 <div class="post__image relative w-full h-full rounded-md">
                     <?php if (Session::currentUser()) : ?>
                         <?php if ($user['id'] == Session::currentUser()->id() || Session::currentUser()->is_admin()) : ?>
-                            <form action="<?= Router::to('delete_post', ['id' => $id]) ?>" method="POST" class="absolute top-4 right-4 z-10">
+                            <form action="<?= Router::to('delete_post') ?>" method="POST" class="absolute top-4 right-4 z-10">
                                 <?= CSRF::field('csrf_delete_post_' . $id) ?>
                                 <input type="hidden" name="id" value="<?= $id ?>">
-                                <button type="submit" class="button button--svg">
-                                    <?= partials('svg/trash.php', ['class' => 'text-gray-400']) ?>
+                                <button type="submit" class="button button--danger">
+                                    Delete post
                                 </button>
                             </form>
                         <?php endif; ?>

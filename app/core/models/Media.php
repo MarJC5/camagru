@@ -32,7 +32,7 @@ class Media extends AModel
      */
     public function path()
     {
-        return $this->data->media_path;
+        return $this->data->media_path ?? '';
     }
 
     /**
@@ -42,7 +42,7 @@ class Media extends AModel
      */
     public function alt()
     {
-        return $this->data->alt;
+        return $this->data->alt ?? '';
     }
 
     /**
@@ -52,7 +52,7 @@ class Media extends AModel
      */
     public function legende()
     {
-        return $this->data->legende;
+        return $this->data->legende ?? '';
     }
 
     /**
@@ -135,6 +135,10 @@ class Media extends AModel
      */
     public function toJSON()
     {
+        if (!$this->id()) {
+            return [];
+        }
+        
         return [
             'path' => $this->path(),
             'src' => $this->publicURL(),
