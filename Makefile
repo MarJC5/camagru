@@ -54,8 +54,4 @@ mysql8:
 	@echo "${GREEN}Running mysql 8 ...${RESET}"
 	@${DOCKER} exec mysql_8 bash
 
-reload:
-	@echo "${GREEN}Reloading nginx...${RESET}"
-	@${DOCKER} exec nginx nginx -s reload
-
-.PHONY: all start up down stop rebuild delete rebuild-no-cache frankenphp mysql8 php82 reload
+.PHONY: all start up down stop rebuild delete rebuild-no-cache frankenphp mysql8

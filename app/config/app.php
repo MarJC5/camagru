@@ -29,7 +29,7 @@ return [
             'png' => 'image/png',
             'gif' => 'image/gif'
         ],
-        'path' => 'storage/uploads/collages/',
+        'path' => 'storage/collages/',
     ],
     'mail' => [
         'host' => Env::get('MAIL_HOST', 'mailpit'),

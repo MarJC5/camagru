@@ -72,7 +72,7 @@ user’s preferences.
 - [x] A main section containing the preview of the user’s webcam, the list of superposable
 images and a button allowing to capture a picture.
 - [x] A side section displaying thumbnails of all previous pictures taken.
-- [ ] Superposable images must be selectable and the button allowing to take the pic-
+- [x] Superposable images must be selectable and the button allowing to take the pic-
 ture should be inactive (not clickable) as long as no superposable image has been
 selected.
 - [ ] The creation of the final image (so among others the superposing of the two images)
@@ -99,11 +99,12 @@ You project should contain imperatively:
 - [x] One (or more) container to deploy your site with one command. anything equivalent
 to docker-compose is ok.
 
-### Bonus part 2/5
+### Bonus part 4/5
 
 - [x] “AJAXify” exchanges with the server.
-- [x] Offer the possibility to a user to share his images on social networks.
+- [x] Propose a live preview of the edited result, directly on the webcam preview.
 - [x] Do an infinite pagination of the gallery part of the site.
+- [x] Offer the possibility to a user to share his images on social networks.
 
 ## Database
 

@@ -418,6 +418,12 @@ class Web {
             ],
             [
                 'method' => 'GET',
+                'path' => '/storage/collages/stickers/{filename}',
+                'name' => 'media_sticker',
+                'action' => [MediaController::class, 'sticker']
+            ],
+            [
+                'method' => 'GET',
                 'path' => '/medias/{filename}',
                 'name' => 'media_show',
                 'action' => [MediaController::class, 'show']

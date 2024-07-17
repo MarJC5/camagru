@@ -1,5 +1,15 @@
+.screenshots .screenshot {
+  position: relative;
+}
 
-.screenshot-image {
+.screenshots .screenshot .screenshot-image-sticker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.screenshots .screenshot-image {
     border-radius: var(--radius);
     background: white;
     box-shadow: var(--shadow);
@@ -16,14 +26,34 @@
   }
 
   .camera {
+    position: relative;
     overflow: hidden;
     z-index: 1;
     border-radius: var(--radius);
     box-shadow: var(--shadow);
+    height: 500px;
+    width: 500px;
+  }
+  @media (max-width: 768px) {
+    .camera {
+      height: 300px;
+      width: 300px;
+    }
+  }
+
+  .actions {
+    max-width: 500px;
   }
 
   .controls {
     display: flex;
     gap: var(--space-4);
     margin-top: var(--space-4);
+  }
+
+  .camera .sticker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
   }

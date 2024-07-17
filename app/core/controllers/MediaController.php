@@ -41,6 +41,23 @@ class MediaController
         echo readfile(BASE_PATH . '/' . $media->path());
     }
 
+    public static function sticker($data)
+    {
+        $media_path = 'storage/collages/stickers/' . $data['filename'];
+
+        // Check if stickers exist
+        if (!file_exists(BASE_PATH . '/' . $media_path)) {
+            Session::set('error', 'Invalid sticker file');
+            Router::redirect('error', ['code' => 404]);
+        }
+        
+        // Set the content type header to the media's mime type
+        header('Content-Type: image/png');
+
+        // Read the file and output it
+        echo readfile(BASE_PATH . '/' . $media_path);
+    }
+
     /**
      * Upload a media file.
      * 

@@ -2,12 +2,36 @@ document.addEventListener("DOMContentLoaded", () => {
   const controls = document.querySelector(".controls");
   const cameraOptions = document.querySelector(".video-options>select");
   const video = document.querySelector("video");
-  const canvas = document.querySelectorAll("canvas");
+  const canvas = document.querySelectorAll(".screenshot canvas");
   const screenshotImage = document.querySelectorAll(".screenshot-image");
+  const screenshotImageStickers = document.querySelectorAll(".screenshot-image-sticker");
+  const stickersButton = document.querySelectorAll(".button--sticker");
+  const stickers = document.querySelectorAll(".sticker");
   const screenshotsCountDisplay = document.querySelector(".screenshots-count");
   const buttons = [...controls.querySelectorAll("button")];
   let streamStarted = false;
+  let currentSticker = null;
   const MAX_SCREENSHOTS = 4; // Set the maximum number of screenshots
+
+  stickersButton.forEach(stickerButton => {
+    stickerButton.addEventListener("click", () => {
+      const sticker = stickerButton.getAttribute("data-sticker");
+      const stickerElement = document.querySelector(`.sticker[data-sticker="${sticker}"]`);
+
+      if (currentSticker) {
+        currentSticker.classList.add("hidden");
+      }
+
+      if (stickerElement) {
+        stickerElement.classList.remove("hidden");
+        currentSticker = stickerElement;
+      }
+
+      if (screenshot.classList.contains("button--disabled")) {
+        screenshot.classList.remove("button--disabled");
+      }
+    });
+  });
 
   screenshotsCountDisplay.innerHTML = `0 / ${MAX_SCREENSHOTS}`;
 
@@ -16,15 +40,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const constraints = {
     video: {
       width: {
-        min: 1280,
-        ideal: 1920,
-        max: 2560,
+        ideal: 500,
       },
       height: {
-        min: 720,
-        ideal: 1080,
-        max: 1440,
+        ideal: 500,
       },
+      aspectRatio: 1
     },
   };
 
@@ -64,14 +85,41 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const doScreenshot = () => {
+    // Check that button doesnt have button--disabled class
+    if (screenshot.classList.contains("button--disabled")) {
+      return;
+    }
+
     const screenshotDataSet = document.querySelector("#screenshots-container");
     let count = parseInt(screenshotDataSet.getAttribute("data-screenshots"));
     if (count < MAX_SCREENSHOTS) {
-      canvas[count].width = video.videoWidth;
-      canvas[count].height = video.videoHeight;
-      canvas[count].getContext('2d').drawImage(video, 0, 0);
+      const ctx = canvas[count].getContext('2d');
+      const canvasWidth = constraints.video.width.ideal;
+      const canvasHeight = constraints.video.height.ideal;
+      const videoWidth = video.videoWidth;
+      const videoHeight = video.videoHeight;
+
+      canvas[count].width = canvasWidth;
+      canvas[count].height = canvasHeight;
+
+      // Calculate the scaling factor to maintain aspect ratio
+      const scale = Math.min(canvasWidth / videoWidth, canvasHeight / videoHeight);
+      const scaledWidth = videoWidth * scale;
+      const scaledHeight = videoHeight * scale;
+      const x = (canvasWidth - scaledWidth) / 2;
+      const y = (canvasHeight - scaledHeight) / 2;
+
+      // Fill the canvas with white background
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+      // Draw the video frame centered within the canvas
+      ctx.drawImage(video, 0, 0, videoWidth, videoHeight, x, y, scaledWidth, scaledHeight);
+
       screenshotImage[count].src = canvas[count].toDataURL('image/webp');
       screenshotImage[count].classList.remove("hidden");
+      screenshotImageStickers[count].src = currentSticker ? currentSticker.src : "";
+      screenshotImageStickers[count].classList.remove("hidden");
       count++; // Increment the counter
       screenshotDataSet.setAttribute("data-screenshots", count);
       screenshotsCountDisplay.innerHTML = `${count} / ${MAX_SCREENSHOTS}`;

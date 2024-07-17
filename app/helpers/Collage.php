@@ -6,44 +6,78 @@ use Camagru\helpers\Config;
 
 class Collage
 {
+    protected static $stickers = [];
+    protected static $filters = [];
 
-    const ELEMENTS = [
-        [
-            'path' => Config::get('collage.path') . 'hand.png',
-            'x' => 0,
-            'y' => 0,
-            'width' => 500,
-            'height' => 500
-        ],
-        [
-            'path' => Config::get('collage.path') . 'heart.png',
-            'x' => 0,
-            'y' => 0,
-            'width' => 500,
-            'height' => 500
-        ],
-        [
-            'path' => Config::get('collage.path') . 'love.png',
-            'x' => 0,
-            'y' => 0,
-            'width' => 500,
-            'height' => 500
-        ],
-        [
-            'path' => Config::get('collage.path') . 'pow.png',
-            'x' => 0,
-            'y' => 0,
-            'width' => 500,
-            'height' => 500
-        ],
-        [
-            'path' => Config::get('collage.path') . 'smiley.png',
-            'x' => 0,
-            'y' => 0,
-            'width' => 500,
-            'height' => 500
-        ]
-    ];
+    public static function initialize()
+    {
+        self::$stickers = [
+            [
+                'name' => 'hand',
+                'path' => BASE_URL . '/' . Config::get('collage.path') . 'stickers/hand.png',
+                'x' => 0,
+                'y' => 0,
+                'width' => 500,
+                'height' => 500
+            ],
+            [
+                'name' => 'heart',
+                'path' => BASE_URL . '/' . Config::get('collage.path') . 'stickers/heart.png',
+                'x' => 0,
+                'y' => 0,
+                'width' => 500,
+                'height' => 500
+            ],
+            [
+                'name' => 'love',
+                'path' => BASE_URL . '/' . Config::get('collage.path') . 'stickers/love.png',
+                'x' => 0,
+                'y' => 0,
+                'width' => 500,
+                'height' => 500
+            ],
+            [
+                'name' => 'pow',
+                'path' => BASE_URL . '/' . Config::get('collage.path') . 'stickers/pow.png',
+                'x' => 0,
+                'y' => 0,
+                'width' => 500,
+                'height' => 500
+            ],
+            [
+                'name' => 'smiley',
+                'path' => BASE_URL . '/' . Config::get('collage.path') . 'stickers/smiley.png',
+                'x' => 0,
+                'y' => 0,
+                'width' => 500,
+                'height' => 500
+            ]
+        ];
+
+        self::$filters = [
+        ];
+    }
+
+    /**
+     * Collage constructor - Initialize the stickers and filters.
+     *
+     */
+    public function __construct()
+    {
+        self::initialize();
+    }
+
+    public static function getStickers()
+    {
+        self::initialize();
+        return self::$stickers;
+    }
+
+    public static function getFilters()
+    {
+        self::initialize();
+        return self::$filters;
+    }
 
     /**
      * Create a collage from an array of images and overlays.
@@ -53,7 +87,6 @@ class Collage
      * @param int $height The height of the collage.
      * @return resource|bool The collage image resource, or false if the elements array is empty.
      */
-
     public static function create(array $elements, int $width, int $height)
     {
         if (empty($elements)) {
