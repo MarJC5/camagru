@@ -23,9 +23,9 @@ const MAX_SHOTS = 4;
 
         <div class="screenshots">
             <h2 class="mt-0 mb-4 flex">Shots<span class="screenshots-count ml-4 text-small"></span></h2>
-            <div id="screenshots-container" class="grid grid--2" data-screenshots="0">
+            <div id="screenshots-container" class="grid grid--3 grid--3-screenshots scroll" data-screenshots="0">
                 <?php for ($i = 0; $i < MAX_SHOTS; $i++) : ?>
-                    <div class="screenshot">
+                    <div class="screenshot hidden">
                         <canvas class="hidden"></canvas>
                         <img class="screenshot-image screenshot-image--<?= $i ?> hidden w-full h-auto" alt="">
                         <img class="screenshot-image-sticker screenshot-image--<?= $i ?>-sticker hidden w-full h-auto" alt="">
@@ -38,7 +38,7 @@ const MAX_SHOTS = 4;
     <div class="actions flex flex-column">
         <div class="stickers-selection">
             <h3 class="mt-4 mb-4">Stickers</h3>
-            <div class="grid grid--5 grid-rows-auto">
+            <div class="grid grid--5 grid--5-btns grid-rows-auto">
                 <?php foreach (Collage::getStickers() as $sticker) : ?>
                     <button class="button button--icon button--sticker" title="<?= $sticker['name'] ?>" data-sticker="<?= $sticker['name'] ?>" data-active="false">
                         <img src="<?= $sticker['path'] ?>" height="50px" width="50px" alt="sticker-<?= $sticker['name'] ?>">

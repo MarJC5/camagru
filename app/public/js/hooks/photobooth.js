@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const controls = document.querySelector(".controls");
   const cameraOptions = document.querySelector(".video-options>select");
   const video = document.querySelector("video");
+  const screenshots = document.querySelectorAll(".screenshot");
   const canvas = document.querySelectorAll(".screenshot canvas");
   const screenshotImage = document.querySelectorAll(".screenshot-image");
   const screenshotImageStickers = document.querySelectorAll(".screenshot-image-sticker");
@@ -117,6 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.drawImage(video, 0, 0, videoWidth, videoHeight, x, y, scaledWidth, scaledHeight);
 
       screenshotImage[count].src = canvas[count].toDataURL('image/webp');
+      screenshots[count].classList.remove("hidden");
       screenshotImage[count].classList.remove("hidden");
       screenshotImageStickers[count].src = currentSticker ? currentSticker.src : "";
       screenshotImageStickers[count].classList.remove("hidden");

@@ -85,6 +85,10 @@
     .grid--3 {
         grid-template-columns: 1fr;
     }
+
+    .grid--3-screenshots {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 /* Variant 3-4 grid styling */
@@ -138,6 +142,10 @@
 @media (max-width: 768px) {
     .grid--5 {
         grid-template-columns: 1fr;
+    }
+
+    .grid--5-btns {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
