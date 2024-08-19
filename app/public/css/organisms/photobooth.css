@@ -16,7 +16,7 @@
 
 .screenshots .scroll {
   overflow-y: auto;
-  max-height: 46vh;
+  max-height: 50vh;
   padding-bottom: var(--space-4);
 }
 
@@ -96,4 +96,21 @@
     top: 0;
     left: 0;
     z-index: 2;
+  }
+
+  .camera.upload.allowed:hover .button--send,
+  .screenshot .button--send {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+
+  .camera.upload.allowed:hover .button--send {
+    display: block;
+  }
+
+  .screenshot:hover .button--send {
+    display: block;
   }

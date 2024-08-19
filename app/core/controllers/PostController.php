@@ -63,7 +63,7 @@ class PostController
      */
     public static function create()
     {
-        $_GET['title'] = 'New page';
+        $_GET['title'] = 'New post';
 
         echo loadView('post/create.php');
     }
@@ -85,10 +85,10 @@ class PostController
         }
 
         $validation = new Validation();
-        $page = new Post();
+        $post = new Post();
 
         $data = $_POST;
-        $rules = $page->validation();
+        $rules = $post->validation();
 
         $validation->validate($data, $rules);
 
@@ -97,10 +97,10 @@ class PostController
             Session::set('error', $errors);
             Router::redirect('create_post');
         } else {
-            $status = $page->insert($data);
+            $status = $post->insert($data);
             if ($status) {
                 Session::set('success', 'Post created successfully');
-                Router::redirect('post', ['id' => $page->id()]);
+                Router::redirect('post', ['id' => $post->id()]);
             } else {
                 Session::set('error', 'An error occurred while creating the post');
                 Router::redirect('create_post');

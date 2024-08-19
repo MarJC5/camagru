@@ -75,9 +75,9 @@ images and a button allowing to capture a picture.
 - [x] Superposable images must be selectable and the button allowing to take the pic-
 ture should be inactive (not clickable) as long as no superposable image has been
 selected.
-- [ ] The creation of the final image (so among others the superposing of the two images)
+- [x] The creation of the final image (so among others the superposing of the two images)
 must be done on the server side.
-- [ ] Because not everyone has a webcam, you should allow the upload of a user image
+- [x] Because not everyone has a webcam, you should allow the upload of a user image
 instead of capturing one with the webcam.
 - [x] The user should be able to delete his edited images, but only his, not other users’
 creations.

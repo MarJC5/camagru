@@ -82,6 +82,21 @@ class Media extends AModel
         ];
     }
 
+     /**
+     * Get the validation rules for the media.
+     *
+     * @return array
+     */
+    public function validationCollage()
+    {
+        $config = Config::get('media');
+        $allowedExtensions = implode(',', array_keys($config['allowed']));
+        return [
+            'image' => "required|size:{$config['size']}|mimes:{$allowedExtensions}",
+            'sticker' => "required|size:{$config['size']}|mimes:{$allowedExtensions}",
+        ];
+    }
+
     /**
      * Upload the media file and save its path.
      *

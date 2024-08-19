@@ -17,7 +17,8 @@ return [
             'jpeg' => 'image/jpeg',
             'jpg' => 'image/jpeg',
             'png' => 'image/png',
-            'gif' => 'image/gif'
+            'gif' => 'image/gif',
+            'webp' => 'image/webp'
         ],
         'path' => 'storage/uploads/medias/',
     ],

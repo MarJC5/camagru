@@ -6,7 +6,10 @@ use Camagru\routes\Router;
 use Camagru\core\models\Media;
 use Camagru\helpers\Session;
 use Camagru\helpers\Logger;
+use Camagru\core\models\Post;
+use Camagru\helpers\Collage;
 use Camagru\helpers\CSRF;
+use Camagru\helpers\Config;
 use Camagru\core\middlewares\Validation;
 
 /**
@@ -28,7 +31,7 @@ class MediaController
     {
         $media_path = 'storage/uploads/medias/' . $data['filename'];
         $media = Media::where('media_path', $media_path)->first();
-        
+
         if (empty($media)) {
             Session::set('error', 'Invalid media file');
             Router::redirect('error', ['code' => 404]);
@@ -50,7 +53,7 @@ class MediaController
             Session::set('error', 'Invalid sticker file');
             Router::redirect('error', ['code' => 404]);
         }
-        
+
         // Set the content type header to the media's mime type
         header('Content-Type: image/png');
 
@@ -66,34 +69,121 @@ class MediaController
      */
     public static function upload()
     {
+        // Return json response
+        header('Content-Type: application/json');
+
         // Verify the CSRF token
         if (!CSRF::verify($_POST['csrf_upload_media'], 'csrf_upload_media')) {
             Session::set('error', 'Invalid CSRF token');
-            Router::redirect('login');
+            echo json_encode(['status' => 403, 'message' => 'Invalid CSRF token']);
+            return;
         }
 
-        $media = new Media();
+        if (!isset($_POST['image']) && !isset($_POST['ssticker'])) {
+            Session::set('error', 'Invalid request, missing parameters');
+            echo json_encode(['status' => 400, 'message' => 'Invalid request, missing parameters']);
+            return;
+        }
 
-        $validation = new Validation();
-        $rules = $media->validation();
-        $data = [
-            'media' => [
-                'size' => $_FILES['media']['size'],
-                'mimes' => $_FILES['media']['type'],
-            ]
-        ];
-        $validation->validate($data, $rules);
+        if (isset($_POST['image']) && isset($_POST['sticker'])) {
+            // Validate base64 image
+            if (!Collage::isValidBase64Image($_POST['image'])) {
+                Session::set('error', 'Invalid base64 image data.');
+                echo json_encode(['status' => 400, 'message' => 'Invalid base64 image data.']);
+                return;
+            }
 
-        if ($validation->fails()) {
-            $errors = $validation->getErrors();
+            // Generate the collage
+            $collage = Collage::create([
+                [
+                    'path' => $_POST['image'], // Base64 image
+                    'x' => 0,
+                    'y' => 0,
+                    'width' => 500,
+                    'height' => 500
+                ],
+                [
+                    'path' => BASE_PATH . '/' . Config::get('collage.path') . 'stickers/' . $_POST['sticker'],
+                    'x' => 0,
+                    'y' => 0,
+                    'width' => 500,
+                    'height' => 500
+                ]
+            ], 500, 500);
 
-            Session::set('error', $errors);
-            Router::redirect('home');
-        } else {
-            if ($media->uploadMedia($_FILES['media'])) {
+            if (!$collage) {
+                Session::set('error', 'Error creating collage.');
+                echo json_encode(['status' => 500]);
+
+                // Clean up
+                imagedestroy($collage);
+
+                return;
+            }
+
+            $filename = uniqid() . '.png';
+
+            if (imagepng($collage, BASE_PATH . '/' . Config::get('media.path') . $filename)) {
                 Session::set('success', 'File uploaded successfully.');
+                
+                // Save the media file
+                $media = new Media();
+                $status = $media->insert([
+                    'media_path' => Config::get('media.path') . $filename,
+                    'user_id' => Session::get('user'),
+                    'title' => 'Collage ' . date('Y-m-d H:i:s'),
+                    'alt' => 'Collage created on ' . date('Y-m-d H:i:s'),
+                    'legende' => 'Collage created on ' . date('Y-m-d H:i:s')
+                ]);
+
+                if (!$status) {
+                    Session::set('error', 'Error saving file.');
+
+                    // Clean up
+                    imagedestroy($collage);
+
+                    // Send http response code
+                    echo json_encode(['status' => 500]);
+
+                    return;
+                }
+
+                // Clean up
+                imagedestroy($collage);
+
+                // Create the post
+                $post = new Post();
+                // Get the media id
+                $media = Media::where('media_path', Config::get('media.path') . $filename)->first();
+                $status = $post->insert([
+                    'user_id' => Session::get('user'),
+                    'media_id' => $media->id(),
+                    'caption' => 'Collage created on ' . date('Y-m-d H:i:s')
+                ]);
+
+                if (!$status) {
+                    Session::set('error', 'Error saving file.');
+                }
+
+                // Get the post id
+                $post = Post::where('media_id', $media->id())->first();
+                // Send http response code
+                echo json_encode([
+                    'status' => 200,
+                    'redirect_url' => '/post/' . $post->id()
+                ]);
+
+                return;
             } else {
                 Session::set('error', 'Error uploading file.');
+
+                // Clean up
+                imagedestroy($collage);
+
+                // Send http response code
+                echo json_encode(['status' => 500]);
+
+                return;
             }
         }
     }
