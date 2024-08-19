@@ -155,13 +155,12 @@ class Database
     public function insert($table, $data)
     {
         $keys = array_keys($data);
-        $values = array_map([$this->pdo, 'quote'], array_values($data));
-
+        $placeholders = implode(', ', array_fill(0, count($data), '?'));
         $columns = implode(', ', $keys);
-        $valueStr = implode(', ', $values);
 
-        $sql = "INSERT INTO {$table} ({$columns}) VALUES ({$valueStr})";
-        return $this->pdo->exec($sql);
+        $sql = "INSERT INTO {$table} ({$columns}) VALUES ({$placeholders})";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute(array_values($data));
     }
 
     /**
@@ -174,8 +173,9 @@ class Database
      */
     public function insertIfNotExists($table, $data, $uniqueKey)
     {
-        $checkSql = "SELECT COUNT(*) FROM {$table} WHERE {$uniqueKey} = " . $this->quote($data[$uniqueKey]);
-        $stmt = $this->pdo->query($checkSql);
+        $checkSql = "SELECT COUNT(*) FROM {$table} WHERE {$uniqueKey} = ?";
+        $stmt = $this->pdo->prepare($checkSql);
+        $stmt->execute([$data[$uniqueKey]]);
         $exists = $stmt->fetchColumn();
 
         if ($exists == 0) {

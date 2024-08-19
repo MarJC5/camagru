@@ -26,7 +26,7 @@ class PostController
      */
     public static function index()
     {
-        $posts = Post::all();
+        $posts = Post::all('created_at', 'DESC');
         $total = Post::count();
         
         $_GET['title'] = 'Posts';

@@ -136,9 +136,9 @@ abstract class AModel
         $instance = new static();
         $sql = "";
         if ($filter) {
-            $sql = "SELECT * FROM {$instance->table} WHERE {$filter['key']} = {$filter['value']} LIMIT {$limit} OFFSET {$offset}";
+            $sql = "SELECT * FROM {$instance->table} WHERE {$filter['key']} = {$filter['value']} ORDER BY id DESC LIMIT {$limit} OFFSET {$offset}";
         } else {
-            $sql = "SELECT * FROM {$instance->table} LIMIT {$limit} OFFSET {$offset}";
+            $sql = "SELECT * FROM {$instance->table} ORDER BY id DESC LIMIT {$limit} OFFSET {$offset}";
         }
 
         return $instance->db->query($sql);
@@ -228,10 +228,10 @@ abstract class AModel
      *
      * @return array All models.
      */
-    public static function all()
+    public static function all(string $column = 'created_at', string $order = 'ASC')
     {
         $instance = new static();
-        $sql = "SELECT * FROM {$instance->table}";
+        $sql = "SELECT * FROM {$instance->table} ORDER BY {$column} {$order}";
         return $instance->db->query($sql);
     }
 
