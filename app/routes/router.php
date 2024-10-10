@@ -25,6 +25,7 @@ class Router
         // Check if the application has been migrated
         if (!Migration::ready($requestUri, $method)) {
             $requestUri = '/install';
+            $method = 'GET';
         }
         
         $parsedUrl = parse_url($requestUri);
@@ -47,7 +48,7 @@ class Router
 
                 // Logger::log($route['method'] . ' ' .  $route['path']);
                 // Logger::log('PARAMS' . ' ' .  print_r($params, true));
-                //Logger::log('POST' . ' ' .  print_r($_POST, true));
+                // Logger::log('POST' . ' ' .  print_r($_POST, true));
                 
                 // Capture the output of the controller action
                 $output = call_user_func_array($route['action'], [$params]);

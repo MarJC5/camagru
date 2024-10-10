@@ -1,6 +1,6 @@
 <?php
 
-namespace Camagru\views\page;
+namespace Camagru\views\setup;
 
 use Camagru\helpers\CSRF;
 use Camagru\routes\Router;

@@ -26,7 +26,6 @@ class Migration
             // If the application is not migrated and the request is not for the setup page, redirect to the setup page
             if ($requestUri !== '/setup') {
                 Session::set('error', 'The application has not been migrated yet');
-                Router::redirect('setup');
                 return false;
             }
 

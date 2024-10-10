@@ -4,6 +4,7 @@ namespace Camagru\core\controllers;
 
 use Camagru\helpers\Sanitize;
 use Camagru\helpers\Session;
+use Camagru\helpers\Logger;
 use Camagru\routes\Router;
 use Camagru\core\database\Runner;
 use Camagru\core\database\Database;
@@ -33,7 +34,7 @@ class SetupController
             Session::set('error', 'Application has already been migrated');
             Router::redirect('home');
         }
-        
+
         if (isset($data['install']) && Runner::isMigrated() === false) {
             $db = new Database();
             $db->trackMigration();
@@ -47,7 +48,7 @@ class SetupController
                 'PostSeeders',
                 'MediaSeeders',
             ];
-    
+
             foreach ($seeders as $seeder) {
                 $seeder = 'Camagru\\core\\database\\seeders\\' . $seeder;
                 $seeder = new $seeder();
@@ -69,9 +70,9 @@ class SetupController
     public static function install()
     {
         if (Runner::isMigrated()) {
+            Session::set('error', 'Application has already been migrated');
             Router::redirect('home');
         }
-
         echo loadView('setup/install.php');
     }
 }

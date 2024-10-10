@@ -54,4 +54,8 @@ mysql8:
 	@echo "${GREEN}Running mysql 8 ...${RESET}"
 	@${DOCKER} exec mysql_8 bash
 
+migrate:
+	@echo "${GREEN}Running migrate cmd ...${RESET}"
+	@${DOCKER} exec frankenphp sh -c "/var/www/html/camagru/migrate ${ARGS}"
+
 .PHONY: all start up down stop rebuild delete rebuild-no-cache frankenphp mysql8
