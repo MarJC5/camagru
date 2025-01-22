@@ -99,12 +99,15 @@ You project should contain imperatively:
 - [x] One (or more) container to deploy your site with one command. anything equivalent
 to docker-compose is ok.
 
-### Bonus part 4/5
+### Bonus part 5/5
 
 - [x] “AJAXify” exchanges with the server.
 - [x] Propose a live preview of the edited result, directly on the webcam preview.
 - [x] Do an infinite pagination of the gallery part of the site.
 - [x] Offer the possibility to a user to share his images on social networks.
+- [x] Alert banner
+- [x] Email templating as html (with a correct display of the content)
+- [x] Migrations & seeders for the database
 
 ## Database
 

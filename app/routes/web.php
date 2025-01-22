@@ -149,7 +149,6 @@ class Web {
                 'path' => '/profile/validate',
                 'query' => ['token'],
                 'name' => 'validate_email',
-                'secure' => 'authentified',
                 'action' => [UserController::class, 'validate']
             ],
             [

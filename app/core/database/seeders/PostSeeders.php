@@ -35,6 +35,8 @@ class PostSeeders extends ASeeders
                 'email' => $userData['email'],
                 'password' => password_hash('password', PASSWORD_DEFAULT),
                 'role' => 'user',
+                'validated' => 1,
+                'notification' => 1,
                 'token' => password_hash(CSRF::generate(), PASSWORD_DEFAULT),
             ];
             $this->db->insertIfNotExists('users', $user, 'email');

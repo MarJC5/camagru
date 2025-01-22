@@ -226,8 +226,8 @@ class User extends AModel
             $hashedToken = password_hash($plainToken, PASSWORD_DEFAULT);
 
         if ($this->update(['token' => $hashedToken, 'validated' => 1])) {
-            Session::set('success', 'Your account has been validated.');
-            Router::redirect('profile');
+            Session::set('success', 'Your account has been validated, you can now login.');
+            Router::redirect('login');
         } else {
             Session::set('error', 'An error occurred while validating your account.');
             Router::redirect('home');

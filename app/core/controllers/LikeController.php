@@ -46,6 +46,8 @@ class LikeController
 
         // Redirect based on the result of the insertion
         if ($status) {
+            $like->notify($_POST['user_id'], $_POST['post_id']);
+            
             Session::set('success', 'Liked');
             Router::redirect('post', ['id' => $_POST['post_id']]);
         } else {
@@ -77,7 +79,6 @@ class LikeController
 
         // Retrieve the like ID from the POST request
         $id = $_POST['id'];
-        Logger::log('Like ID: ' . $id);
         $like = new Like($id);
 
         // Check if the like exists

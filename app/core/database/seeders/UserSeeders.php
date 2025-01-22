@@ -29,6 +29,7 @@ class UserSeeders extends ASeeders
                 'password' => password_hash(Env::get('ADMIN_PASSWORD'), PASSWORD_DEFAULT),
                 'role' => 'admin',
                 'validated' => 1,
+                'notification' => 1,
                 'token' => password_hash(CSRF::generate(), PASSWORD_DEFAULT),
             ],
         ];
