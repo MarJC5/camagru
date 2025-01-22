@@ -46,7 +46,7 @@ class LikeController
 
         // Redirect based on the result of the insertion
         if ($status) {
-            $like->notify($_POST['user_id'], $_POST['post_id']);
+            $like->sendNotificationEmail($_POST['user_id'], $_POST['post_id']);
             
             Session::set('success', 'Liked');
             Router::redirect('post', ['id' => $_POST['post_id']]);

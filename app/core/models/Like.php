@@ -80,7 +80,7 @@ class Like extends AModel
      *
      * @return bool
      */
-    public function notify($user_id, $post_id): bool 
+    public function sendNotificationEmail($user_id, $post_id): bool 
     {
         $post = new Post($post_id);
         $user = new User($user_id);

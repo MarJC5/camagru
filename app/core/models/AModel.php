@@ -79,6 +79,11 @@ abstract class AModel
         $data = (array) $this->data;
         $data = array_intersect_key($data, array_flip($this->fillable));
 
+        // Parse XSS attacks
+        foreach ($data as $key => $value) {
+            $data[$key] = htmlspecialchars($value);
+        }
+
         if ($this->id()) {
             return $this->update($data);
         } else {
@@ -243,6 +248,11 @@ abstract class AModel
      */
     public function insert($data)
     {
+        // Parse XSS attacks
+        foreach ($data as $key => $value) {
+            $data[$key] = htmlspecialchars($value);
+        }
+
         $columns = implode(', ', array_keys($data));
         $values = implode(', ', array_map([$this->db, 'quote'], array_values($data)));
         $sql = "INSERT INTO {$this->table} ({$columns}) VALUES ({$values})";
@@ -257,6 +267,11 @@ abstract class AModel
      */
     public function update($data)
     {
+        // Parse XSS attacks
+        foreach ($data as $key => $value) {
+            $data[$key] = htmlspecialchars($value);
+        }
+
         $set = [];
         foreach ($data as $key => $value) {
             $set[] = "{$key} = " . $this->db->quote($value);
