@@ -19,7 +19,9 @@ DOCKER		=  docker compose -f ${DOCKER_DIR} --env-file ${ENV_FILE} -p camagru
 
 all: up
 
-start: up
+start:
+	@echo "${GREEN}Starting containers...${RESET}"
+	@${DOCKER} up -d --remove-orphans
 
 up: install
 	@echo "${GREEN}Starting containers...${RESET}"
