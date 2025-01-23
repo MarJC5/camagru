@@ -21,7 +21,7 @@ all: up
 
 start: up
 
-up:
+up: install
 	@echo "${GREEN}Starting containers...${RESET}"
 	@${DOCKER} up -d --remove-orphans
 
@@ -33,7 +33,7 @@ stop:
 	@echo "${RED}Stopping containers...${RESET}"
 	@${DOCKER} stop
 
-rebuild:
+rebuild: install
 	@echo "${GREEN}Rebuilding containers...${RESET}"
 	@${DOCKER} up -d --remove-orphans --build
 
@@ -54,8 +54,18 @@ mysql8:
 	@echo "${GREEN}Running mysql 8 ...${RESET}"
 	@${DOCKER} exec mysql_8 bash
 
+seed:
+	@echo "${GREEN}Running seed cmd ...${RESET}"
+	@${DOCKER} exec frankenphp sh -c "php /var/www/html/camagru/seed"
+
+migrate-seed: migrate seed
+	@echo "${GREEN}Migration and seeding completed${RESET}"
+
+install: migrate-seed
+	@echo "${GREEN}Installation completed${RESET}"
+
 migrate:
 	@echo "${GREEN}Running migrate cmd ...${RESET}"
-	@${DOCKER} exec frankenphp sh -c "/var/www/html/camagru/migrate ${ARGS}"
+	@${DOCKER} exec frankenphp sh -c "php /var/www/html/camagru/migrate reset"
 
 .PHONY: all start up down stop rebuild delete rebuild-no-cache frankenphp mysql8

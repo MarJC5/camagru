@@ -39,9 +39,10 @@ class Page extends AModel
      *
      * @return string
      */
-    public function content()
+    public function content() 
     {
-        return $this->data->content ?? null;
+        $content = $this->data->content ?? '';
+        return html_entity_decode(htmlspecialchars_decode($content));
     }
 
     /**

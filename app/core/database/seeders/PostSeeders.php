@@ -31,8 +31,8 @@ class PostSeeders extends ASeeders
         // Insert users into the database
         foreach ($usersData as $userData) {
             $user = [
-                'username' => $userData['username'],
-                'email' => $userData['email'],
+                'username' => strtolower($userData['username']),
+                'email' => strtolower($userData['email']),
                 'password' => password_hash('password', PASSWORD_DEFAULT),
                 'role' => 'user',
                 'validated' => 1,
@@ -51,6 +51,9 @@ class PostSeeders extends ASeeders
         // Fetch posts and comments from JSONPlaceholder
         $postsData = json_decode(file_get_contents('https://jsonplaceholder.typicode.com/posts'), true);
         $commentsData = json_decode(file_get_contents('https://jsonplaceholder.typicode.com/comments'), true);
+
+        // Limit the number of posts to x number
+        $postsData = array_slice($postsData, 0, 25);
 
         // Shuffle postsData to randomize post creation
         shuffle($postsData);
@@ -86,7 +89,7 @@ class PostSeeders extends ASeeders
             $postId = $this->db->getLastInsertId();
 
             // Create a random number of comments for each post
-            $numComments = rand(1, 20);
+            $numComments = rand(1, 10);
             for ($j = 0; $j < $numComments; $j++) {
                 $commentKey = array_rand($commentsData);
                 $commentData = $commentsData[$commentKey];
@@ -99,7 +102,7 @@ class PostSeeders extends ASeeders
             }
 
             // Create a random number of likes for each post
-            $numLikes = rand(1, 20);
+            $numLikes = rand(1, 10);
             for ($k = 0; $k < $numLikes; $k++) {
                 $likeUserId = $this->userIds[array_rand($this->userIds)]; // Ensure random user ID exists
                 $like = [
