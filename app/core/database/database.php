@@ -154,6 +154,9 @@ class Database
      */
     public function insert($table, $data)
     {
+        // Parse XSS attacks
+        $data = $this->parseXss($data);
+        
         $keys = array_keys($data);
         $placeholders = implode(', ', array_fill(0, count($data), '?'));
         $columns = implode(', ', $keys);
@@ -173,6 +176,9 @@ class Database
      */
     public function insertIfNotExists($table, $data, $uniqueKey)
     {
+        // Parse XSS attacks
+        $data = $this->parseXss($data);
+
         $checkSql = "SELECT COUNT(*) FROM {$table} WHERE {$uniqueKey} = ?";
         $stmt = $this->pdo->prepare($checkSql);
         $stmt->execute([$data[$uniqueKey]]);
@@ -193,5 +199,18 @@ class Database
     public function getLastInsertId()
     {
         return $this->pdo->lastInsertId();
+    }
+
+    /**
+     * Parse XSS attacks.
+     * 
+     * @param array $data The data to parse.
+     */
+    public function parseXss($data)
+    {
+        foreach ($data as $key => $value) {
+            $data[$key] = htmlspecialchars($value);
+        }
+        return $data;
     }
 }

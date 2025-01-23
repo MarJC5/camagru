@@ -120,7 +120,7 @@ class Web {
             ],
             [
                 'method' => 'POST',
-                'path' => '/profile/reset-password',
+                'path' => '/profile/reset-password-request',
                 'name' => 'reset_password_request',
                 'action' => [UserController::class, 'reset_password_request']
             ],

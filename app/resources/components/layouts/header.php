@@ -21,6 +21,10 @@ use function Camagru\public_url;
     <title><?= Env::get('APP_NAME', 'Camagru') ?><?= !empty($_GET['title']) ? ' | ' . htmlspecialchars($_GET['title']) : '' ?></title>
     <!-- Favicon -->
     <link nonce="<?= Session::get('nonce') ?>" rel="icon" href="<?= public_url('/favicon/favicon.ico') ?>" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= public_url('/favicon/apple-touch-icon.png') ?>">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= public_url('/favicon/favicon-32x32.png') ?>">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= public_url('/favicon/favicon-16x16.png') ?>">
+    <link rel="manifest" href="<?= public_url('/favicon/site.webmanifest') ?>">
     <!-- CSS -->
     <link nonce="<?= Session::get('nonce') ?>" href="<?= css_url('app.css') ?>" rel="stylesheet">
     <link nonce="<?= Session::get('nonce') ?>" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
@@ -50,7 +54,7 @@ use function Camagru\public_url;
     <?= partials('ui/alert.php') ?>
     <header>
         <div class="row flex justify-between">
-            <div id="logo">
+            <div id="logo" class="flex item-center mr-2">
                 <a href="<?= Router::to('home') ?>">
                     <?= Env::get('APP_NAME', 'Camagru') ?>
                 </a>

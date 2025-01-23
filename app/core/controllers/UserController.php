@@ -477,6 +477,8 @@ class UserController {
         // Sanitize the data
         $_POST = Sanitize::escapeArray($_POST);
 
+        Logger::log(print_r($_POST, true));
+
         // Verify the CSRF token
         if (!CSRF::verify($_POST['csrf_reset_password_request'], 'csrf_reset_password_request')) {
             Session::set('error', 'Invalid CSRF token');
@@ -497,12 +499,7 @@ class UserController {
             Router::redirect('reset_password');
         }
 
-        $token = $_POST['csrf_token'];
-
-        if (!CSRF::verify($token)) {
-            Session::set('error', 'Invalid token');
-            Router::redirect('reset_password');
-        }
+        $token = CSRF::generate();
 
         if (!$user->reset_password_request($token))
         {
@@ -538,12 +535,6 @@ class UserController {
 
         $password = $_POST['password'];
         $password_confirmation = $_POST['password_confirmation'];
-        $token = $_POST['csrf_token'];
-
-        if (!CSRF::verify($token)) {
-            Session::set('error', 'Invalid token');
-            Router::redirect('reset_password');
-        }
 
         if ($password !== $password_confirmation) {
             Session::set('error', 'Passwords do not match');

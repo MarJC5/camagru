@@ -73,13 +73,21 @@ class MediaController
         header('Content-Type: application/json');
 
         // Verify the CSRF token
-        if (!CSRF::verify($_POST['csrf_upload_media'], 'csrf_upload_media')) {
-            Session::set('error', 'Invalid CSRF token');
-            echo json_encode(['status' => 403, 'message' => 'Invalid CSRF token']);
-            return;
+        if (!isset($_POST['media_mode']) && $_POST['media_mode'] === 'shot') {
+            if (!CSRF::verify($_POST['csrf_upload_shot_media'], 'csrf_upload_shot_media')) {
+                Session::set('error', 'Invalid CSRF token');
+                echo json_encode(['status' => 403, 'message' => 'Invalid CSRF token']);
+                return;
+            }
+        } else if (!isset($_POST['media_mode']) && $_POST['media_mode'] === 'upload') {
+            if (!CSRF::verify($_POST['csrf_upload_media'], 'csrf_upload_media')) {
+                Session::set('error', 'Invalid CSRF token');
+                echo json_encode(['status' => 403, 'message' => 'Invalid CSRF token']);
+                return;
+            }
         }
 
-        if (!isset($_POST['image']) && !isset($_POST['ssticker'])) {
+        if (!isset($_POST['image']) && !isset($_POST['sticker'])) {
             Session::set('error', 'Invalid request, missing parameters');
             echo json_encode(['status' => 400, 'message' => 'Invalid request, missing parameters']);
             return;

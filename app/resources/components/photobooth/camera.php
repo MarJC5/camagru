@@ -55,7 +55,7 @@ const MAX_SHOTS = 4;
                 <?php endforeach; ?>
             </div>
         </div>
-        <div class="controls">
+        <div class="controls flex flex-wrap">
             <div class="video-options">
                 <select name="" id="" class="select">
                     <option value="">Select camera</option>

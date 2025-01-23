@@ -80,9 +80,7 @@ abstract class AModel
         $data = array_intersect_key($data, array_flip($this->fillable));
 
         // Parse XSS attacks
-        foreach ($data as $key => $value) {
-            $data[$key] = htmlspecialchars($value);
-        }
+        $data = $this->parseXss($data);
 
         if ($this->id()) {
             return $this->update($data);
@@ -249,9 +247,7 @@ abstract class AModel
     public function insert($data)
     {
         // Parse XSS attacks
-        foreach ($data as $key => $value) {
-            $data[$key] = htmlspecialchars($value);
-        }
+        $data = $this->parseXss($data);
 
         $columns = implode(', ', array_keys($data));
         $values = implode(', ', array_map([$this->db, 'quote'], array_values($data)));
@@ -268,9 +264,7 @@ abstract class AModel
     public function update($data)
     {
         // Parse XSS attacks
-        foreach ($data as $key => $value) {
-            $data[$key] = htmlspecialchars($value);
-        }
+        $data = $this->parseXss($data);
 
         $set = [];
         foreach ($data as $key => $value) {
@@ -341,5 +335,18 @@ abstract class AModel
     protected function quote($value)
     {
         return $this->db->quote($value);
+    }
+
+    /**
+     * Parse XSS attacks.
+     * 
+     * @param array $data The data to parse.
+     */
+    public function parseXss($data)
+    {
+        foreach ($data as $key => $value) {
+            $data[$key] = htmlspecialchars($value);
+        }
+        return $data;
     }
 }

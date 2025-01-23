@@ -297,6 +297,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const mainCanvasData = mainCanvas.toDataURL("image/webp");
         formData.append("sticker", currentSticker.src.split("/").pop());
         formData.append("image", mainCanvasData);
+        formData.append("media_mode", "upload");
         formData.append("csrf_upload_media", csrfUpload); // Add CSRF token to FormData
       } else {
         const screenshot = publishButton.closest(".screenshot");
@@ -308,7 +309,8 @@ document.addEventListener("DOMContentLoaded", function () {
         formData.append("image", screenshotImage.src);
 
         formData.append("sticker", stickerFilename);
-        formData.append("csrf_upload_media", csrfShot); // Add CSRF token to FormData
+        formData.append("media_mode", "shot");
+        formData.append("csrf_upload_shot_media", csrfShot); // Add CSRF token to FormData
       }
 
       // Use fetch to send FormData
