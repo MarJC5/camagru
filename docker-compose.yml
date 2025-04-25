@@ -20,7 +20,6 @@ services:
       - "443:443" # HTTPS
       - "443:443/udp" # HTTP/3
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ./app:/var/www/html/camagru
       - ./docker/services/frankenphp/Caddyfile:/etc/caddy/Caddyfile
       - ./docker/services/frankenphp/php.ini:/usr/local/etc/php/php.ini

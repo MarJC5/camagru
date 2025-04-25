@@ -290,7 +290,7 @@ class User extends AModel
      *
      * @param string $password
      */
-    public function new_password($password)
+    public function new_password($password, $showError = true)
     {
         $validation = new Validation();
         $rules = $this->validation();
@@ -308,14 +308,23 @@ class User extends AModel
             $errors = $validation->getErrors();
             Session::set('error', $errors);
             Router::redirect('reset_password');
+            return false;
         }
 
-        if ($this->update(['password' => password_hash($password, PASSWORD_DEFAULT)])) {
-            Session::set('success', 'Password updated successfully.');
-            Router::redirect('login');
+        $result = $this->update(['password' => password_hash($password, PASSWORD_DEFAULT)]);
+
+        if ($result) {
+            if ($showError) {
+                Session::set('success', 'Password updated successfully.');
+                Router::redirect('login');
+            }
+            return true;
         } else {
-            Session::set('error', 'An error occurred while updating your password.');
-            Router::redirect('reset_password');
+            if ($showError) {
+                Session::set('error', 'An error occurred while updating your password.');
+                Router::redirect('reset_password');
+            }
+            return false;
         }
     }
 
@@ -327,8 +336,8 @@ class User extends AModel
     public function validation()
     {
         return [
-            'username' => 'required|min:3|max:20|alpha_num|unique:users,username,' . $this->id(),
-            'email' => 'required|email|unique:users,email,' . $this->id(),
+            'username' => 'optional|min:3|max:20|alpha_num|unique:users,username,' . $this->id(),
+            'email' => 'optional|email|unique:users,email,' . $this->id(),
             'password' => 'optional|min:6',
         ];
     }

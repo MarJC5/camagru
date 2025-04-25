@@ -160,58 +160,72 @@ class UserController {
             return;
         }
 
-        // remove if empty
-        $data = array_filter($_POST);
+        $data = array_filter($_POST);  
+        unset($data['id'], $data['csrf_update_user']);
 
-        // remove id
-        unset($data['id']);
-        unset($data['csrf_token']);
+        // Remove unchanged fields first
+        $currentData = $user->toArray(); 
+        $data = array_filter($data, function($value, $key) use ($currentData) {
+            return !isset($currentData[$key]) || $currentData[$key] !== $value;
+        }, ARRAY_FILTER_USE_BOTH);
 
-        $validation = new Validation();
-        $rules = $user->validation();
-        $validation->validate($data, $rules);
+        $passwordUpdated = false;
 
-        if ($validation->fails()) {
-            $errors = $validation->getErrors();
-
-            Session::set('error', $errors);
-            Router::redirect('edit_user', ['id' => $id]);
-        } else {
-            // Hash password
-            if (isset($data['password'])) {
-
-                // Validate password
-                if ($data['password'] !== $data['password_confirmation']) {
-                    Session::set('error', 'Passwords do not match');
-                    Router::redirect('edit_user', ['id' => $id]);
-                }
-
-                // Confirm old password
-                if (!password_verify($data['old_password'], $user->password())) {
-                    Session::set('error', 'Invalid old password');
-                    Router::redirect('edit_user', ['id' => $id]);
-                }
-
-                $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-            }
-
-            if (isset($data['username'])) {
-                $data['username'] = Slugify::format($data['username']);
-            }
-
-            $status = $user->update($data);
-
-            if ($status) {
-                Session::set('success', 'User updated successfully');
-                if ($id === Session::currentUser()->id()) {
-                    Router::redirect('profile');
-                } else {
-                    Router::redirect('user', ['id' => $id]);
-                }
-            } else {
-                Session::set('error', 'An error occurred while updating the user');
+        // Handle password after filtering
+        if (isset($data['password'])) {
+            if ($data['password'] !== $data['password_confirmation']) {
+                Session::set('error', 'Passwords do not match');
                 Router::redirect('edit_user', ['id' => $id]);
             }
+
+            if (!password_verify($data['old_password'], $user->password())) {
+                Session::set('error', 'Invalid old password');
+                Router::redirect('edit_user', ['id' => $id]);
+            }
+
+            $passwordUpdateResult = $user->new_password($data['password'], false);
+            $passwordUpdated = $passwordUpdateResult;
+
+            unset($data['old_password'], $data['password_confirmation'], $data['password']);
+        }
+
+        // If there's still data to update, validate and update it
+        if (!empty($data)) {
+            $validation = new Validation();
+            $rules = $user->validation();
+            $validation->validate($data, $rules);
+
+            if ($validation->fails()) {
+                $errors = $validation->getErrors();
+
+                Session::set('error', $errors);
+                Router::redirect('edit_user', ['id' => $id]);
+            } else {
+                $status = $user->update($data);
+
+                if ($status) {
+                    Session::set('success', 'User updated successfully');
+                    if ($id === Session::currentUser()->id()) {
+                        Router::redirect('profile');
+                    } else {
+                        Router::redirect('user', ['id' => $id]);
+                    }
+                } else {
+                    Session::set('error', 'An error occurred while updating the user');
+                    Router::redirect('edit_user', ['id' => $id]);
+                }
+            }
+        } else if ($passwordUpdated) {
+            // If only password was updated and it was successful
+            Session::set('success', 'Password updated successfully');
+            if ($id === Session::currentUser()->id()) {
+                Router::redirect('profile');
+            } else {
+                Router::redirect('user', ['id' => $id]);
+            }
+        } else {
+            Session::set('error', 'No data to update');
+            Router::redirect('edit_user', ['id' => $id]);
         }
     }
 
