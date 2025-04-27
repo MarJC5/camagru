@@ -65,7 +65,7 @@ const MAX_SHOTS = 4;
             <button class="button button--icon pause hidden" title="Pause"><?= partials('svg/hide-camera.php') ?></button>
             <button class="button button--icon screenshot hidden button--disabled" title="ScreenShot"><?= partials('svg/take-photo.php') ?></button>
             <button class="button button--icon upload" title="Upload"><?= partials('svg/upload.php') ?></button>
-            <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+            <input type="file" id="imageUpload" accept=".png,.webp,.jpeg,.jpg" style="display: none;">
         </div>
     </div>
 </div>

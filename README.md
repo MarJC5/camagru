@@ -40,9 +40,9 @@ on small resolutions.
 This point is MANDATORY and shall be verified when your application would be eval-
 uated. To have an idea, here are some stuff that is NOT considered as SECURE:
   - [x] Store plain or unencrypted passwords in the database.
-  - [ ] Offer the ability to inject HTML or “user” JavaScript in badly protected variables.
-  - [ ] Offer the ability to upload unwanted content on the server.
-  - [ ] Offer the possibility of altering an SQL query.
+  - [x] Offer the ability to inject HTML or “user” JavaScript in badly protected variables.
+  - [x] Offer the ability to upload unwanted content on the server.
+  - [x] Offer the possibility of altering an SQL query.
   - [x] Use an extern form to manipulate so-called private data
 
 ### User features
