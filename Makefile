@@ -17,7 +17,7 @@ DOCKER		=  docker compose -f ${DOCKER_DIR} --env-file ${ENV_FILE} -p camagru
 %:
 	@:
 
-all: up
+all: start up
 
 start:
 	@echo "${GREEN}Starting containers...${RESET}"

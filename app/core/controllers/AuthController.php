@@ -101,6 +101,12 @@ class AuthController
 
         $validation = new Validation();
         $user = new User();
+
+        // Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number and one special character
+        if (strlen($_POST['password']) < 8 || !preg_match('/[A-Z]/', $_POST['password']) || !preg_match('/[a-z]/', $_POST['password']) || !preg_match('/[0-9]/', $_POST['password']) || !preg_match('/[^A-Za-z0-9]/', $_POST['password'])) {
+            Session::set('error', 'Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number and one special character');
+            Router::redirect('register_user');
+        }
         
         $data = [
             'username' => Slugify::format(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS)),

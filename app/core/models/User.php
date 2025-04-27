@@ -302,6 +302,12 @@ class User extends AModel
             }
         }
 
+        if (strlen($password) < 8 || !preg_match('/[A-Z]/', $password) || !preg_match('/[a-z]/', $password) || !preg_match('/[0-9]/', $password) || !preg_match('/[^A-Za-z0-9]/', $password)) {
+            Session::set('error', 'Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number and one special character');
+            Router::redirect('reset_password');
+            return false;
+        }
+
         $validation->validate(['password' => $password], $rules);
 
         if ($validation->fails()) {
@@ -315,6 +321,8 @@ class User extends AModel
 
         if ($result) {
             if ($showError) {
+                // Avoid reuse reset link
+                Session::removeTempResetToken();
                 Session::set('success', 'Password updated successfully.');
                 Router::redirect('login');
             }

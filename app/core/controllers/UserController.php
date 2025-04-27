@@ -173,6 +173,12 @@ class UserController {
 
         // Handle password after filtering
         if (isset($data['password'])) {
+            // Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number and one special character
+            if (strlen($data['password']) < 8 || !preg_match('/[A-Z]/', $data['password']) || !preg_match('/[a-z]/', $data['password']) || !preg_match('/[0-9]/', $data['password']) || !preg_match('/[^A-Za-z0-9]/', $data['password'])) {
+                Session::set('error', 'Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number and one special character');
+                Router::redirect('edit_user', ['id' => $id]);
+            }
+
             if ($data['password'] !== $data['password_confirmation']) {
                 Session::set('error', 'Passwords do not match');
                 Router::redirect('edit_user', ['id' => $id]);
