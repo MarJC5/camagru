@@ -268,7 +268,8 @@ class UserController {
         if ($status) {
             Session::set('success', 'User deleted successfully');
             // Redirect to home if the user is deleting his own account
-            if ($id === Session::get('user')) {
+            if ($user->id() === Session::get('user')) {
+                Session::destroy(); // Clear the session before redirecting
                 Router::redirect('logout');
             } else {
                 Router::redirect('home');

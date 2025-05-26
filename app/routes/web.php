@@ -186,7 +186,7 @@ class Web {
             ],
             [
                 'method' => 'POST',
-                'path' => '/user',
+                'path' => '/user/{id}',
                 'name' => 'delete_user',
                 'secure' => 'authentified',
                 'action' => [UserController::class, 'delete']

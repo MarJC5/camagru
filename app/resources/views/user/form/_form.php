@@ -45,7 +45,7 @@ use Camagru\helpers\Session;
         <div class="danger-zone">
             <h4 class="the-title">Danger Zone</h4>
             <p class="w-half">Deleting your account will remove all your data from the system.</p>
-            <form action="<?= Router::to('delete_user') ?>" method="POST">
+            <form action="<?= Router::to('delete_user', ['id' => $user_id]) ?>" method="POST">
                 <?= CSRF::field('csrf_delete_user') ?>
                 <input type="hidden" name="id" value="<?= htmlspecialchars($user_id) ?>">
                 <button type="submit" class="button button--danger">

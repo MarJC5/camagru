@@ -21,7 +21,7 @@ services:
       - "443:443/udp" # HTTP/3
     volumes:
       - ./app:/var/www/html/camagru
-      - ./docker/services/frankenphp/Caddyfile:/etc/caddy/Caddyfile
+      - ./docker/services/frankenphp/Caddyfile:/etc/frankenphp/Caddyfile
       - ./docker/services/frankenphp/php.ini:/usr/local/etc/php/php.ini
     tty: true
     depends_on:
